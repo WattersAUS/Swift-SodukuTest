@@ -55,6 +55,19 @@ class SudokuCell {
         return useTheseValues[Int(arc4random_uniform(UInt32(useTheseValues.count)))]
     }
     
+    func getRandomUnUsedPosition() -> (unUsedRow: Int, unUsedColumn: Int) {
+        if self.isCellFull == true {
+            return (-1, -1)
+        }
+        var row = Int(arc4random_uniform(3))
+        var column = Int(arc4random_uniform(3))
+        while self.numbers[row][column] > 0 {
+            row = Int(arc4random_uniform(3))
+            column = Int(arc4random_uniform(3))
+        }
+        return (row, column)
+    }
+    
     func setNumberAsUsed(usedNumber: Int) -> Int {
         if usedNumber < 1 || usedNumber > 9 {
             return 0
@@ -86,7 +99,19 @@ class SudokuCell {
         return self.numbers[row][column]
     }
     
-    func returnRowValuesAtColumnPosition(row: Int) -> [Int] {
+    func populateNumberAtCellPosition(number: Int, row: Int, column: Int) {
+        if row < 0 || row > 2 || column < 0 || column > 2 {
+            return
+        }
+        if self.numbers[row][column] > 0 {
+            return
+        }
+        self.numbers[row][column] = number
+        self.setNumberAsUsed(self.numbers[row][column])
+        return
+    }
+    
+    func getRowValuesAtColumnPosition(row: Int) -> [Int] {
         var values: [Int] = []
         for var column = 0; column < 3 && row >= 0 && row < 3; column++ {
             values.append(self.numbers[row][column])
@@ -94,7 +119,7 @@ class SudokuCell {
         return values
     }
     
-    func returnColumnValuesAtRowPosition(column: Int) -> [Int] {
+    func getColumnValuesAtRowPosition(column: Int) -> [Int] {
         var values: [Int] = []
         for var row = 0; row < 3 && column >= 0 && column < 3; row++ {
             values.append(self.numbers[row][column])
@@ -102,7 +127,7 @@ class SudokuCell {
         return values
     }
     
-    func returnAllValues() -> [[Int]] {
+    func getAllValues() -> [[Int]] {
         var values: [[Int]] = []
         for var row = 0; row < 3; row++ {
             var rowArray: [Int] = []
@@ -130,5 +155,15 @@ class SudokuCell {
             }
         }
         return false
+    }
+    
+    func setCellFullIfRequired() {
+        for var index = 0; index < 9; index++ {
+            if usedNumbers[index] == 0 {
+                return
+            }
+        }
+        self.isCellFull = true
+        return
     }
 }

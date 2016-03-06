@@ -27,6 +27,7 @@ class SudokuBoard {
         row1.append(SudokuCell())
         row1.append(SudokuCell())
         cells[2] = row1
+        self.buildBoard()
     }
     
     func clearBoard() {
@@ -52,19 +53,24 @@ class SudokuBoard {
         if self.cells[row][column].isCellFull == true {
             return
         }
-        // get array of all positions still to be filled
-        var freeCellPositions: [[Int]] = [[],[]]
-        
-        // get a random unused number to use
-        var randomUnUsedNumber: Int = self.cells[row][column].getRandomUnUsedNumber()
-        
-        
-        // check that adjacent positions by row/column do not also use the same number
-        
-        // populate the number
-        
-        // set the number as used in the cell
-        
+        // get a unused number from the selected cell
+        let unUsedNumber: Int = self.cells[row][column].getRandomUnUsedNumber()
+        // get an unused row/cell location
+        let unUsedPosition: (unUsedRow: Int, unUsedColumn: Int) = self.cells[row][column].getRandomUnUsedPosition()
+        // check if the unused number can exist in that location by checking adjacent cells
+        for var boardRow: Int = 0; boardRow < 3; boardRow++ {
+            if self.cells[boardRow][column].checkNumberInUseInRow(unUsedNumber, row: boardRow) == true {
+                return
+            }
+        }
+        for var boardColumn: Int = 0; boardColumn < 3; boardColumn++ {
+            if self.cells[row][boardColumn].checkNumberInUseInColumn(unUsedNumber, column: boardColumn) == true {
+                return
+            }
+        }
+        // if we get this far, then the number is good use in this location
+        self.cells[row][column].populateNumberAtCellPosition(unUsedNumber, row: unUsedPosition.unUsedRow, column: unUsedPosition.unUsedColumn)
+        self.cells[row][column].setCellFullIfRequired()
         return
     }
     
