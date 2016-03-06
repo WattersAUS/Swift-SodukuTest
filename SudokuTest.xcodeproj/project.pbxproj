@@ -14,6 +14,8 @@
 		BFADC00D1C8C8CA200F48E54 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFADC00B1C8C8CA200F48E54 /* LaunchScreen.storyboard */; };
 		BFADC0181C8C8CA200F48E54 /* SudokuTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFADC0171C8C8CA200F48E54 /* SudokuTestTests.swift */; };
 		BFADC0231C8C8CA300F48E54 /* SudokuTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFADC0221C8C8CA300F48E54 /* SudokuTestUITests.swift */; };
+		BFADC0311C8C8D1000F48E54 /* SudokuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFADC0301C8C8D1000F48E54 /* SudokuCell.swift */; };
+		BFADC0331C8C8D8400F48E54 /* SudokuBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFADC0321C8C8D8400F48E54 /* SudokuBoard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +49,8 @@
 		BFADC01E1C8C8CA200F48E54 /* SudokuTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SudokuTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFADC0221C8C8CA300F48E54 /* SudokuTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuTestUITests.swift; sourceTree = "<group>"; };
 		BFADC0241C8C8CA300F48E54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BFADC0301C8C8D1000F48E54 /* SudokuCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SudokuCell.swift; sourceTree = "<group>"; };
+		BFADC0321C8C8D8400F48E54 /* SudokuBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SudokuBoard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +107,8 @@
 				BFADC0091C8C8CA200F48E54 /* Assets.xcassets */,
 				BFADC00B1C8C8CA200F48E54 /* LaunchScreen.storyboard */,
 				BFADC00E1C8C8CA200F48E54 /* Info.plist */,
+				BFADC0301C8C8D1000F48E54 /* SudokuCell.swift */,
+				BFADC0321C8C8D8400F48E54 /* SudokuBoard.swift */,
 			);
 			path = SudokuTest;
 			sourceTree = "<group>";
@@ -193,6 +199,7 @@
 				TargetAttributes = {
 					BFADBFFE1C8C8CA200F48E54 = {
 						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = 4E7FPMRF2G;
 					};
 					BFADC0121C8C8CA200F48E54 = {
 						CreatedOnToolsVersion = 7.2.1;
@@ -257,7 +264,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				BFADC0051C8C8CA200F48E54 /* ViewController.swift in Sources */,
+				BFADC0311C8C8D1000F48E54 /* SudokuCell.swift in Sources */,
 				BFADC0031C8C8CA200F48E54 /* AppDelegate.swift in Sources */,
+				BFADC0331C8C8D8400F48E54 /* SudokuBoard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,10 +408,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = SudokuTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "uk.co.Shiny-Idea.SudokuTest";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
@@ -410,10 +423,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = SudokuTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "uk.co.Shiny-Idea.SudokuTest";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};
