@@ -33,15 +33,15 @@ class SudokuBoard {
     func clearBoard() {
         for var row = 0; row < 3; row++ {
             for var column = 0; column < 3; column++ {
-                cells[row][column].clearAllCells()
+                cells[row][column].clearCell()
             }
         }
     }
     
-    func checkAllCellsAreBuilt() -> Bool {
-        for var cellRow = 0; cellRow < 3; cellRow++ {
-            for var cellColumn = 0; cellColumn < 3; cellColumn++ {
-                if self.cells[cellRow][cellColumn].isCellFull == false {
+    func isBoardComplete() -> Bool {
+        for var row = 0; row < 3; row++ {
+            for var column = 0; column < 3; column++ {
+                if self.cells[row][column].isCellComplete() == false {
                     return false
                 }
             }
@@ -50,7 +50,7 @@ class SudokuBoard {
     }
     
     func populateRandomCell(row:Int, column: Int) {
-        if self.cells[row][column].isCellFull == true {
+        if self.cells[row][column].isCellComplete() == true {
             return
         }
         // get a unused number from the selected cell
@@ -59,35 +59,57 @@ class SudokuBoard {
         let unUsedPosition: (unUsedRow: Int, unUsedColumn: Int) = self.cells[row][column].getRandomUnUsedPosition()
         // check if the unused number can exist in that location by checking adjacent cells
         for var boardRow: Int = 0; boardRow < 3; boardRow++ {
-            if self.cells[boardRow][column].checkNumberInUseInRow(unUsedNumber, row: boardRow) == true {
+            if self.cells[boardRow][column].isNumberUsedInRow(unUsedNumber, row: boardRow) == true {
                 return
             }
         }
         for var boardColumn: Int = 0; boardColumn < 3; boardColumn++ {
-            if self.cells[row][boardColumn].checkNumberInUseInColumn(unUsedNumber, column: boardColumn) == true {
+            if self.cells[row][boardColumn].isNumberUsedInColumn(unUsedNumber, column: boardColumn) == true {
                 return
             }
         }
         // if we get this far, then the number is good use in this location
-        self.cells[row][column].populateNumberAtCellPosition(unUsedNumber, row: unUsedPosition.unUsedRow, column: unUsedPosition.unUsedColumn)
-        self.cells[row][column].setCellFullIfRequired()
+        self.cells[row][column].setNumberAtCellPosition(unUsedPosition.unUsedRow, column: unUsedPosition.unUsedColumn, number: unUsedNumber)
         return
     }
     
-    func buildBoard() {
-        // pick a random cell to populate first
-        var cellRow: Int = Int(arc4random_uniform(3))
-        var cellColumn: Int = Int(arc4random_uniform(3))
-        self.cells[cellRow][cellColumn].populateAllCells()
-        // now randomly select a cell to set a number in, until all numbers are set in all cells
-        repeat {
-            cellRow = Int(arc4random_uniform(3))
-            cellColumn = Int(arc4random_uniform(3))
-            if self.cells[cellRow][cellColumn].isCellFull == false {
-                // cell selected, now populate a number in that cell
-                self.populateRandomCell(cellRow, column: cellColumn)
+    func checkRowsInAdjacentCells(cellRow: Int, cellColumn: Int, rowToCheck: Int, numberToCheck: Int) -> Bool {
+        return false
+    }
+    
+    func checkColumnsInAdjacentCells(cellRow: Int, cellColumn: Int, columnToCheck: Int, numberToCheck: Int) -> Bool {
+        return false
+    }
+
+    func checkNumberValidInPosition(cellRow: Int, cellColumn: Int, rowInCell: Int, columnInCell: Int, numberToCheck: Int) -> Bool {
+        
+        return true
+    }
+    
+    func buildCell(row: Int, column: Int) {
+        while self.cells[row][column].isCellComplete() == false {
+            // get an unused row/cell location and an unused number
+            let unUsedPosition: (unUsedRow: Int, unUsedColumn: Int) = self.cells[row][column].getRandomUnUsedPosition()
+            let unUsedNumber: Int = self.cells[row][column].getRandomUnUsedNumber()
+            // check if the unused number can exist in that location by checking adjacent cells
+            if checkNumberValidInPosition(row, cellColumn: column, rowInCell: unUsedPosition.unUsedRow, columnInCell: unUsedPosition.unUsedColumn, numberToCheck: unUsedNumber) == true {
+                self.cells[row][column].setNumberAtCellPosition(unUsedPosition.unUsedRow, column: unUsedPosition.unUsedColumn, number: unUsedNumber)
             }
-        } while self.checkAllCellsAreBuilt() == false
+        }
+    }
+    
+    func buildBoard() {
+        // start at the top left and build the first cell, this seeds the rest of the table
+        // then iterate through the rest of cells left -> right a row at a time
+        for var boardRow: Int = 0; boardRow < 3; boardRow++ {
+            for var boardColumn: Int = 0; boardColumn < 3; boardColumn++ {
+                if boardRow == 0 && boardColumn == 0 {
+                    self.cells[boardRow][boardColumn].seedInitialCell()
+                } else {
+                    buildCell(boardRow, column: boardColumn)
+                }
+            }
+        }
     }
     
     func returnCellsAtPosition(row:Int, column:Int) -> SudokuCell {

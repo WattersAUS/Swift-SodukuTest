@@ -11,29 +11,30 @@ import Foundation
 class SudokuCell {
     
     // has the Cell been fully allocated
-    var isCellFull:Bool = false
+    var isComplete:Bool = false
     
     // 2d array 3x3
     var numbers = [[Int]](count: 3, repeatedValue: [Int](count: 3, repeatedValue: 0))
     
-    // numbers 1 thro 9
-    // 0 = unused, 1 = used
+    // array holding numbers 1 thro 9, 0 = unused, 1 = used
     var usedNumbers = [Int](count: 9, repeatedValue: 0)
     
-    func resetUsage() {
+    func resetCellUsage() {
         for var count:Int = 0; count < 9; count++ {
             self.usedNumbers[count] = 0
         }
+        return
     }
     
-    func clearAllCells() {
+    func clearCell() {
         for var row = 0; row < 3; row++ {
             for var column = 0; column < 3; column++ {
                 self.numbers[row][column] = 0
             }
         }
-        self.resetUsage()
-        self.isCellFull = false
+        self.resetCellUsage()
+        self.isComplete = false
+        return
     }
     
     func getArrayOfNumberUsage() -> [Int] {
@@ -49,14 +50,14 @@ class SudokuCell {
         var useTheseValues: [Int] = []
         for var index = 0; index < unUsedValues.count; index++ {
             if unUsedValues[index] == 0 {
-                useTheseValues.append(index)
+                useTheseValues.append(index + 1)
             }
         }
         return useTheseValues[Int(arc4random_uniform(UInt32(useTheseValues.count)))]
     }
     
     func getRandomUnUsedPosition() -> (unUsedRow: Int, unUsedColumn: Int) {
-        if self.isCellFull == true {
+        if self.isComplete == true {
             return (-1, -1)
         }
         var row = Int(arc4random_uniform(3))
@@ -76,42 +77,42 @@ class SudokuCell {
         return usedNumber
     }
     
-    func populateAllCells() {
-        self.clearAllCells()
+    func seedInitialCell() {
+        self.clearCell()
         for var row = 0; row < 3; row++ {
             for var column = 0; column < 3; column++ {
                 self.numbers[row][column] = self.getRandomUnUsedNumber()
                 self.setNumberAsUsed(self.numbers[row][column])
             }
         }
-        self.isCellFull = true
-    }
-    
-    func populateRandomUnUsedNumberAtCellPosition(row: Int, column: Int) -> Int {
-        if row < 0 || row > 2 || column < 0 || column > 2 {
-            return 0
-        }
-        if self.numbers[row][column] > 0 {
-            return 0
-        }
-        self.numbers[row][column] = self.getRandomUnUsedNumber()
-        self.setNumberAsUsed(self.numbers[row][column])
-        return self.numbers[row][column]
-    }
-    
-    func populateNumberAtCellPosition(number: Int, row: Int, column: Int) {
-        if row < 0 || row > 2 || column < 0 || column > 2 {
-            return
-        }
-        if self.numbers[row][column] > 0 {
-            return
-        }
-        self.numbers[row][column] = number
-        self.setNumberAsUsed(self.numbers[row][column])
+        self.isComplete = true
         return
     }
     
-    func getRowValuesAtColumnPosition(row: Int) -> [Int] {
+    func setCellCompleteIfRequired() -> Bool {
+        var completed = true
+        for var index = 0; index < 9; index++ {
+            if usedNumbers[index] == 0 {
+                completed = false
+            }
+        }
+        self.isComplete = completed
+        return self.isComplete
+    }
+    
+    func setNumberAtCellPosition(row: Int, column: Int, number: Int) -> Bool {
+        if row < 0 || row > 2 || column < 0 || column > 2 || number < 1 || number > 9 {
+            return false
+        }
+        if self.numbers[row][column] > 0 {
+            return false
+        }
+        self.numbers[row][column] = number
+        self.setNumberAsUsed(self.numbers[row][column])
+        return self.setCellCompleteIfRequired()
+    }
+    
+    func getColumnValuesFromRow(row: Int) -> [Int] {
         var values: [Int] = []
         for var column = 0; column < 3 && row >= 0 && row < 3; column++ {
             values.append(self.numbers[row][column])
@@ -119,7 +120,7 @@ class SudokuCell {
         return values
     }
     
-    func getColumnValuesAtRowPosition(column: Int) -> [Int] {
+    func getRowValuesFromColumn(column: Int) -> [Int] {
         var values: [Int] = []
         for var row = 0; row < 3 && column >= 0 && column < 3; row++ {
             values.append(self.numbers[row][column])
@@ -127,7 +128,7 @@ class SudokuCell {
         return values
     }
     
-    func getAllValues() -> [[Int]] {
+    func getCellValues() -> [[Int]] {
         var values: [[Int]] = []
         for var row = 0; row < 3; row++ {
             var rowArray: [Int] = []
@@ -139,7 +140,7 @@ class SudokuCell {
         return values
     }
     
-    func checkNumberInUseInRow(number: Int, row: Int) -> Bool {
+    func isNumberUsedInRow(number: Int, row: Int) -> Bool {
         for var column = 0; column < 3 && row >= 0 && row < 3; column++ {
             if number == self.numbers[row][column] {
                 return true
@@ -148,7 +149,7 @@ class SudokuCell {
         return false
     }
     
-    func checkNumberInUseInColumn(number: Int, column: Int) -> Bool {
+    func isNumberUsedInColumn(number: Int, column: Int) -> Bool {
         for var row = 0; row < 3 && column >= 0 && column < 3; row++ {
             if number == self.numbers[row][column] {
                 return true
@@ -157,13 +158,7 @@ class SudokuCell {
         return false
     }
     
-    func setCellFullIfRequired() {
-        for var index = 0; index < 9; index++ {
-            if usedNumbers[index] == 0 {
-                return
-            }
-        }
-        self.isCellFull = true
-        return
+    func isCellComplete() -> Bool {
+        return self.isComplete
     }
 }
