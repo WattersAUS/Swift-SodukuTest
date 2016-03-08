@@ -9,24 +9,25 @@
 import Foundation
 
 class SudokuBoard {
-    var cells: [[SudokuCell]] = [[], [], []]
+    var cells: [[SudokuCell]] = []
     
     init () {
-        // first row of cells
-        var row1: [SudokuCell] = [SudokuCell()]
-        row1.append(SudokuCell())
-        row1.append(SudokuCell())
-        cells[0] = row1
+        // allocate the row of arraysfirst row of cells
+        var row: [SudokuCell] = [SudokuCell()]
+        row.append(SudokuCell())
+        row.append(SudokuCell())
+        cells.append(row)
         // 2nd
-        row1 = [SudokuCell()]
-        row1.append(SudokuCell())
-        row1.append(SudokuCell())
-        cells[1] = row1
+        row = [SudokuCell()]
+        row.append(SudokuCell())
+        row.append(SudokuCell())
+        cells.append(row)
         // final
-        row1 = [SudokuCell()]
-        row1.append(SudokuCell())
-        row1.append(SudokuCell())
-        cells[2] = row1
+        row = [SudokuCell()]
+        row.append(SudokuCell())
+        row.append(SudokuCell())
+        cells.append(row)
+
         self.buildBoard()
     }
     
@@ -48,41 +49,18 @@ class SudokuBoard {
         }
         return true
     }
-    
-    func populateRandomCell(row:Int, column: Int) {
-        if self.cells[row][column].isCellComplete() == true {
-            return
-        }
-        // get a unused number from the selected cell
-        let unUsedNumber: Int = self.cells[row][column].getRandomUnUsedNumber()
-        // get an unused row/cell location
-        let unUsedPosition: (unUsedRow: Int, unUsedColumn: Int) = self.cells[row][column].getRandomUnUsedPosition()
-        // check if the unused number can exist in that location by checking adjacent cells
-        for var boardRow: Int = 0; boardRow < 3; boardRow++ {
-            if self.cells[boardRow][column].isNumberUsedInRow(unUsedNumber, row: boardRow) == true {
-                return
-            }
-        }
-        for var boardColumn: Int = 0; boardColumn < 3; boardColumn++ {
-            if self.cells[row][boardColumn].isNumberUsedInColumn(unUsedNumber, column: boardColumn) == true {
-                return
-            }
-        }
-        // if we get this far, then the number is good use in this location
-        self.cells[row][column].setNumberAtCellPosition(unUsedPosition.unUsedRow, column: unUsedPosition.unUsedColumn, number: unUsedNumber)
-        return
-    }
-    
-    func checkRowsInAdjacentCells(cellRow: Int, cellColumn: Int, rowToCheck: Int, numberToCheck: Int) -> Bool {
-        return false
-    }
-    
-    func checkColumnsInAdjacentCells(cellRow: Int, cellColumn: Int, columnToCheck: Int, numberToCheck: Int) -> Bool {
-        return false
-    }
 
     func checkNumberValidInPosition(cellRow: Int, cellColumn: Int, rowInCell: Int, columnInCell: Int, numberToCheck: Int) -> Bool {
-        
+        for var row: Int = 0; row < cellRow; row++ {
+            if self.cells[row][cellColumn].isNumberUsedInRow(numberToCheck, row: rowInCell) == true {
+                return false
+            }
+        }
+        for var column: Int = 0; column < cellColumn; column++ {
+            if self.cells[cellRow][column].isNumberUsedInColumn(numberToCheck, column: columnInCell) == true {
+                return false
+            }
+        }
         return true
     }
     
@@ -96,6 +74,7 @@ class SudokuBoard {
                 self.cells[row][column].setNumberAtCellPosition(unUsedPosition.unUsedRow, column: unUsedPosition.unUsedColumn, number: unUsedNumber)
             }
         }
+        return
     }
     
     func buildBoard() {
@@ -104,12 +83,15 @@ class SudokuBoard {
         for var boardRow: Int = 0; boardRow < 3; boardRow++ {
             for var boardColumn: Int = 0; boardColumn < 3; boardColumn++ {
                 if boardRow == 0 && boardColumn == 0 {
+                    print("Seeding the initial cell at (0,0)")
                     self.cells[boardRow][boardColumn].seedInitialCell()
                 } else {
+                    print("Building cell at (\(boardRow),\(boardColumn))")
                     buildCell(boardRow, column: boardColumn)
                 }
             }
         }
+        return
     }
     
     func returnCellsAtPosition(row:Int, column:Int) -> SudokuCell {
