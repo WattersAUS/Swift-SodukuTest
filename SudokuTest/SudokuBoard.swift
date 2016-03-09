@@ -64,7 +64,8 @@ class SudokuBoard {
         return true
     }
     
-    func buildCell(row: Int, column: Int) {
+    func buildCell(row: Int, column: Int) -> Bool {
+        var stalled: Int = 0
         while self.cells[row][column].isCellComplete() == false {
             // get an unused row/cell location and an unused number
             let unUsedPosition: (unUsedRow: Int, unUsedColumn: Int) = self.cells[row][column].getRandomUnUsedPosition()
@@ -72,23 +73,35 @@ class SudokuBoard {
             // check if the unused number can exist in that location by checking adjacent cells
             if checkNumberValidInPosition(row, cellColumn: column, rowInCell: unUsedPosition.unUsedRow, columnInCell: unUsedPosition.unUsedColumn, numberToCheck: unUsedNumber) == true {
                 self.cells[row][column].setNumberAtCellPosition(unUsedPosition.unUsedRow, column: unUsedPosition.unUsedColumn, number: unUsedNumber)
+                stalled = 0
+            } else {
+                stalled += 1
+                if stalled > 100 {
+                    return false
+                }
             }
         }
-        return
+//        print ("Cell(\(row),\(column)) completed")
+        return true
     }
     
     func buildBoard() {
-        // start at the top left and build the first cell, this seeds the rest of the table
-        // then iterate through the rest of cells left -> right a row at a time
-        for var boardRow: Int = 0; boardRow < 3; boardRow++ {
-            for var boardColumn: Int = 0; boardColumn < 3; boardColumn++ {
-                if boardRow == 0 && boardColumn == 0 {
-                    print("Seeding the initial cell at (0,0)")
-                    self.cells[boardRow][boardColumn].seedInitialCell()
-                } else {
-                    print("Building cell at (\(boardRow),\(boardColumn))")
-                    buildCell(boardRow, column: boardColumn)
+        let cellCoords: [(row: Int, column: Int)] = [(0,0), (0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1), (2,2)]
+        var cellIndex: Int = 0
+        while (self.isBoardComplete() == false) {
+//            print("Building cell at (\(cellCoords[cellIndex].row),\(cellCoords[cellIndex].column))")
+            if buildCell(cellCoords[cellIndex].row, column: cellCoords[cellIndex].column) == true {
+                cellIndex++
+            } else {
+                print("Cell build at (\(cellCoords[cellIndex].row), \(cellCoords[cellIndex].column)) stalled, restarting")
+                for var i: Int = cellIndex; i >= 0; i-- {
+//                    print("Clearing cell at (\(cellCoords[i].row), \(cellCoords[i].column))")
+                    self.cells[cellCoords[i].row][cellCoords[i].column].clearCell()
                 }
+                cellIndex = 0
+            }
+            if cellIndex == 9 {
+                print("Completed Board Build...")
             }
         }
         return
