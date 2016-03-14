@@ -103,6 +103,7 @@ class SudokuBoard {
         }
         var dumpOfBoard: String = ""
         for var boardRow: Int = 0; boardRow < 3; boardRow++ {
+            dumpOfBoard += "\nBoard row: \(boardRow)\n"
             for var cellRow: Int = 0; cellRow < 3; cellRow++ {
                 var dumpOfCellRow: String = ""
                 for var boardColumn: Int = 0; boardColumn < 3; boardColumn++ {

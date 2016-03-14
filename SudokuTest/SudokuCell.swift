@@ -19,6 +19,8 @@ class SudokuCell {
     // array holding numbers 1 thro 9, 0 = unused, 1 = used
     var usedNumbers = [Int](count: 9, repeatedValue: 0)
     
+    let cellCoords: [(row: Int, column: Int)] = [(0,0), (0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1), (2,2)]
+    
     func resetCellUsage() {
         for var count:Int = 0; count < 9; count++ {
             self.usedNumbers[count] = 0
@@ -27,10 +29,8 @@ class SudokuCell {
     }
     
     func clearCell() {
-        for var row = 0; row < 3; row++ {
-            for var column = 0; column < 3; column++ {
-                self.numbers[row][column] = 0
-            }
+        for var index: Int = 0; index < self.cellCoords.count; index++ {
+            self.numbers[self.cellCoords[index].row][self.cellCoords[index].column] = 0
         }
         self.resetCellUsage()
         self.isComplete = false
@@ -79,11 +79,9 @@ class SudokuCell {
     
     func seedInitialCell() {
         self.clearCell()
-        for var row = 0; row < 3; row++ {
-            for var column = 0; column < 3; column++ {
-                self.numbers[row][column] = self.getRandomUnUsedNumber()
-                self.setNumberAsUsed(self.numbers[row][column])
-            }
+        for var index: Int = 0; index < self.cellCoords.count; index++ {
+            self.numbers[self.cellCoords[index].row][self.cellCoords[index].column] = self.getRandomUnUsedNumber()
+            self.setNumberAsUsed(self.numbers[self.cellCoords[index].row][self.cellCoords[index].column])
         }
         self.isComplete = true
         return
@@ -124,18 +122,6 @@ class SudokuCell {
         var values: [Int] = []
         for var row = 0; row < 3 && column >= 0 && column < 3; row++ {
             values.append(self.numbers[row][column])
-        }
-        return values
-    }
-    
-    func getCellValues() -> [[Int]] {
-        var values: [[Int]] = []
-        for var row = 0; row < 3; row++ {
-            var rowArray: [Int] = []
-            for var column = 0; column < 3; column++ {
-                rowArray.append(self.numbers[row][column])
-            }
-            values.append(rowArray)
         }
         return values
     }
