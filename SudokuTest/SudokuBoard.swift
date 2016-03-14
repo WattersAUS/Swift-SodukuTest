@@ -10,7 +10,8 @@ import Foundation
 
 class SudokuBoard {
     var cells: [[SudokuCell]] = []
-    
+    let boardCoords: [(row: Int, column: Int)] = [(0,0), (0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1), (2,2)]
+
     init () {
         // allocate the row of arraysfirst row of cells
         var row: [SudokuCell] = [SudokuCell()]
@@ -27,24 +28,19 @@ class SudokuBoard {
         row.append(SudokuCell())
         row.append(SudokuCell())
         cells.append(row)
-
-        self.buildBoard()
     }
     
     func clearBoard() {
-        for var row = 0; row < 3; row++ {
-            for var column = 0; column < 3; column++ {
-                cells[row][column].clearCell()
-            }
+        for var index: Int = 0; index < self.boardCoords.count; index++ {
+            cells[self.boardCoords[index].row][self.boardCoords[index].column].clearCell()
         }
+        return
     }
     
     func isBoardComplete() -> Bool {
-        for var row = 0; row < 3; row++ {
-            for var column = 0; column < 3; column++ {
-                if self.cells[row][column].isCellComplete() == false {
-                    return false
-                }
+        for var index: Int = 0; index < self.boardCoords.count; index++ {
+            if cells[self.boardCoords[index].row][self.boardCoords[index].column].isCellComplete() == false {
+                return false
             }
         }
         return true
@@ -81,37 +77,46 @@ class SudokuBoard {
                 }
             }
         }
-//        print ("Cell(\(row),\(column)) completed")
         return true
     }
     
     func buildBoard() {
-        let cellCoords: [(row: Int, column: Int)] = [(0,0), (0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1), (2,2)]
-        var cellIndex: Int = 0
+        var index: Int = 0
         while (self.isBoardComplete() == false) {
-//            print("Building cell at (\(cellCoords[cellIndex].row),\(cellCoords[cellIndex].column))")
-            if buildCell(cellCoords[cellIndex].row, column: cellCoords[cellIndex].column) == true {
-                cellIndex++
+            if buildCell(self.boardCoords[index].row, column: self.boardCoords[index].column) == true {
+                index++
             } else {
-                print("Cell build at (\(cellCoords[cellIndex].row), \(cellCoords[cellIndex].column)) stalled, restarting")
-                for var i: Int = cellIndex; i >= 0; i-- {
-//                    print("Clearing cell at (\(cellCoords[i].row), \(cellCoords[i].column))")
-                    self.cells[cellCoords[i].row][cellCoords[i].column].clearCell()
+                print("Cell build at (\(self.boardCoords[index].row), \(self.boardCoords[index].column)) stalled, restarting")
+                for var i: Int = index; i >= 0; i-- {
+                    self.cells[self.boardCoords[i].row][self.boardCoords[i].column].clearCell()
                 }
-                cellIndex = 0
-            }
-            if cellIndex == 9 {
-                print("Completed Board Build...")
+                index = 0
             }
         }
+        print("Completed Board Build")
         return
     }
     
-    func returnCellsAtPosition(row:Int, column:Int) -> SudokuCell {
-        if column >= 0 && column < 3 && row >= 0 && row < 3 {
-            return cells[row][column]
+    func dumpBoard() -> String {
+        if self.isBoardComplete() == false {
+            return "Board is not completed"
         }
-        return cells[0][0]
+        var dumpOfBoard: String = ""
+        for var boardRow: Int = 0; boardRow < 3; boardRow++ {
+            for var cellRow: Int = 0; cellRow < 3; cellRow++ {
+                var dumpOfCellRow: String = ""
+                for var boardColumn: Int = 0; boardColumn < 3; boardColumn++ {
+                    let cellColumns: [Int] = self.cells[boardRow][boardColumn].getColumnValuesFromRow(cellRow)
+                    dumpOfCellRow += " |"
+                    for var i: Int = 0; i < cellColumns.count; i++ {
+                        dumpOfCellRow += " \(cellColumns[i])"
+                    }
+                    dumpOfCellRow += " |"
+                }
+                dumpOfBoard += "\n" + dumpOfCellRow
+            }
+        }
+        return dumpOfBoard
     }
     
 }
