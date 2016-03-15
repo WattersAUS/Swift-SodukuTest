@@ -8,16 +8,18 @@
 
 import Foundation
 
-class SudokuBoard {
+class SudokuBoard: NSObject, NSCopying {
 
     var cells: [[SudokuCell]] = []
     var boardCoords: [(row: Int, column: Int)] = []
-    var boardCells: Int =  0
+    var boardSize: Int = 0
+    var stalls: Int = 0
     
     init (size: Int) {
-        var boardSize: Int = size
-        if boardSize != 3 || boardSize != 4 {
-            boardSize = 3
+        super.init()
+        self.boardSize = size
+        if self.boardSize != 3 && self.boardSize != 4 {
+            self.boardSize = 3
         }
         for var row: Int = 0; row < boardSize; row++ {
             var rowOfCells: [SudokuCell] = [SudokuCell(size: boardSize)]
@@ -27,22 +29,20 @@ class SudokuBoard {
                     rowOfCells.append(SudokuCell(size: boardSize))
                 }
             }
-            cells.append(rowOfCells)
+            self.cells.append(rowOfCells)
         }
-        boardCells = size * size
     }
-    
     
     func clearBoard() {
         for var index: Int = 0; index < self.boardCoords.count; index++ {
-            cells[self.boardCoords[index].row][self.boardCoords[index].column].clearCell()
+            self.cells[self.boardCoords[index].row][self.boardCoords[index].column].clearCell()
         }
         return
     }
     
     func isBoardComplete() -> Bool {
         for var index: Int = 0; index < self.boardCoords.count; index++ {
-            if cells[self.boardCoords[index].row][self.boardCoords[index].column].isCellComplete() == false {
+            if self.cells[self.boardCoords[index].row][self.boardCoords[index].column].isCellComplete() == false {
                 return false
             }
         }
@@ -51,12 +51,12 @@ class SudokuBoard {
 
     func checkNumberValidInPosition(cellRow: Int, cellColumn: Int, rowInCell: Int, columnInCell: Int, numberToCheck: Int) -> Bool {
         for var row: Int = 0; row < cellRow; row++ {
-            if self.cells[row][cellColumn].isNumberUsedInRow(numberToCheck, row: rowInCell) == true {
+            if self.cells[row][cellColumn].isNumberUsedInColumn(numberToCheck, column: columnInCell) == true {
                 return false
             }
         }
         for var column: Int = 0; column < cellColumn; column++ {
-            if self.cells[cellRow][column].isNumberUsedInColumn(numberToCheck, column: columnInCell) == true {
+            if self.cells[cellRow][column].isNumberUsedInRow(numberToCheck, row: rowInCell) == true {
                 return false
             }
         }
@@ -75,7 +75,7 @@ class SudokuBoard {
                 stalled = 0
             } else {
                 stalled += 1
-                if stalled > 100 {
+                if stalled > 16 {
                     return false
                 }
             }
@@ -85,19 +85,18 @@ class SudokuBoard {
     
     func buildBoard() {
         var index: Int = 0
-        var stalls: Int = 0
+        self.stalls = 0
         while (self.isBoardComplete() == false) {
             if buildCell(self.boardCoords[index].row, column: self.boardCoords[index].column) == true {
                 index++
             } else {
-                print("Cell build at (\(self.boardCoords[index].row), \(self.boardCoords[index].column)), restarting, build has stalled \(++stalls) times")
+                ++self.stalls
                 for var i: Int = index; i >= 0; i-- {
                     self.cells[self.boardCoords[i].row][self.boardCoords[i].column].clearCell()
                 }
                 index = 0
             }
         }
-        print("Completed board with \(stalls) stalls")
         return
     }
     
@@ -111,7 +110,7 @@ class SudokuBoard {
             for var cellRow: Int = 0; cellRow < 3; cellRow++ {
                 var dumpOfCellRow: String = ""
                 for var boardColumn: Int = 0; boardColumn < 3; boardColumn++ {
-                    let cellColumns: [Int] = self.cells[boardRow][boardColumn].getColumnValuesFromRow(cellRow)
+                    let cellColumns: [Int] = self.cells[boardRow][boardColumn].getValuesFromRow(cellRow)
                     dumpOfCellRow += " |"
                     for var i: Int = 0; i < cellColumns.count; i++ {
                         dumpOfCellRow += " \(cellColumns[i])"
@@ -122,6 +121,23 @@ class SudokuBoard {
             }
         }
         return dumpOfBoard
+    }
+    
+    func copyWithZone(zone: NSZone) -> AnyObject {
+        let copy = SudokuBoard(size: self.boardSize)
+        for var row: Int = 0; row < boardSize; row++ {
+            var rowOfCells: [SudokuCell] = [self.cells[row][0]]
+            for var column: Int = 1; column < boardSize; column++ {
+                rowOfCells.append(self.cells[row][column])
+            }
+            copy.cells.append(rowOfCells)
+        }
+        for var index: Int = 0; index < self.boardCoords.count; index++ {
+            copy.boardCoords.append(self.boardCoords[index])
+        }
+        copy.boardSize = self.boardSize
+        copy.stalls = self.stalls
+        return copy
     }
     
 }
