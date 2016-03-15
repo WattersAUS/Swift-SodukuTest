@@ -10,16 +10,27 @@ import Foundation
 
 class SudokuCell {
     
-    // has the Cell been fully allocated
-    var isComplete:Bool = false
-    
-    // 2d array 3x3
-    var numbers = [[Int]](count: 3, repeatedValue: [Int](count: 3, repeatedValue: 0))
-    
-    // array holding numbers 1 thro 9, 0 = unused, 1 = used
-    var usedNumbers = [Int](count: 9, repeatedValue: 0)
-    
-    let cellCoords: [(row: Int, column: Int)] = [(0,0), (0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1), (2,2)]
+    private var isComplete:Bool = false
+    private var numbers = [[Int]](count: 3, repeatedValue: [Int](count: 3, repeatedValue: 0))
+    private var usedNumbers: [Int] = []
+    private var cellCoords: [(row: Int, column: Int)] = []
+    private var cells: Int = 0
+
+    init (size: Int) {
+        var cellSize: Int = size
+        if cellSize != 3 && cellSize != 4 {
+            cellSize = 3
+        }
+        for var row: Int = 0; row < cellSize; row++ {
+            for var column: Int = 0; column < size; column++ {
+                cellCoords.append((row, column))
+            }
+        }
+        cells = cellSize * cellSize
+        for var loop: Int = 0; loop < cells; loop++ {
+            self.usedNumbers.append(0)
+        }
+    }
     
     func resetCellUsage() {
         for var count:Int = 0; count < 9; count++ {

@@ -9,26 +9,29 @@
 import Foundation
 
 class SudokuBoard {
-    var cells: [[SudokuCell]] = []
-    let boardCoords: [(row: Int, column: Int)] = [(0,0), (0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1), (2,2)]
 
-    init () {
-        // allocate the row of arraysfirst row of cells
-        var row: [SudokuCell] = [SudokuCell()]
-        row.append(SudokuCell())
-        row.append(SudokuCell())
-        cells.append(row)
-        // 2nd
-        row = [SudokuCell()]
-        row.append(SudokuCell())
-        row.append(SudokuCell())
-        cells.append(row)
-        // final
-        row = [SudokuCell()]
-        row.append(SudokuCell())
-        row.append(SudokuCell())
-        cells.append(row)
+    var cells: [[SudokuCell]] = []
+    var boardCoords: [(row: Int, column: Int)] = []
+    var boardCells: Int =  0
+    
+    init (size: Int) {
+        var boardSize: Int = size
+        if boardSize != 3 || boardSize != 4 {
+            boardSize = 3
+        }
+        for var row: Int = 0; row < boardSize; row++ {
+            var rowOfCells: [SudokuCell] = [SudokuCell(size: boardSize)]
+            for var column: Int = 0; column < boardSize; column++ {
+                self.boardCoords.append((row, column))
+                if column > 0 {
+                    rowOfCells.append(SudokuCell(size: boardSize))
+                }
+            }
+            cells.append(rowOfCells)
+        }
+        boardCells = size * size
     }
+    
     
     func clearBoard() {
         for var index: Int = 0; index < self.boardCoords.count; index++ {
@@ -82,18 +85,19 @@ class SudokuBoard {
     
     func buildBoard() {
         var index: Int = 0
+        var stalls: Int = 0
         while (self.isBoardComplete() == false) {
             if buildCell(self.boardCoords[index].row, column: self.boardCoords[index].column) == true {
                 index++
             } else {
-                print("Cell build at (\(self.boardCoords[index].row), \(self.boardCoords[index].column)) stalled, restarting")
+                print("Cell build at (\(self.boardCoords[index].row), \(self.boardCoords[index].column)), restarting, build has stalled \(++stalls) times")
                 for var i: Int = index; i >= 0; i-- {
                     self.cells[self.boardCoords[i].row][self.boardCoords[i].column].clearCell()
                 }
                 index = 0
             }
         }
-        print("Completed Board Build")
+        print("Completed board with \(stalls) stalls")
         return
     }
     
