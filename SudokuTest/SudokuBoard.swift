@@ -15,9 +15,9 @@ class SudokuBoard: NSObject, NSCopying {
     var boardSize: Int = 0
     var stalls: Int = 0
     
-    init (size: Int) {
+    init (cellWidth: Int) {
         super.init()
-        self.boardSize = size
+        self.boardSize = cellWidth
         if self.boardSize != 3 && self.boardSize != 4 {
             self.boardSize = 3
         }
@@ -124,7 +124,7 @@ class SudokuBoard: NSObject, NSCopying {
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = SudokuBoard(size: self.boardSize)
+        let copy = SudokuBoard(cellWidth: self.boardSize)
         for var row: Int = 0; row < boardSize; row++ {
             var rowOfCells: [SudokuCell] = [self.cells[row][0]]
             for var column: Int = 1; column < boardSize; column++ {
