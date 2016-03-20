@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     let kViewBoardMargin: CGFloat = 35.0
     var viewBoard: UIView!
     var viewCells: [[UIView]] = []
+    var sudokuLabels: [[[UILabel]]] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,8 +37,6 @@ class ViewController: UIViewController {
 //        outputBoardMsgsTextField.text = boardDump
 //    }
 //
-    
-    
     
     func setupInitialBoardDisplay() {
         self.view.backgroundColor = UIColor.blackColor()
