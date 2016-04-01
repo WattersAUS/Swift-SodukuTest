@@ -58,13 +58,13 @@ class ViewController: UIViewController {
                 
                 let labelMargin: CGFloat = 5.0
                 let labelWidth: CGFloat = (cellUI.bounds.width - (4 * labelMargin)) / 3
-                //var labelCells: [UILabel] = []
                 var jStart: CGFloat = 5.0
                 for j: Int in 0 ..< 3 {
                     var kStart: CGFloat = 5.0
                     for k: Int in 0 ..< 3 {
                         let cellLabel: UILabel = UILabel(frame: CGRect(x: kStart, y: jStart, width: labelWidth, height: labelWidth))
                         cellLabel.backgroundColor = UIColor.redColor()
+
                         cellLabel.text = "y=\(j) x=\(k)"
                         cellUI.addSubview(cellLabel)
                         kStart += labelWidth + labelMargin

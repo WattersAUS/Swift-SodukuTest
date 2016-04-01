@@ -11,6 +11,7 @@ import Foundation
 class SudokuBoard: NSObject, NSCopying {
 
     var cells: [[SudokuCell]] = []
+    var cellsCopy: [[SudokuCell]] = []
     var boardCoords: [(row: Int, column: Int)] = []
     var boardSize: Int = 0
     var stalls: Int = 0
@@ -100,35 +101,35 @@ class SudokuBoard: NSObject, NSCopying {
         return
     }
     
-    func dumpBoard() -> String {
-        if self.isBoardComplete() == false {
-            return "Board is not completed"
-        }
-        var dumpOfBoard: String = ""
-        for boardRow: Int in 0 ..< 3 {
-            dumpOfBoard += "\nBoard row: \(boardRow)\n"
-            for cellRow: Int in 0 ..< 3 {
-                var dumpOfCellRow: String = ""
-                for boardColumn: Int in 0 ..< 3 {
-                    let cellColumns: [Int] = self.cells[boardRow][boardColumn].getValuesFromRow(cellRow)
-                    dumpOfCellRow += " |"
-                    for i: Int in 0 ..< cellColumns.count {
-                        dumpOfCellRow += " \(cellColumns[i])"
-                    }
-                    dumpOfCellRow += " |"
-                }
-                dumpOfBoard += "\n" + dumpOfCellRow
-            }
-        }
-        return dumpOfBoard
-    }
+//    func dumpBoard() -> String {
+//        if self.isBoardComplete() == false {
+//            return "Board is not completed"
+//        }
+//        var dumpOfBoard: String = ""
+//        for boardRow: Int in 0 ..< 3 {
+//            dumpOfBoard += "\nBoard row: \(boardRow)\n"
+//            for cellRow: Int in 0 ..< 3 {
+//                var dumpOfCellRow: String = ""
+//                for boardColumn: Int in 0 ..< 3 {
+//                    let cellColumns: [Int] = self.cells[boardRow][boardColumn].getValuesFromRow(cellRow)
+//                    dumpOfCellRow += " |"
+//                    for i: Int in 0 ..< cellColumns.count {
+//                        dumpOfCellRow += " \(cellColumns[i])"
+//                    }
+//                    dumpOfCellRow += " |"
+//                }
+//                dumpOfBoard += "\n" + dumpOfCellRow
+//            }
+//        }
+//        return dumpOfBoard
+//    }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
         let copy = SudokuBoard(cellWidth: self.boardSize)
         for row: Int in 0 ..< boardSize {
-            var rowOfCells: [SudokuCell] = [self.cells[row][0]]
+            var rowOfCells: [SudokuCell] = [self.cells[row][0].copy() as! SudokuCell]
             for column: Int in 1 ..< boardSize {
-                rowOfCells.append(self.cells[row][column])
+                rowOfCells.append(self.cells[row][column].copy() as! SudokuCell)
             }
             copy.cells.append(rowOfCells)
         }

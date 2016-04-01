@@ -8,7 +8,7 @@
 
 import Foundation
 
-class SudokuCell {
+class SudokuCell: NSObject, NSCopying {
     
     private var isComplete:Bool = false
     private var numbers: [[Int]] = []
@@ -106,16 +106,6 @@ class SudokuCell {
         return (row, column)
     }
     
-    func seedInitialCell() {
-        self.clearCell()
-        for index: Int in 0 ..< self.cellCoords.count {
-            self.numbers[self.cellCoords[index].row][self.cellCoords[index].column] = self.getRandomUnUsedNumber()
-            self.setNumberAsUsed(self.numbers[self.cellCoords[index].row][self.cellCoords[index].column])
-        }
-        self.isComplete = true
-        return
-    }
-    
     func setNumberAtCellPosition(row: Int, column: Int, number: Int) -> Bool {
         if row < 0 || row >= self.dimension || column < 0 || column >= self.dimension || number < 1 || number > self.usedNumbers.count {
             return false
@@ -150,7 +140,6 @@ class SudokuCell {
     }
     
     func isNumberUsedInColumn(number: Int, column: Int) -> Bool {
-        
         if column >= 0 && column < self.dimension {
             for row: Int in 0 ..< self.dimension {
                 if number == self.numbers[row][column] {
@@ -163,6 +152,24 @@ class SudokuCell {
     
     func isCellComplete() -> Bool {
         return self.isComplete
+    }
+    
+    func copyWithZone(zone: NSZone) -> AnyObject {
+        let copy = SudokuCell(size: self.dimension)
+        copy.isComplete = self.isComplete
+        for row: Int in 0 ..< self.dimension {
+            for column: Int in 0 ..< self.dimension {
+                copy.numbers[row][column] = self.numbers[row][column]
+            }
+        }
+        for index: Int in 0 ..< self.usedNumbers.count {
+            copy.usedNumbers[index] = self.usedNumbers[index]
+        }
+        for index: Int in 0 ..< self.cellCoords.count {
+            copy.cellCoords[index] = self.cellCoords[index]
+        }
+        copy.dimension = self.dimension
+        return copy
     }
 
 }
