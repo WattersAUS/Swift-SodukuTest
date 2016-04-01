@@ -15,13 +15,13 @@ class ViewController: UIViewController {
     let kViewBoardMargin: CGFloat = 35.0
     var viewBoard: UIView!
     var viewCells: [[UIView]] = []
-    var sudokuLabels: [[[UILabel]]] = []
+    var viewLabels: [[[UILabel]]] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.setupInitialBoardDisplay()
-        board = SudokuBoard(cellWidth: 3)
+        board = SudokuBoard()
         board.buildBoard()
     }
 
@@ -29,6 +29,7 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
 //
 //    @IBAction func resetBoardButtonPressed(sender: UIButton) {
 //        board.clearBoard()
@@ -48,10 +49,10 @@ class ViewController: UIViewController {
         let cellWidth: CGFloat = (self.viewBoard.bounds.width - (4 * cellMargin)) / 3
         
         var yStart: CGFloat = cellMargin
-        for var y: Int = 0; y < 3; y++ {
+        for y: Int in 0 ..< 3 {
             var rowCells: [UIView] = []
             var xStart: CGFloat = cellMargin
-            for var x: Int = 0; x < 3; x++ {
+            for x: Int in 0 ..< 3 {
                 let cellUI: UIView = UIView(frame: CGRect(x: xStart, y: yStart, width: cellWidth, height: cellWidth))
                 cellUI.backgroundColor = UIColor.blueColor()
                 
@@ -59,12 +60,12 @@ class ViewController: UIViewController {
                 let labelWidth: CGFloat = (cellUI.bounds.width - (4 * labelMargin)) / 3
                 //var labelCells: [UILabel] = []
                 var jStart: CGFloat = 5.0
-                for var j: Int = 0; j < 3; j++ {
+                for j: Int in 0 ..< 3 {
                     var kStart: CGFloat = 5.0
-                    for var k: Int = 0; k < 3; k++ {
+                    for k: Int in 0 ..< 3 {
                         let cellLabel: UILabel = UILabel(frame: CGRect(x: kStart, y: jStart, width: labelWidth, height: labelWidth))
                         cellLabel.backgroundColor = UIColor.redColor()
-                        // add label to the view to be done here
+                        cellLabel.text = "y=\(j) x=\(k)"
                         cellUI.addSubview(cellLabel)
                         kStart += labelWidth + labelMargin
                     }

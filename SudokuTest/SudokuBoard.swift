@@ -15,15 +15,15 @@ class SudokuBoard: NSObject, NSCopying {
     var boardSize: Int = 0
     var stalls: Int = 0
     
-    init (cellWidth: Int) {
+    init (cellWidth: Int = 3) {
         super.init()
         self.boardSize = cellWidth
-        if self.boardSize != 3 && self.boardSize != 4 {
+        if self.boardSize != 3 {
             self.boardSize = 3
         }
-        for var row: Int = 0; row < boardSize; row++ {
+        for row: Int in 0 ..< boardSize {
             var rowOfCells: [SudokuCell] = [SudokuCell(size: boardSize)]
-            for var column: Int = 0; column < boardSize; column++ {
+            for column: Int in 0 ..< boardSize {
                 self.boardCoords.append((row, column))
                 if column > 0 {
                     rowOfCells.append(SudokuCell(size: boardSize))
@@ -34,14 +34,14 @@ class SudokuBoard: NSObject, NSCopying {
     }
     
     func clearBoard() {
-        for var index: Int = 0; index < self.boardCoords.count; index++ {
+        for index: Int in 0 ..< self.boardCoords.count {
             self.cells[self.boardCoords[index].row][self.boardCoords[index].column].clearCell()
         }
         return
     }
     
     func isBoardComplete() -> Bool {
-        for var index: Int = 0; index < self.boardCoords.count; index++ {
+        for index: Int in 0 ..< self.boardCoords.count {
             if self.cells[self.boardCoords[index].row][self.boardCoords[index].column].isCellComplete() == false {
                 return false
             }
@@ -50,12 +50,12 @@ class SudokuBoard: NSObject, NSCopying {
     }
 
     func checkNumberValidInPosition(cellRow: Int, cellColumn: Int, rowInCell: Int, columnInCell: Int, numberToCheck: Int) -> Bool {
-        for var row: Int = 0; row < cellRow; row++ {
+        for row: Int in 0 ..< cellRow {
             if self.cells[row][cellColumn].isNumberUsedInColumn(numberToCheck, column: columnInCell) == true {
                 return false
             }
         }
-        for var column: Int = 0; column < cellColumn; column++ {
+        for column: Int in 0 ..< cellColumn {
             if self.cells[cellRow][column].isNumberUsedInRow(numberToCheck, row: rowInCell) == true {
                 return false
             }
@@ -88,10 +88,10 @@ class SudokuBoard: NSObject, NSCopying {
         self.stalls = 0
         while (self.isBoardComplete() == false) {
             if buildCell(self.boardCoords[index].row, column: self.boardCoords[index].column) == true {
-                index++
+                index += 1
             } else {
-                ++self.stalls
-                for var i: Int = index; i >= 0; i-- {
+                self.stalls += 1
+                for i: Int in 0 ..< index {
                     self.cells[self.boardCoords[i].row][self.boardCoords[i].column].clearCell()
                 }
                 index = 0
@@ -105,14 +105,14 @@ class SudokuBoard: NSObject, NSCopying {
             return "Board is not completed"
         }
         var dumpOfBoard: String = ""
-        for var boardRow: Int = 0; boardRow < 3; boardRow++ {
+        for boardRow: Int in 0 ..< 3 {
             dumpOfBoard += "\nBoard row: \(boardRow)\n"
-            for var cellRow: Int = 0; cellRow < 3; cellRow++ {
+            for cellRow: Int in 0 ..< 3 {
                 var dumpOfCellRow: String = ""
-                for var boardColumn: Int = 0; boardColumn < 3; boardColumn++ {
+                for boardColumn: Int in 0 ..< 3 {
                     let cellColumns: [Int] = self.cells[boardRow][boardColumn].getValuesFromRow(cellRow)
                     dumpOfCellRow += " |"
-                    for var i: Int = 0; i < cellColumns.count; i++ {
+                    for i: Int in 0 ..< cellColumns.count {
                         dumpOfCellRow += " \(cellColumns[i])"
                     }
                     dumpOfCellRow += " |"
@@ -125,14 +125,14 @@ class SudokuBoard: NSObject, NSCopying {
     
     func copyWithZone(zone: NSZone) -> AnyObject {
         let copy = SudokuBoard(cellWidth: self.boardSize)
-        for var row: Int = 0; row < boardSize; row++ {
+        for row: Int in 0 ..< boardSize {
             var rowOfCells: [SudokuCell] = [self.cells[row][0]]
-            for var column: Int = 1; column < boardSize; column++ {
+            for column: Int in 1 ..< boardSize {
                 rowOfCells.append(self.cells[row][column])
             }
             copy.cells.append(rowOfCells)
         }
-        for var index: Int = 0; index < self.boardCoords.count; index++ {
+        for index: Int in 0 ..< self.boardCoords.count {
             copy.boardCoords.append(self.boardCoords[index])
         }
         copy.boardSize = self.boardSize

@@ -16,14 +16,14 @@ class SudokuCell {
     private var cellCoords: [(row: Int, column: Int)] = []
     private var dimension: Int = 0
 
-    init (size: Int) {
+    init (size: Int = 3) {
         self.dimension = size
-        if self.dimension != 3 && self.dimension != 4 {
+        if self.dimension != 3 {
             self.dimension = 3
         }
-        for var row: Int = 0; row < self.dimension; row++ {
+        for row: Int in 0 ..< self.dimension {
             var rowOfNumbers: [Int] = [ 0 ]
-            for var column: Int = 0; column < self.dimension; column++ {
+            for column: Int in 0 ..< self.dimension {
                 cellCoords.append((row, column))
                 if column > 0 {
                     rowOfNumbers.append(0)
@@ -31,7 +31,7 @@ class SudokuCell {
             }
             numbers.append(rowOfNumbers)
         }
-        for var loop: Int = 0; loop < (self.dimension * self.dimension); loop++ {
+        for _: Int in 0 ..< (self.dimension * self.dimension) {
             self.usedNumbers.append(0)
         }
         return
@@ -39,7 +39,7 @@ class SudokuCell {
 
     // private functions
     private func resetCellUsage() {
-        for var index:Int = 0; index < self.usedNumbers.count; index++ {
+        for index: Int in 0 ..< self.usedNumbers.count {
             self.usedNumbers[index] = 0
         }
         return
@@ -47,7 +47,7 @@ class SudokuCell {
     
     private func getArrayOfNumberUsage() -> [Int] {
         var values: [Int] = []
-        for var index = 0; index < self.usedNumbers.count; index++ {
+        for index: Int in 0 ..< self.usedNumbers.count {
             values.append(self.usedNumbers[index])
         }
         return values
@@ -63,7 +63,7 @@ class SudokuCell {
     
     private func setCellCompleteIfRequired() -> Bool {
         var completed = true
-        for var index = 0; index < self.usedNumbers.count; index++ {
+        for index: Int in 0 ..< self.usedNumbers.count {
             if self.usedNumbers[index] == 0 {
                 completed = false
             }
@@ -74,7 +74,7 @@ class SudokuCell {
     
     //public functions
     func clearCell() {
-        for var index: Int = 0; index < self.cellCoords.count; index++ {
+        for index: Int in 0 ..< self.cellCoords.count {
             self.numbers[self.cellCoords[index].row][self.cellCoords[index].column] = 0
         }
         self.resetCellUsage()
@@ -85,7 +85,7 @@ class SudokuCell {
     func getRandomUnUsedNumber() -> Int {
         let unUsedValues: [Int] = self.getArrayOfNumberUsage()
         var useTheseValues: [Int] = []
-        for var index = 0; index < unUsedValues.count; index++ {
+        for index: Int in 0 ..< self.usedNumbers.count {
             if unUsedValues[index] == 0 {
                 useTheseValues.append(index + 1)
             }
@@ -108,7 +108,7 @@ class SudokuCell {
     
     func seedInitialCell() {
         self.clearCell()
-        for var index: Int = 0; index < self.cellCoords.count; index++ {
+        for index: Int in 0 ..< self.cellCoords.count {
             self.numbers[self.cellCoords[index].row][self.cellCoords[index].column] = self.getRandomUnUsedNumber()
             self.setNumberAsUsed(self.numbers[self.cellCoords[index].row][self.cellCoords[index].column])
         }
@@ -130,25 +130,32 @@ class SudokuCell {
     
     func getValuesFromRow(row: Int) -> [Int] {
         var values: [Int] = []
-        for var column = 0; column < self.dimension && row >= 0 && row < self.dimension; column++ {
-            values.append(self.numbers[row][column])
+        if row >= 0 && row < self.dimension {
+            for column: Int in 0 ..< self.dimension {
+                values.append(self.numbers[row][column])
+            }
         }
         return values
     }
     
     func isNumberUsedInRow(number: Int, row: Int) -> Bool {
-        for var column = 0; column < self.dimension && row >= 0 && row < self.dimension; column++ {
-            if number == self.numbers[row][column] {
-                return true
+        if row >= 0 && row < self.dimension {
+            for column: Int in 0 ..< self.dimension {
+                if number == self.numbers[row][column] {
+                    return true
+                }
             }
         }
         return false
     }
     
     func isNumberUsedInColumn(number: Int, column: Int) -> Bool {
-        for var row = 0; row < self.dimension && column >= 0 && column < self.dimension; row++ {
-            if number == self.numbers[row][column] {
-                return true
+        
+        if column >= 0 && column < self.dimension {
+            for row: Int in 0 ..< self.dimension {
+                if number == self.numbers[row][column] {
+                    return true
+                }
             }
         }
         return false
@@ -157,11 +164,5 @@ class SudokuCell {
     func isCellComplete() -> Bool {
         return self.isComplete
     }
-    
-//    func printCell() {
-//        for var index: Int = 0; index < self.cellCoords.count; index++ {
-//            print("row: \(self.cellCoords[index].row), column: \(self.cellCoords[index].column), value: \(self.numbers[self.cellCoords[index].row][self.cellCoords[index].column])")
-//        }
-//        return
-//    }
+
 }
