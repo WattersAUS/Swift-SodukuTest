@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var board: GameBoard!
+    var sudokuBoard: GameBoard!
     let kViewStatusBarHeight: CGFloat = 5.0
     let kViewBoardMargin: CGFloat = 35.0
     var viewBoard: UIView!
@@ -20,9 +20,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        board = GameBoard()
-        board.buildSolution()
-        print(board.dumpBoard())
+        sudokuBoard = GameBoard()
+        sudokuBoard.buildSolution()
+        print(sudokuBoard.dumpBoard())
+        sudokuBoard.buildGame()
         self.setupInitialBoardDisplay()
     }
 
@@ -65,7 +66,7 @@ class ViewController: UIViewController {
                     for k: Int in 0 ..< 3 {
                         let cellLabel: UILabel = UILabel(frame: CGRect(x: kStart, y: jStart, width: labelWidth, height: labelWidth))
                         cellLabel.backgroundColor = UIColor.redColor()
-                        cellLabel.text = "\(board.getNumberFromBoard(y, boardColumn: x, cellRow: j, cellColumn: k))"
+                        cellLabel.text = "\(sudokuBoard.getNumberFromGameBoard(y, boardColumn: x, cellRow: j, cellColumn: k))"
                         cellLabel.font = UIFont(name: "MarkerFelt-Wide", size: 40)
                         cellLabel.textAlignment = NSTextAlignment.Center
                         cellUI.addSubview(cellLabel)

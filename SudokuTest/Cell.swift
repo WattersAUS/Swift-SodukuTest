@@ -65,6 +65,14 @@ class Cell: NSObject, NSCopying {
         return numberUsed
     }
     
+    private func setNumberAsUnUsed(numberUsed: Int) {
+        if numberUsed < 1 || numberUsed > self.numbersUsed.count {
+            return
+        }
+        self.numbersUsed[numberUsed - 1] = 0
+        return
+    }
+
     private func checkForCellCompleted() -> Bool {
         var completed = true
         for index: Int in 0 ..< self.numbersUsed.count {
@@ -127,6 +135,19 @@ class Cell: NSObject, NSCopying {
             return 0
         }
         return self.cellNumbers[row][column]
+    }
+    
+    func clearNumberAtCellPosition(row: Int, column: Int) {
+        if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns {
+            return
+        }
+        if self.cellNumbers[row][column] = 0 {
+            return
+        }
+        self.setNumberAsUnUsed(self.cellNumbers[row][column])
+        self.cellNumbers[row][column] = 0
+        self.cellCompleted = false
+        return
     }
     
     func getValuesFromRow(row: Int) -> [Int] {

@@ -10,19 +10,28 @@ import Foundation
 
 class GameBoard: NSObject, NSCopying {
     
-    var cells: [[Cell]] = []
-    var boardCoordinates: [(row: Int, column: Int)] = []
-    var boardRows: Int = 0
-    var boardColumns: Int = 0
-    var stalls: Int = 0
+    private var solutionCells: [[Cell]] = []
+    private var boardCoordinates: [(row: Int, column: Int)] = []
+    private var boardRows: Int = 0
+    private var boardColumns: Int = 0
+    private var difficulty: Int = 0
+    private var stalls: Int = 0
+
+    // used in conjunction with gameCells to show how many numbers to remove from the cells
+    private var removeFromCells: [[Int]] = []
+    var gameCells: [[Cell]] = []
     
-    init (size: Int = 3) {
+    init (size: Int = 3, setDifficulty: Int = 6) {
         super.init()
         self.boardColumns = size
         if self.boardColumns != 3 {
             self.boardColumns = 3
         }
         self.boardRows = self.boardColumns
+        self.difficulty = setDifficulty
+        if self.difficulty < 0 || self.difficulty > 9 {
+            self.difficulty = 6
+        }
         for row: Int in 0 ..< boardRows {
             var rowOfCells: [Cell] = [Cell(size: self.boardColumns)]
             for column: Int in 0 ..< boardColumns {
@@ -31,19 +40,19 @@ class GameBoard: NSObject, NSCopying {
                     rowOfCells.append(Cell(size: self.boardColumns))
                 }
             }
-            self.cells.append(rowOfCells)
+            self.solutionCells.append(rowOfCells)
         }
     }
 
     // private functions
     private func isNumberLegalInPosition(cellRow: Int, cellColumn: Int, rowInCell: Int, columnInCell: Int, number: Int) -> Bool {
         for row: Int in 0 ..< cellRow {
-            if self.cells[row][cellColumn].isNumberUsedInColumn(number, column: columnInCell) == true {
+            if self.solutionCells[row][cellColumn].isNumberUsedInColumn(number, column: columnInCell) == true {
                 return false
             }
         }
         for column: Int in 0 ..< cellColumn {
-            if self.cells[cellRow][column].isNumberUsedInRow(number, row: rowInCell) == true {
+            if self.solutionCells[cellRow][column].isNumberUsedInRow(number, row: rowInCell) == true {
                 return false
             }
         }
@@ -52,35 +61,46 @@ class GameBoard: NSObject, NSCopying {
 
     private func buildCell(row: Int, column: Int) -> Bool {
         var stalled: Int = 0
-        while self.cells[row][column].isCellCompleted() == false {
+        while self.solutionCells[row][column].isCellCompleted() == false {
             // get an unused row/cell location and an unused number
-            let unUsedPosition: (unUsedRow: Int, unUsedColumn: Int) = self.cells[row][column].getRandomUnUsedPosition()
-            let unUsedNumber: Int = self.cells[row][column].getRandomUnUsedNumber()
-            // check if the unused number can exist in that location by checking adjacent cells
+            let unUsedPosition: (unUsedRow: Int, unUsedColumn: Int) = self.solutionCells[row][column].getRandomUnUsedPosition()
+            let unUsedNumber: Int = self.solutionCells[row][column].getRandomUnUsedNumber()
+            // check if the unused number can exist in that location by checking adjacent solutionCells
             if isNumberLegalInPosition(row, cellColumn: column, rowInCell: unUsedPosition.unUsedRow, columnInCell: unUsedPosition.unUsedColumn, number: unUsedNumber) == true {
-                self.cells[row][column].setNumberAtCellPosition(unUsedPosition.unUsedRow, column: unUsedPosition.unUsedColumn, number: unUsedNumber)
+                self.solutionCells[row][column].setNumberAtCellPosition(unUsedPosition.unUsedRow, column: unUsedPosition.unUsedColumn, number: unUsedNumber)
                 stalled = 0
             } else {
                 stalled += 1
-                if stalled > 32 {
+                if stalled > 100 {
                     return false
                 }
             }
         }
         return true
     }
+    
+    private func copyCompletedCellsToGameCells() {
+        for row: Int in 0 ..< self.boardRows {
+            var rowOfCells: [Cell] = [self.solutionCells[row][0].copy() as! Cell]
+            for column: Int in 1 ..< self.boardColumns {
+                rowOfCells.append(self.solutionCells[row][column].copy() as! Cell)
+            }
+            self.gameCells.append(rowOfCells)
+        }
+        return
+    }
 
     // public functions
     func clearBoard() {
         for index: Int in 0 ..< self.boardCoordinates.count {
-            self.cells[self.boardCoordinates[index].row][self.boardCoordinates[index].column].clearCell()
+            self.solutionCells[self.boardCoordinates[index].row][self.boardCoordinates[index].column].clearCell()
         }
         return
     }
     
     func isBoardCompleted() -> Bool {
         for index: Int in 0 ..< self.boardCoordinates.count {
-            if self.cells[self.boardCoordinates[index].row][self.boardCoordinates[index].column].isCellCompleted() == false {
+            if self.solutionCells[self.boardCoordinates[index].row][self.boardCoordinates[index].column].isCellCompleted() == false {
                 return false
             }
         }
@@ -98,13 +118,21 @@ class GameBoard: NSObject, NSCopying {
                 self.stalls += 1
                 var i: Int = index
                 while i > 0 {
-                    self.cells[self.boardCoordinates[i].row][self.boardCoordinates[i].column].clearCell()
+                    self.solutionCells[self.boardCoordinates[i].row][self.boardCoordinates[i].column].clearCell()
+                    print("Stalled, reseting cell at (\(self.boardCoordinates[i].row),\(self.boardCoordinates[i].column))")
                     i -= 1
                 }
-                print("Stalled, reseting")
                 index = 0
             }
         }
+        return
+    }
+    
+    func buildGame() {
+        self.gameCells.removeAll()
+        self.copyCompletedCellsToGameCells()
+        // using the difficulty determine how many numbers to clear from each cell
+        
         return
     }
     
@@ -118,7 +146,7 @@ class GameBoard: NSObject, NSCopying {
             for cellRow: Int in 0 ..< 3 {
                 var dumpOfCellRow: String = ""
                 for boardColumn: Int in 0 ..< 3 {
-                    let cellColumns: [Int] = self.cells[boardRow][boardColumn].getValuesFromRow(cellRow)
+                    let cellColumns: [Int] = self.solutionCells[boardRow][boardColumn].getValuesFromRow(cellRow)
                     dumpOfCellRow += " |"
                     for i: Int in 0 ..< cellColumns.count {
                         dumpOfCellRow += " \(cellColumns[i])"
@@ -132,24 +160,28 @@ class GameBoard: NSObject, NSCopying {
         return dumpOfBoard
     }
     
-    func getNumberFromBoard(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) -> Int {
+    func getNumberFromGameBoard(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) -> Int {
         if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
             return 0
         }
-        if cellRow < 0 || cellRow >= self.cells[boardRow][boardColumn].cellDepth() || cellColumn < 0 || cellColumn >= self.cells[boardRow][boardColumn].cellWidth() {
+        if cellRow < 0 || cellRow >= self.gameCells[boardRow][boardColumn].cellDepth() || cellColumn < 0 || cellColumn >= self.gameCells[boardRow][boardColumn].cellWidth() {
             return 0
         }
-        return self.cells[boardRow][boardColumn].getNumberAtCellPosition(cellRow, column: cellColumn)
+        return self.gameCells[boardRow][boardColumn].getNumberAtCellPosition(cellRow, column: cellColumn)
+    }
+    
+    func getGameDifficulty() -> Int {
+        return self.difficulty
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
         let copy = GameBoard(size: self.boardColumns)
         for row: Int in 0 ..< self.boardRows {
-            var rowOfCells: [Cell] = [self.cells[row][0].copy() as! Cell]
+            var rowOfCells: [Cell] = [self.solutionCells[row][0].copy() as! Cell]
             for column: Int in 1 ..< self.boardColumns {
-                rowOfCells.append(self.cells[row][column].copy() as! Cell)
+                rowOfCells.append(self.solutionCells[row][column].copy() as! Cell)
             }
-            copy.cells.append(rowOfCells)
+            copy.solutionCells.append(rowOfCells)
         }
         for index: Int in 0 ..< self.boardCoordinates.count {
             copy.boardCoordinates.append(self.boardCoordinates[index])
