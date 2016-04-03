@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     let kViewBoardMargin: CGFloat = 35.0
     var viewBoard: UIView!
     var viewCells: [[UIView]] = []
-    var viewLabels: [[[UILabel]]] = []
+    var viewLabels: [[UILabel]] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,8 +42,8 @@ class ViewController: UIViewController {
 //
     
     func setupInitialBoardDisplay() {
-        self.view.backgroundColor = UIColor.whiteColor()
-        self.viewBoard = UIView(frame: CGRect(x: self.view.bounds.origin.x + self.kViewBoardMargin, y: self.view.bounds.origin.y + self.kViewBoardMargin + self.kViewStatusBarHeight, width: self.view.bounds.width - (2 * self.kViewBoardMargin), height: self.view.bounds.width - (2 * self.kViewBoardMargin)))
+        self.view.backgroundColor = UIColor.lightGrayColor()
+        self.viewBoard = UIView(frame: CGRect(x: self.view.bounds.origin.x + self.kViewBoardMargin, y: self.view.bounds.origin.y + self.kViewBoardMargin + self.kViewStatusBarHeight + 20, width: self.view.bounds.width - (2 * self.kViewBoardMargin), height: self.view.bounds.width - (2 * self.kViewBoardMargin)))
         self.viewBoard.backgroundColor = UIColor.blackColor()
         self.view.addSubview(self.viewBoard)
 
@@ -64,7 +64,13 @@ class ViewController: UIViewController {
                 for j: Int in 0 ..< 3 {
                     var kStart: CGFloat = 5.0
                     for k: Int in 0 ..< 3 {
-                        let cellLabel: UILabel = UILabel(frame: CGRect(x: kStart, y: jStart, width: labelWidth, height: labelWidth))
+
+                        
+                        
+                        
+                        
+                        let cellLabel: UILabel = UILabel()
+                        cellLabel.frame = CGRect(x: kStart, y: jStart, width: labelWidth, height: labelWidth)
                         let numberRetrieved: Int = sudokuBoard.getNumberFromGameBoard(y, boardColumn: x, cellRow: j, cellColumn: k)
                         if numberRetrieved == 0 {
                             cellLabel.text = ""
@@ -76,7 +82,13 @@ class ViewController: UIViewController {
                         cellLabel.font = UIFont(name: "MarkerFelt-Wide", size: 40)
                         cellLabel.textAlignment = NSTextAlignment.Center
                         cellUI.addSubview(cellLabel)
+
+                        
+                        
+                        
+                        
                         kStart += labelWidth + labelMargin
+
                     }
                     jStart += labelWidth + labelMargin
                 }

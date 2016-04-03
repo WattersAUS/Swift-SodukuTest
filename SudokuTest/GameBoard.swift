@@ -21,6 +21,8 @@ class GameBoard: NSObject, NSCopying {
     private var removeFromCells: [[Int]] = []
     var gameCells: [[Cell]] = []
     
+    // Labels used for display
+    
     init (size: Int = 3, setDifficulty: Int = 6) {
         super.init()
         self.boardColumns = size
