@@ -118,6 +118,33 @@ class Cell: NSObject, NSCopying {
         return (row, column)
     }
     
+    func getRandomUsedPosition() -> (usedRow: Int, usedColumn: Int) {
+        var used: Int = 0
+        for index: Int in 0 ..< self.cellCoordinates.count {
+            if self.cellNumbers[self.cellCoordinates[index].row][self.cellCoordinates[index].column] > 0 {
+                used = 1
+            }
+        }
+        if used == 0 {
+            return(-1 , -1)
+        }
+        var index: Int = Int(arc4random_uniform(UInt32(self.cellCoordinates.count)))
+        while self.cellNumbers[self.cellCoordinates[index].row][self.cellCoordinates[index].column] == 0 {
+            index = Int(arc4random_uniform(UInt32(self.cellCoordinates.count)))
+        }
+        return (self.cellCoordinates[index].row, self.cellCoordinates[index].column)
+    }
+    
+    func clearNumberAtCellPosition(row: Int, column: Int) {
+        if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns {
+            return
+        }
+        self.setNumberAsUnUsed(self.cellNumbers[row][column])
+        self.cellNumbers[row][column] = 0
+        self.cellCompleted = false
+        return
+    }
+    
     func setNumberAtCellPosition(row: Int, column: Int, number: Int) -> Bool {
         if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns || number < 1 || number > self.numbersUsed.count {
             return false
@@ -135,19 +162,6 @@ class Cell: NSObject, NSCopying {
             return 0
         }
         return self.cellNumbers[row][column]
-    }
-    
-    func clearNumberAtCellPosition(row: Int, column: Int) {
-        if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns {
-            return
-        }
-        if self.cellNumbers[row][column] = 0 {
-            return
-        }
-        self.setNumberAsUnUsed(self.cellNumbers[row][column])
-        self.cellNumbers[row][column] = 0
-        self.cellCompleted = false
-        return
     }
     
     func getValuesFromRow(row: Int) -> [Int] {

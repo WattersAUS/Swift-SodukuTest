@@ -131,8 +131,19 @@ class GameBoard: NSObject, NSCopying {
     func buildGame() {
         self.gameCells.removeAll()
         self.copyCompletedCellsToGameCells()
-        // using the difficulty determine how many numbers to clear from each cell
-        
+        for cellRowOfObj in self.gameCells {
+            for cellObj in cellRowOfObj {
+                // using the difficulty determine how many numbers to clear from each cell
+                var cellsToClear: Int = self.difficulty - Int(arc4random_uniform(UInt32(4))) + 2
+                while cellsToClear > 0 {
+                    let usedPosition: (usedRow: Int, usedColumn: Int) = cellObj.getRandomUsedPosition()
+                    if usedPosition.usedRow > -1 && usedPosition.usedColumn > -1 {
+                        cellObj.clearNumberAtCellPosition(usedPosition.usedRow, column: usedPosition.usedColumn)
+                    }
+                    cellsToClear -= 1
+                }
+            }
+        }
         return
     }
     

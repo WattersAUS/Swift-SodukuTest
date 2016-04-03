@@ -42,9 +42,9 @@ class ViewController: UIViewController {
 //
     
     func setupInitialBoardDisplay() {
-        self.view.backgroundColor = UIColor.blackColor()
+        self.view.backgroundColor = UIColor.whiteColor()
         self.viewBoard = UIView(frame: CGRect(x: self.view.bounds.origin.x + self.kViewBoardMargin, y: self.view.bounds.origin.y + self.kViewBoardMargin + self.kViewStatusBarHeight, width: self.view.bounds.width - (2 * self.kViewBoardMargin), height: self.view.bounds.width - (2 * self.kViewBoardMargin)))
-        self.viewBoard.backgroundColor = UIColor.whiteColor()
+        self.viewBoard.backgroundColor = UIColor.blackColor()
         self.view.addSubview(self.viewBoard)
 
         let cellMargin: CGFloat = 5.0
@@ -56,7 +56,7 @@ class ViewController: UIViewController {
             var xStart: CGFloat = cellMargin
             for x: Int in 0 ..< 3 {
                 let cellUI: UIView = UIView(frame: CGRect(x: xStart, y: yStart, width: cellWidth, height: cellWidth))
-                cellUI.backgroundColor = UIColor.blueColor()
+                cellUI.backgroundColor = UIColor.blackColor()
                 
                 let labelMargin: CGFloat = 5.0
                 let labelWidth: CGFloat = (cellUI.bounds.width - (4 * labelMargin)) / 3
@@ -65,8 +65,14 @@ class ViewController: UIViewController {
                     var kStart: CGFloat = 5.0
                     for k: Int in 0 ..< 3 {
                         let cellLabel: UILabel = UILabel(frame: CGRect(x: kStart, y: jStart, width: labelWidth, height: labelWidth))
-                        cellLabel.backgroundColor = UIColor.redColor()
-                        cellLabel.text = "\(sudokuBoard.getNumberFromGameBoard(y, boardColumn: x, cellRow: j, cellColumn: k))"
+                        let numberRetrieved: Int = sudokuBoard.getNumberFromGameBoard(y, boardColumn: x, cellRow: j, cellColumn: k)
+                        if numberRetrieved == 0 {
+                            cellLabel.text = ""
+                            cellLabel.backgroundColor = UIColor.whiteColor()
+                        } else {
+                            cellLabel.text = "\(numberRetrieved)"
+                            cellLabel.backgroundColor = UIColor.lightGrayColor()
+                        }
                         cellLabel.font = UIFont(name: "MarkerFelt-Wide", size: 40)
                         cellLabel.textAlignment = NSTextAlignment.Center
                         cellUI.addSubview(cellLabel)
