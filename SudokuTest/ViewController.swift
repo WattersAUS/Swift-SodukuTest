@@ -11,42 +11,40 @@ import UIKit
 class ViewController: UIViewController {
     
     var sudokuBoard: GameBoard!
+    var displayBoard: GameBoardLabels!
+    var debug: Int = 1
+    
+    var viewBoard: UIView!
     let kViewStatusBarHeight: CGFloat = 5.0
     let kViewBoardMargin: CGFloat = 35.0
-    var viewBoard: UIView!
-    var viewCells: [[UIView]] = []
-    var viewLabels: [[UILabel]] = []
     
+    var viewCells: [[UIView]] = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        sudokuBoard = GameBoard()
-        sudokuBoard.buildSolution()
-        print(sudokuBoard.dumpBoard())
-        sudokuBoard.buildGame()
-        self.setupInitialBoardDisplay()
+        self.sudokuBoard = GameBoard()
+        self.displayBoard = GameBoardLabels()
+        //self.buildSudoku()
+        self.initialBoardDisplay()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-//
-//    @IBAction func resetBoardButtonPressed(sender: UIButton) {
-//        board.clearBoard()
-//        board.buildBoard()
-//        let boardDump: String = board.dumpBoard()
-//        outputBoardMsgsTextField.text = boardDump
-//    }
-//
     
-    func setupInitialBoardDisplay() {
+    // build the initial board display, with all cells = 0 (ie blank)
+    func initialBoardDisplay() {
         self.view.backgroundColor = UIColor.lightGrayColor()
         self.viewBoard = UIView(frame: CGRect(x: self.view.bounds.origin.x + self.kViewBoardMargin, y: self.view.bounds.origin.y + self.kViewBoardMargin + self.kViewStatusBarHeight + 20, width: self.view.bounds.width - (2 * self.kViewBoardMargin), height: self.view.bounds.width - (2 * self.kViewBoardMargin)))
         self.viewBoard.backgroundColor = UIColor.blackColor()
         self.view.addSubview(self.viewBoard)
-
+        self.setupBoardContainerDisplay()
+        return
+    }
+    
+    func setupBoardContainerDisplay() {
         let cellMargin: CGFloat = 5.0
         let cellWidth: CGFloat = (self.viewBoard.bounds.width - (4 * cellMargin)) / 3
         
@@ -64,31 +62,12 @@ class ViewController: UIViewController {
                 for j: Int in 0 ..< 3 {
                     var kStart: CGFloat = 5.0
                     for k: Int in 0 ..< 3 {
-
-                        
-                        
-                        
-                        
-                        let cellLabel: UILabel = UILabel()
-                        cellLabel.frame = CGRect(x: kStart, y: jStart, width: labelWidth, height: labelWidth)
-                        let numberRetrieved: Int = sudokuBoard.getNumberFromGameBoard(y, boardColumn: x, cellRow: j, cellColumn: k)
-                        if numberRetrieved == 0 {
-                            cellLabel.text = ""
-                            cellLabel.backgroundColor = UIColor.whiteColor()
-                        } else {
-                            cellLabel.text = "\(numberRetrieved)"
-                            cellLabel.backgroundColor = UIColor.lightGrayColor()
-                        }
-                        cellLabel.font = UIFont(name: "MarkerFelt-Wide", size: 40)
-                        cellLabel.textAlignment = NSTextAlignment.Center
-                        cellUI.addSubview(cellLabel)
-
-                        
-                        
-                        
-                        
+                        let cellLabels: CellLabels = self.displayBoard.solutionLabels[y][x]
+                        let newLabel: UILabel = cellLabels.cellNumbers[j][k]
+                        newLabel.frame = CGRect(x: kStart, y: jStart, width: labelWidth, height: labelWidth)
+                        cellLabels.setLabelToNumber(j, column: k, number: 0)
+                        cellUI.addSubview(newLabel)
                         kStart += labelWidth + labelMargin
-
                     }
                     jStart += labelWidth + labelMargin
                 }
@@ -100,5 +79,42 @@ class ViewController: UIViewController {
             yStart += cellWidth + cellMargin
         }
     }
-}
+    
+    @IBAction func resetButtonPressed(sender: UIButton) {
+        self.buildSudoku()
+    }
+    
+    //
+    //    @IBAction func resetBoardButtonPressed(sender: UIButton) {
+    //        board.clearBoard()
+    //        board.buildBoard()
+    //        let boardDump: String = board.dumpBoard()
+    //        outputBoardMsgsTextField.text = boardDump
+    //    }
+    //
+    
+    func buildSudoku() {
+        sudokuBoard.clearBoard()
+        sudokuBoard.buildSolution()
+        if self.debug > 0 {
+            print(sudokuBoard.dumpBoard())
+        }
+        sudokuBoard.buildGame()
+        self.updateBoardDisplay()
+        return
+    }
+    
+    func updateBoardDisplay() {
+        for y: Int in 0 ..< 3 {
+            for x: Int in 0 ..< 3 {
+                for j: Int in 0 ..< 3 {
+                    for k: Int in 0 ..< 3 {
+                        let cellLabels: CellLabels = self.displayBoard.solutionLabels[y][x]
+                        cellLabels.setLabelToNumber(j, column: k, number: sudokuBoard.getNumberFromGameBoard(y, boardColumn: x, cellRow: j, cellColumn: k))
+                    }
+                }
+            }
+        }
+    }
 
+}

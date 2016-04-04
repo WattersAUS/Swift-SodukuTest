@@ -21,8 +21,6 @@ class GameBoard: NSObject, NSCopying {
     private var removeFromCells: [[Int]] = []
     var gameCells: [[Cell]] = []
     
-    // Labels used for display
-    
     init (size: Int = 3, setDifficulty: Int = 6) {
         super.init()
         self.boardColumns = size
@@ -34,7 +32,7 @@ class GameBoard: NSObject, NSCopying {
         if self.difficulty < 0 || self.difficulty > 9 {
             self.difficulty = 6
         }
-        for row: Int in 0 ..< boardRows {
+        for row: Int in 0 ..< self.boardRows {
             var rowOfCells: [Cell] = [Cell(size: self.boardColumns)]
             for column: Int in 0 ..< boardColumns {
                 self.boardCoordinates.append((row, column))

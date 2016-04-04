@@ -1,5 +1,5 @@
 //
-//  CellLabel.swift
+//  CellLabels.swift
 //  SudokuTest
 //
 //  Created by Graham Watson on 03/04/2016.
@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class CellLabel {
+class CellLabels {
     
     var cellNumbers: [[UILabel]] = []
     private var cellColumns: Int = 0
