@@ -21,7 +21,7 @@ class GameBoard: NSObject, NSCopying {
     private var removeFromCells: [[Int]] = []
     var gameCells: [[Cell]] = []
     
-    init (size: Int = 3, setDifficulty: Int = 6) {
+    init (size: Int = 3, setDifficulty: Int = 7) {
         super.init()
         self.boardColumns = size
         if self.boardColumns != 3 {
@@ -134,7 +134,7 @@ class GameBoard: NSObject, NSCopying {
         for cellRowOfObj in self.gameCells {
             for cellObj in cellRowOfObj {
                 // using the difficulty determine how many numbers to clear from each cell
-                var cellsToClear: Int = self.difficulty - Int(arc4random_uniform(UInt32(4))) + 2
+                var cellsToClear: Int = self.difficulty - Int(arc4random_uniform(UInt32(3))) + 1
                 while cellsToClear > 0 {
                     let usedPosition: (usedRow: Int, usedColumn: Int) = cellObj.getRandomUsedPosition()
                     if usedPosition.usedRow > -1 && usedPosition.usedColumn > -1 {
