@@ -13,6 +13,8 @@ class ViewController: UIViewController {
     var sudokuBoard: GameBoard!
     var displayBoard: GameBoardLabels!
     var debug: Int = 1
+    var boardDimensions: Int = 3
+    var gameDifficulty: Int = 7
     
     var viewBoard: UIView!
     let kViewStatusBarHeight: CGFloat = 5.0
@@ -23,8 +25,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.sudokuBoard = GameBoard()
-        self.displayBoard = GameBoardLabels()
+        self.sudokuBoard = GameBoard(size: boardDimensions, setDifficulty: self.gameDifficulty)
+        self.displayBoard = GameBoardLabels(size: boardDimensions)
         //self.buildSudoku()
         self.initialBoardDisplay()
     }
@@ -32,6 +34,10 @@ class ViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func resetButtonPressed(sender: UIButton) {
+        self.buildSudoku()
     }
     
     // build the initial board display, with all cells = 0 (ie blank)
@@ -50,19 +56,19 @@ class ViewController: UIViewController {
         let cellWidth: CGFloat = (self.viewBoard.bounds.width - (4 * cellMargin)) / 3
         
         var yStart: CGFloat = cellMargin
-        for y: Int in 0 ..< 3 {
+        for y: Int in 0 ..< self.boardDimensions {
             var rowCells: [UIView] = []
             var xStart: CGFloat = cellMargin
-            for x: Int in 0 ..< 3 {
+            for x: Int in 0 ..< self.boardDimensions {
                 let cellUI: UIView = UIView(frame: CGRect(x: xStart, y: yStart, width: cellWidth, height: cellWidth))
                 cellUI.backgroundColor = UIColor.blackColor()
                 
                 let labelMargin: CGFloat = 5.0
                 let labelWidth: CGFloat = (cellUI.bounds.width - (4 * labelMargin)) / 3
                 var jStart: CGFloat = 5.0
-                for j: Int in 0 ..< 3 {
+                for j: Int in 0 ..< self.boardDimensions {
                     var kStart: CGFloat = 5.0
-                    for k: Int in 0 ..< 3 {
+                    for k: Int in 0 ..< self.boardDimensions {
                         let cellLabels: CellLabels = self.displayBoard.solutionLabels[y][x]
                         let newLabel: UILabel = cellLabels.cellNumbers[j][k]
                         newLabel.frame = CGRect(x: kStart, y: jStart, width: labelWidth, height: labelWidth)
@@ -81,10 +87,6 @@ class ViewController: UIViewController {
         }
     }
     
-    @IBAction func resetButtonPressed(sender: UIButton) {
-        self.buildSudoku()
-    }
-    
     func buildSudoku() {
         sudokuBoard.clearBoard()
         sudokuBoard.buildSolution()
@@ -97,16 +99,17 @@ class ViewController: UIViewController {
     }
     
     func updateBoardDisplay() {
-        for y: Int in 0 ..< 3 {
-            for x: Int in 0 ..< 3 {
-                for j: Int in 0 ..< 3 {
-                    for k: Int in 0 ..< 3 {
-                        let cellLabels: CellLabels = self.displayBoard.solutionLabels[y][x]
+        for y: Int in 0 ..< self.displayBoard.boardRows {
+            for x: Int in 0 ..< self.displayBoard.boardColumns {
+                let cellLabels: CellLabels = self.displayBoard.solutionLabels[y][x]
+                for j: Int in 0 ..< cellLabels.cellRows {
+                    for k: Int in 0 ..< cellLabels.cellColumns {
                         cellLabels.setLabelToNumber(j, column: k, number: sudokuBoard.getNumberFromGameBoard(y, boardColumn: x, cellRow: j, cellColumn: k))
                     }
                 }
             }
         }
+        return
     }
 
     func initialiseUIViewToAcceptTouch(view: UIView) {
@@ -120,10 +123,30 @@ class ViewController: UIViewController {
 
     func detectedUIViewTapped(recognizer: UITapGestureRecognizer) {
         if(recognizer.state == UIGestureRecognizerState.Ended) {
-            let alertView = UIAlertController(title: "View touched", message: "row/column of cell to go here", preferredStyle: .Alert)
-            alertView.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
-            presentViewController(alertView, animated: true, completion: nil)
+            let labelPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) = self.getPositionOfLabelTapped(recognizer.locationInView(recognizer.view))
+            if labelPosition.boardColumn != -1 {
+                let alertView = UIAlertController(title: "View touched", message: "row/column of cell to go here", preferredStyle: .Alert)
+                alertView.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
+                presentViewController(alertView, animated: true, completion: nil)
+            }
         }
         return
+    }
+    
+    func getPositionOfLabelTapped(location: CGPoint) -> (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) {
+        for y: Int in 0 ..< self.displayBoard.boardRows {
+            for x: Int in 0 ..< self.displayBoard.boardColumns {
+                let cellLabels: CellLabels = self.displayBoard.solutionLabels[y][x]
+                for j: Int in 0 ..< cellLabels.cellRows {
+                    for k: Int in 0 ..< cellLabels.cellColumns {
+                        let cellLabel: UILabel = cellLabels.cellNumbers[j][k]
+                        if cellLabel.frame.contains(location) == true {
+                            return(y, x, j, k)
+                        }
+                    }
+                }
+            }
+        }
+        return(-1, -1, -1, -1)
     }
 }

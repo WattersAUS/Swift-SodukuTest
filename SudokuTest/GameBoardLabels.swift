@@ -15,7 +15,7 @@ class GameBoardLabels {
     var boardRows: Int = 0
     var boardColumns: Int = 0
     
-    init (size: Int = 3, setDifficulty: Int = 6) {
+    init (size: Int = 3) {
         self.boardColumns = size
         if self.boardColumns != 3 {
             self.boardColumns = 3

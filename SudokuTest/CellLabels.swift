@@ -12,8 +12,8 @@ import UIKit
 class CellLabels {
     
     var cellNumbers: [[UILabel]] = []
-    private var cellColumns: Int = 0
-    private var cellRows: Int = 0
+    var cellColumns: Int = 0
+    var cellRows: Int = 0
     
     init (size: Int = 3) {
         self.cellColumns = size
