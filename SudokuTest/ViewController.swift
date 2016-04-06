@@ -41,7 +41,7 @@ class ViewController: UIViewController {
         self.viewBoard.backgroundColor = UIColor.blackColor()
         self.view.addSubview(self.viewBoard)
         self.setupBoardContainerDisplay()
-        self.initialiseLabelsToAcceptTouch()
+        self.initialiseUIViewToAcceptTouch(self.viewBoard)
         return
     }
     
@@ -85,15 +85,6 @@ class ViewController: UIViewController {
         self.buildSudoku()
     }
     
-    //
-    //    @IBAction func resetBoardButtonPressed(sender: UIButton) {
-    //        board.clearBoard()
-    //        board.buildBoard()
-    //        let boardDump: String = board.dumpBoard()
-    //        outputBoardMsgsTextField.text = boardDump
-    //    }
-    //
-    
     func buildSudoku() {
         sudokuBoard.clearBoard()
         sudokuBoard.buildSolution()
@@ -117,37 +108,21 @@ class ViewController: UIViewController {
             }
         }
     }
-    
-    func initialiseLabelsToAcceptTouch() {
-        for y: Int in 0 ..< 3 {
-            for x: Int in 0 ..< 3 {
-                for j: Int in 0 ..< 3 {
-                    for k: Int in 0 ..< 3 {
-                        let cellLabels: CellLabels = self.displayBoard.solutionLabels[y][x]
-                        let label: UILabel = cellLabels.cellNumbers[j][k]
-                        let singleTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.detectedUILabelTapped(_:)))
-                        singleTap.numberOfTapsRequired = 1
-                        singleTap.numberOfTouchesRequired = 1
-                        label.addGestureRecognizer(singleTap)
-                        label.userInteractionEnabled = true
-                    }
-                }
-            }
-        }
+
+    func initialiseUIViewToAcceptTouch(view: UIView) {
+        let singleTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.detectedUIViewTapped(_:)))
+        singleTap.numberOfTapsRequired = 1
+        singleTap.numberOfTouchesRequired = 1
+        view.addGestureRecognizer(singleTap)
+        view.userInteractionEnabled = true
+        return
     }
-    
-    func detectedUILabelTapped(recognizer: UITapGestureRecognizer) {
+
+    func detectedUIViewTapped(recognizer: UITapGestureRecognizer) {
         if(recognizer.state == UIGestureRecognizerState.Ended) {
-//            let alertView = UIAlertController(title: "Cell touched", message: "row/column to go here", preferredStyle: .Alert)
-//            alertView.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
-//            presentViewController(alertView, animated: true, completion: nil)
-            if recognizer.view?.backgroundColor != UIColor.lightGrayColor() {
-                if recognizer.view?.backgroundColor == UIColor.blueColor() {
-                    recognizer.view?.backgroundColor = UIColor.whiteColor()
-                } else {
-                    recognizer.view?.backgroundColor = UIColor.blueColor()
-                }
-            }
+            let alertView = UIAlertController(title: "View touched", message: "row/column of cell to go here", preferredStyle: .Alert)
+            alertView.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
+            presentViewController(alertView, animated: true, completion: nil)
         }
         return
     }
