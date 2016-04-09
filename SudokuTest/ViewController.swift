@@ -43,7 +43,7 @@ class ViewController: UIViewController {
     func initialBoardDisplay() {
         self.view.backgroundColor = UIColor.lightGrayColor()
         self.viewBoard = UIView(frame: CGRect(x: self.view.bounds.origin.x + self.kViewBoardMargin, y: self.view.bounds.origin.y + self.kViewBoardMargin + self.kViewStatusBarHeight + 20, width: self.view.bounds.width - (2 * self.kViewBoardMargin), height: self.view.bounds.width - (2 * self.kViewBoardMargin)))
-        self.viewBoard.backgroundColor = UIColor.brownColor()
+        self.viewBoard.backgroundColor = UIColor.blackColor()
         self.view.addSubview(self.viewBoard)
         self.setupBoardContainerDisplay()
         self.initialiseUIViewToAcceptTouch(self.viewBoard)
@@ -76,15 +76,15 @@ class ViewController: UIViewController {
     // draw out the labels onto the board
     func drawLabelsOnBoard(boardRows: Int, boardColumns: Int, cellMargin: CGFloat) {
         let cellWidth: CGFloat = self.calculateCellWidth(boardColumns, margin: cellMargin)
-        var yStart: CGFloat = 0
+        let labelWidth: CGFloat = calculateLabelWidth(boardColumns, cellWidth: cellWidth, margin: cellMargin)
+        var yStart: CGFloat = cellMargin * 1.5
         for y: Int in 0 ..< boardRows {
-            var xStart: CGFloat = 0
+            var xStart: CGFloat = cellMargin * 1.5
             for x: Int in 0 ..< boardColumns {
                 let labelMargin: CGFloat = cellMargin
-                let labelWidth: CGFloat = calculateLabelWidth(boardColumns * boardColumns, margin: cellMargin)
-                var jStart: CGFloat = cellMargin
+                var jStart: CGFloat = 0
                 for j: Int in 0 ..< boardRows {
-                    var kStart: CGFloat = cellMargin
+                    var kStart: CGFloat = 0
                     for k: Int in 0 ..< boardColumns {
                         let cellLabels: CellLabels = self.displayBoard.solutionLabels[y][x]
                         let newLabel: UILabel = cellLabels.cellNumbers[j][k]
@@ -108,12 +108,10 @@ class ViewController: UIViewController {
         return cellWidth / CGFloat(boardColumns)
     }
     
-    func calculateLabelWidth(labelColumns: Int, margin: CGFloat) -> CGFloat {
-        var labelWidth: CGFloat = self.viewBoard.bounds.width
-        // number of columns on board define number of margins board is drawn with
-        let marginsWidth: CGFloat = CGFloat(labelColumns + 1) * margin
-        labelWidth -= marginsWidth
-        return labelWidth / CGFloat(labelColumns)
+    func calculateLabelWidth(labelColumns: Int, cellWidth: CGFloat, margin: CGFloat) -> CGFloat {
+        // number of columns on board define number of margins cell is drawn with
+        let marginsWidth: CGFloat = CGFloat(labelColumns) * margin
+        return (cellWidth - marginsWidth) / CGFloat(labelColumns)
     }
     
     func buildSudoku() {
@@ -153,7 +151,8 @@ class ViewController: UIViewController {
         if(recognizer.state == UIGestureRecognizerState.Ended) {
             let labelPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) = self.getPositionOfLabelTapped(recognizer.locationInView(recognizer.view))
             if labelPosition.boardColumn != -1 {
-                let alertView = UIAlertController(title: "View touched", message: "row/column of cell to go here", preferredStyle: .Alert)
+                let cellPosn: String = "y=\(labelPosition.boardRow) x=\(labelPosition.boardColumn) j=\(labelPosition.cellRow) k=\(labelPosition.cellColumn)"
+                let alertView = UIAlertController(title: "View touched", message: cellPosn, preferredStyle: .Alert)
                 alertView.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
                 presentViewController(alertView, animated: true, completion: nil)
             }
@@ -168,7 +167,6 @@ class ViewController: UIViewController {
                 for j: Int in 0 ..< cellLabels.cellRows {
                     for k: Int in 0 ..< cellLabels.cellColumns {
                         let cellLabel: UILabel = cellLabels.cellNumbers[j][k]
-                        print("y=\(y) x=\(x) j=\(j) k=\(k)")
                         if self.isTapWithinLabel(location, label: cellLabel) == true {
                             return(y, x, j, k)
                         }
