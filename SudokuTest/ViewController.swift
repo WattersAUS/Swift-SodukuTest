@@ -19,15 +19,13 @@ class ViewController: UIViewController {
     var viewBoard: UIView!
     let kViewStatusBarHeight: CGFloat = 5.0
     let kViewBoardMargin: CGFloat = 35.0
+    let kCellMargin: CGFloat = 5.0
     
-    var viewCells: [[UIView]] = []
-
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.sudokuBoard = GameBoard(size: boardDimensions, setDifficulty: self.gameDifficulty)
         self.displayBoard = GameBoardLabels(size: boardDimensions)
-        //self.buildSudoku()
         self.initialBoardDisplay()
     }
 
@@ -38,13 +36,14 @@ class ViewController: UIViewController {
     
     @IBAction func resetButtonPressed(sender: UIButton) {
         self.buildSudoku()
+        self.updateBoardDisplay()
     }
     
     // build the initial board display, with all cells = 0 (ie blank)
     func initialBoardDisplay() {
         self.view.backgroundColor = UIColor.lightGrayColor()
         self.viewBoard = UIView(frame: CGRect(x: self.view.bounds.origin.x + self.kViewBoardMargin, y: self.view.bounds.origin.y + self.kViewBoardMargin + self.kViewStatusBarHeight + 20, width: self.view.bounds.width - (2 * self.kViewBoardMargin), height: self.view.bounds.width - (2 * self.kViewBoardMargin)))
-        self.viewBoard.backgroundColor = UIColor.blackColor()
+        self.viewBoard.backgroundColor = UIColor.brownColor()
         self.view.addSubview(self.viewBoard)
         self.setupBoardContainerDisplay()
         self.initialiseUIViewToAcceptTouch(self.viewBoard)
@@ -52,39 +51,69 @@ class ViewController: UIViewController {
     }
     
     func setupBoardContainerDisplay() {
-        let cellMargin: CGFloat = 5.0
-        let cellWidth: CGFloat = (self.viewBoard.bounds.width - (4 * cellMargin)) / 3
-        
+        self.buildBoardBackground(self.boardDimensions, boardColumns: self.boardDimensions, cellMargin: self.kCellMargin)
+        self.drawLabelsOnBoard(self.boardDimensions, boardColumns: self.boardDimensions, cellMargin: self.kCellMargin)
+        return
+    }
+
+    // draw the grid background, into each we will draw a grid of labels
+    func buildBoardBackground(boardRows: Int, boardColumns: Int, cellMargin: CGFloat) {
+        let cellWidth: CGFloat = self.calculateCellWidth(boardColumns, margin: cellMargin)
         var yStart: CGFloat = cellMargin
-        for y: Int in 0 ..< self.boardDimensions {
-            var rowCells: [UIView] = []
+        for _: Int in 0 ..< boardRows {
             var xStart: CGFloat = cellMargin
-            for x: Int in 0 ..< self.boardDimensions {
+            for _: Int in 0 ..< boardColumns {
                 let cellUI: UIView = UIView(frame: CGRect(x: xStart, y: yStart, width: cellWidth, height: cellWidth))
                 cellUI.backgroundColor = UIColor.blackColor()
-                
-                let labelMargin: CGFloat = 5.0
-                let labelWidth: CGFloat = (cellUI.bounds.width - (4 * labelMargin)) / 3
-                var jStart: CGFloat = 5.0
-                for j: Int in 0 ..< self.boardDimensions {
-                    var kStart: CGFloat = 5.0
-                    for k: Int in 0 ..< self.boardDimensions {
+                self.viewBoard.addSubview(cellUI)
+                xStart += cellWidth + cellMargin
+            }
+            yStart += cellWidth + cellMargin
+        }
+        return
+    }
+    
+    // draw out the labels onto the board
+    func drawLabelsOnBoard(boardRows: Int, boardColumns: Int, cellMargin: CGFloat) {
+        let cellWidth: CGFloat = self.calculateCellWidth(boardColumns, margin: cellMargin)
+        var yStart: CGFloat = 0
+        for y: Int in 0 ..< boardRows {
+            var xStart: CGFloat = 0
+            for x: Int in 0 ..< boardColumns {
+                let labelMargin: CGFloat = cellMargin
+                let labelWidth: CGFloat = calculateLabelWidth(boardColumns * boardColumns, margin: cellMargin)
+                var jStart: CGFloat = cellMargin
+                for j: Int in 0 ..< boardRows {
+                    var kStart: CGFloat = cellMargin
+                    for k: Int in 0 ..< boardColumns {
                         let cellLabels: CellLabels = self.displayBoard.solutionLabels[y][x]
                         let newLabel: UILabel = cellLabels.cellNumbers[j][k]
-                        newLabel.frame = CGRect(x: kStart, y: jStart, width: labelWidth, height: labelWidth)
+                        newLabel.frame = CGRect(x: xStart + kStart, y: yStart + jStart, width: labelWidth, height: labelWidth)
                         cellLabels.setLabelToNumber(j, column: k, number: 0)
-                        cellUI.addSubview(newLabel)
+                        self.viewBoard.addSubview(newLabel)
                         kStart += labelWidth + labelMargin
                     }
                     jStart += labelWidth + labelMargin
                 }
-                self.viewBoard.addSubview(cellUI)
-                rowCells.append((cellUI))
                 xStart += cellWidth + cellMargin
             }
-            viewCells.append(rowCells)
             yStart += cellWidth + cellMargin
         }
+        return
+    }
+    
+    func calculateCellWidth(boardColumns: Int, margin: CGFloat) -> CGFloat {
+        var cellWidth: CGFloat = self.viewBoard.bounds.width
+        cellWidth -= (CGFloat(boardColumns + 1) * margin)
+        return cellWidth / CGFloat(boardColumns)
+    }
+    
+    func calculateLabelWidth(labelColumns: Int, margin: CGFloat) -> CGFloat {
+        var labelWidth: CGFloat = self.viewBoard.bounds.width
+        // number of columns on board define number of margins board is drawn with
+        let marginsWidth: CGFloat = CGFloat(labelColumns + 1) * margin
+        labelWidth -= marginsWidth
+        return labelWidth / CGFloat(labelColumns)
     }
     
     func buildSudoku() {
@@ -94,7 +123,6 @@ class ViewController: UIViewController {
             print(sudokuBoard.dumpBoard())
         }
         sudokuBoard.buildGame()
-        self.updateBoardDisplay()
         return
     }
     
@@ -140,7 +168,8 @@ class ViewController: UIViewController {
                 for j: Int in 0 ..< cellLabels.cellRows {
                     for k: Int in 0 ..< cellLabels.cellColumns {
                         let cellLabel: UILabel = cellLabels.cellNumbers[j][k]
-                        if cellLabel.frame.contains(location) == true {
+                        print("y=\(y) x=\(x) j=\(j) k=\(k)")
+                        if self.isTapWithinLabel(location, label: cellLabel) == true {
                             return(y, x, j, k)
                         }
                     }
@@ -148,5 +177,15 @@ class ViewController: UIViewController {
             }
         }
         return(-1, -1, -1, -1)
+    }
+    
+    func isTapWithinLabel(location: CGPoint, label: UILabel) -> Bool {
+        print("x = \(location.x) y = \(location.y) label: x = \(label.frame.origin.x) y = \(label.frame.origin.y) w = \(label.frame.width) h = \(label.frame.height)")
+        if (location.x >= label.frame.origin.x) && (location.x <= (label.frame.origin.x + label.frame.width)) {
+            if (location.y >= label.frame.origin.y) && (location.y <= (label.frame.origin.y + label.frame.height)) {
+                return true
+            }
+        }
+        return false
     }
 }
