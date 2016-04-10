@@ -66,7 +66,7 @@ class ViewController: UIViewController {
     // build the initial board display, with all cells = 0 (ie blank)
     func initialSudokuBoardDisplay() {
         let originX: CGFloat = self.view.bounds.origin.x + self.kMainViewMargin
-        let originY: CGFloat = self.view.bounds.origin.y + self.kMainViewMargin + self.kMainViewStatusBarHeight + (2 * self.kMainViewStatusBarHeight)
+        let originY: CGFloat = self.viewStatusPanel.frame.origin.y + self.viewStatusPanel.frame.height + self.kMainViewMargin
         let frameWidth: CGFloat = self.view.bounds.width - (2 * self.kMainViewMargin)
         let frameHeight: CGFloat = self.view.bounds.width - (2 * self.kMainViewMargin)
         self.viewSudokuBoard = UIView(frame: CGRect(x: originX, y: originY, width: frameWidth, height: frameHeight))
@@ -80,7 +80,7 @@ class ViewController: UIViewController {
     // build the initial control panel
     func initialControlPanelDisplay() {
         let originX: CGFloat = self.view.bounds.origin.x + self.kMainViewMargin
-        let originY: CGFloat = self.view.bounds.origin.y + self.kMainViewMargin + (2 * self.kMainViewStatusBarHeight) + self.viewSudokuBoard.frame.height
+        let originY: CGFloat = self.viewSudokuBoard.frame.origin.y + self.viewSudokuBoard.frame.height +  self.kMainViewMargin
         let frameWidth: CGFloat = self.view.bounds.width - (2 * self.kMainViewMargin)
         let frameHeight: CGFloat = kMainViewStatusBarHeight
         self.viewControlPanel = UIView(frame: CGRect(x: originX, y: originY, width: frameWidth, height: frameHeight))
