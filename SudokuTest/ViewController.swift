@@ -16,17 +16,29 @@ class ViewController: UIViewController {
     var boardDimensions: Int = 3
     var gameDifficulty: Int = 7
     
-    var viewBoard: UIView!
-    let kViewStatusBarHeight: CGFloat = 5.0
-    let kViewBoardMargin: CGFloat = 35.0
+    let kMainViewStatusBarHeight: CGFloat = 20.0
+    let kMainViewMargin: CGFloat = 35.0
+
+    // game time, hints left, difficulty displayed here
+    var viewStatusPanel: UIView!
+    
+    // the board to solve
+    var viewSudokuBoard: UIView!
     let kCellMargin: CGFloat = 5.0
+    
+    // numbers to insert into the board, rewind, replay, reset
+    var viewControlPanel: UIView!
+    var ctrlLabels: [UILabel]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.sudokuBoard = GameBoard(size: boardDimensions, setDifficulty: self.gameDifficulty)
         self.displayBoard = GameBoardLabels(size: boardDimensions)
-        self.initialBoardDisplay()
+        self.view.backgroundColor = UIColor.lightGrayColor()
+        self.initialStatusPanelDisplay()
+        self.initialSudokuBoardDisplay()
+        self.initialControlPanelDisplay()
     }
 
     override func didReceiveMemoryWarning() {
@@ -39,18 +51,45 @@ class ViewController: UIViewController {
         self.updateBoardDisplay()
     }
     
-    // build the initial board display, with all cells = 0 (ie blank)
-    func initialBoardDisplay() {
-        self.view.backgroundColor = UIColor.lightGrayColor()
-        self.viewBoard = UIView(frame: CGRect(x: self.view.bounds.origin.x + self.kViewBoardMargin, y: self.view.bounds.origin.y + self.kViewBoardMargin + self.kViewStatusBarHeight + 20, width: self.view.bounds.width - (2 * self.kViewBoardMargin), height: self.view.bounds.width - (2 * self.kViewBoardMargin)))
-        self.viewBoard.backgroundColor = UIColor.blackColor()
-        self.view.addSubview(self.viewBoard)
-        self.setupBoardContainerDisplay()
-        self.initialiseUIViewToAcceptTouch(self.viewBoard)
+    // build status panel for the top of the screen
+    func initialStatusPanelDisplay() {
+        let originX: CGFloat = self.view.bounds.origin.x + self.kMainViewMargin
+        let originY: CGFloat = self.view.bounds.origin.y + self.kMainViewMargin
+        let frameWidth: CGFloat = self.view.bounds.width - (2 * self.kMainViewMargin)
+        let frameHeight: CGFloat = kMainViewStatusBarHeight
+        self.viewStatusPanel = UIView(frame: CGRect(x: originX, y: originY, width: frameWidth, height: frameHeight))
+        self.viewStatusPanel.backgroundColor = UIColor.blueColor()
+        self.view.addSubview(self.viewStatusPanel)
         return
     }
     
-    func setupBoardContainerDisplay() {
+    // build the initial board display, with all cells = 0 (ie blank)
+    func initialSudokuBoardDisplay() {
+        let originX: CGFloat = self.view.bounds.origin.x + self.kMainViewMargin
+        let originY: CGFloat = self.view.bounds.origin.y + self.kMainViewMargin + self.kMainViewStatusBarHeight + (2 * self.kMainViewStatusBarHeight)
+        let frameWidth: CGFloat = self.view.bounds.width - (2 * self.kMainViewMargin)
+        let frameHeight: CGFloat = self.view.bounds.width - (2 * self.kMainViewMargin)
+        self.viewSudokuBoard = UIView(frame: CGRect(x: originX, y: originY, width: frameWidth, height: frameHeight))
+        self.viewSudokuBoard.backgroundColor = UIColor.blackColor()
+        self.view.addSubview(self.viewSudokuBoard)
+        self.setupSudokuBoardContainerDisplay()
+        self.initialiseUIViewToAcceptTouch(self.viewSudokuBoard)
+        return
+    }
+    
+    // build the initial control panel
+    func initialControlPanelDisplay() {
+        let originX: CGFloat = self.view.bounds.origin.x + self.kMainViewMargin
+        let originY: CGFloat = self.view.bounds.origin.y + self.kMainViewMargin + (2 * self.kMainViewStatusBarHeight) + self.viewSudokuBoard.frame.height
+        let frameWidth: CGFloat = self.view.bounds.width - (2 * self.kMainViewMargin)
+        let frameHeight: CGFloat = kMainViewStatusBarHeight
+        self.viewControlPanel = UIView(frame: CGRect(x: originX, y: originY, width: frameWidth, height: frameHeight))
+        self.viewControlPanel.backgroundColor = UIColor.greenColor()
+        self.view.addSubview(self.viewControlPanel)
+        return
+    }
+    
+    func setupSudokuBoardContainerDisplay() {
         self.buildBoardBackground(self.boardDimensions, boardColumns: self.boardDimensions, cellMargin: self.kCellMargin)
         self.drawLabelsOnBoard(self.boardDimensions, boardColumns: self.boardDimensions, cellMargin: self.kCellMargin)
         return
@@ -65,7 +104,7 @@ class ViewController: UIViewController {
             for _: Int in 0 ..< boardColumns {
                 let cellUI: UIView = UIView(frame: CGRect(x: xStart, y: yStart, width: cellWidth, height: cellWidth))
                 cellUI.backgroundColor = UIColor.blackColor()
-                self.viewBoard.addSubview(cellUI)
+                self.viewSudokuBoard.addSubview(cellUI)
                 xStart += cellWidth + cellMargin
             }
             yStart += cellWidth + cellMargin
@@ -90,7 +129,7 @@ class ViewController: UIViewController {
                         let newLabel: UILabel = cellLabels.cellNumbers[j][k]
                         newLabel.frame = CGRect(x: xStart + kStart, y: yStart + jStart, width: labelWidth, height: labelWidth)
                         cellLabels.setLabelToNumber(j, column: k, number: 0)
-                        self.viewBoard.addSubview(newLabel)
+                        self.viewSudokuBoard.addSubview(newLabel)
                         kStart += labelWidth + labelMargin
                     }
                     jStart += labelWidth + labelMargin
@@ -103,7 +142,7 @@ class ViewController: UIViewController {
     }
     
     func calculateCellWidth(boardColumns: Int, margin: CGFloat) -> CGFloat {
-        var cellWidth: CGFloat = self.viewBoard.bounds.width
+        var cellWidth: CGFloat = self.viewSudokuBoard.bounds.width
         cellWidth -= (CGFloat(boardColumns + 1) * margin)
         return cellWidth / CGFloat(boardColumns)
     }
@@ -151,6 +190,7 @@ class ViewController: UIViewController {
         if(recognizer.state == UIGestureRecognizerState.Ended) {
             let labelPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) = self.getPositionOfLabelTapped(recognizer.locationInView(recognizer.view))
             if labelPosition.boardColumn != -1 {
+                // if the posn is filled and not a user filled selected answer do nothing
                 let cellPosn: String = "y=\(labelPosition.boardRow) x=\(labelPosition.boardColumn) j=\(labelPosition.cellRow) k=\(labelPosition.cellColumn)"
                 let alertView = UIAlertController(title: "View touched", message: cellPosn, preferredStyle: .Alert)
                 alertView.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
