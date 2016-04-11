@@ -157,9 +157,10 @@ class ViewController: UIViewController {
         sudokuBoard.clearBoard()
         sudokuBoard.buildSolution()
         if self.debug > 0 {
-            print(sudokuBoard.dumpBoard())
+            print(sudokuBoard.dumpSolutionBoard())
         }
-        sudokuBoard.buildGame()
+        sudokuBoard.buildGameBoard()
+        sudokuBoard.buildOriginBoard()
         return
     }
     
@@ -187,16 +188,26 @@ class ViewController: UIViewController {
     }
 
     func detectedUIViewTapped(recognizer: UITapGestureRecognizer) {
-        if(recognizer.state == UIGestureRecognizerState.Ended) {
-            let labelPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) = self.getPositionOfLabelTapped(recognizer.locationInView(recognizer.view))
-            if labelPosition.boardColumn != -1 {
-                // if the posn is filled and not a user filled selected answer do nothing
-                let cellPosn: String = "y=\(labelPosition.boardRow) x=\(labelPosition.boardColumn) j=\(labelPosition.cellRow) k=\(labelPosition.cellColumn)"
-                let alertView = UIAlertController(title: "View touched", message: cellPosn, preferredStyle: .Alert)
-                alertView.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
-                presentViewController(alertView, animated: true, completion: nil)
-            }
+        if(recognizer.state != UIGestureRecognizerState.Ended) {
+            return
         }
+        // check we have a board to test
+        if self.sudokuBoard.gameCells.count == 0 {
+            return
+        }
+        // has the user tapped in a cell?
+        let labelPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) = self.getPositionOfLabelTapped(recognizer.locationInView(recognizer.view))
+        if labelPosition.boardColumn == -1 {
+            return
+        }
+        // the user must not have selected an 'origin' cell
+        if self.sudokuBoard.originCells[labelPosition.boardRow][labelPosition.boardColumn].getNumberAtCellPosition(labelPosition.cellRow, column: labelPosition.cellColumn) > 0 {
+            return
+        }
+        let cellPosn: String = "y=\(labelPosition.boardRow) x=\(labelPosition.boardColumn) j=\(labelPosition.cellRow) k=\(labelPosition.cellColumn)"
+        let alertView = UIAlertController(title: "View touched", message: cellPosn, preferredStyle: .Alert)
+        alertView.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
+        presentViewController(alertView, animated: true, completion: nil)
         return
     }
     
@@ -218,7 +229,7 @@ class ViewController: UIViewController {
     }
     
     func isTapWithinLabel(location: CGPoint, label: UILabel) -> Bool {
-        print("x = \(location.x) y = \(location.y) label: x = \(label.frame.origin.x) y = \(label.frame.origin.y) w = \(label.frame.width) h = \(label.frame.height)")
+        //print("x = \(location.x) y = \(location.y) label: x = \(label.frame.origin.x) y = \(label.frame.origin.y) w = \(label.frame.width) h = \(label.frame.height)")
         if (location.x >= label.frame.origin.x) && (location.x <= (label.frame.origin.x + label.frame.width)) {
             if (location.y >= label.frame.origin.y) && (location.y <= (label.frame.origin.y + label.frame.height)) {
                 return true
