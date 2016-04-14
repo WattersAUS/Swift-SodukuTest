@@ -229,7 +229,6 @@ class ViewController: UIViewController {
     }
     
     func isTapWithinLabel(location: CGPoint, label: UILabel) -> Bool {
-        //print("x = \(location.x) y = \(location.y) label: x = \(label.frame.origin.x) y = \(label.frame.origin.y) w = \(label.frame.width) h = \(label.frame.height)")
         if (location.x >= label.frame.origin.x) && (location.x <= (label.frame.origin.x + label.frame.width)) {
             if (location.y >= label.frame.origin.y) && (location.y <= (label.frame.origin.y + label.frame.height)) {
                 return true

@@ -18,6 +18,7 @@
 		BFADC00D1C8C8CA200F48E54 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFADC00B1C8C8CA200F48E54 /* LaunchScreen.storyboard */; };
 		BFADC0181C8C8CA200F48E54 /* SudokuTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFADC0171C8C8CA200F48E54 /* SudokuTestTests.swift */; };
 		BFADC0231C8C8CA300F48E54 /* SudokuTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFADC0221C8C8CA300F48E54 /* SudokuTestUITests.swift */; };
+		BFDE91111CBFF4BB007370D0 /* TrackSolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDE91101CBFF4BB007370D0 /* TrackSolution.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		BFADC01E1C8C8CA200F48E54 /* SudokuTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SudokuTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFADC0221C8C8CA300F48E54 /* SudokuTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuTestUITests.swift; sourceTree = "<group>"; };
 		BFADC0241C8C8CA300F48E54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BFDE91101CBFF4BB007370D0 /* TrackSolution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackSolution.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 				BF87FFCC1CB18DC1004A857C /* CellLabels.swift */,
 				BF70DE771CB01857006BB30D /* GameBoard.swift */,
 				BF4F760F1CB2F5E4006A71BE /* GameBoardLabels.swift */,
+				BFDE91101CBFF4BB007370D0 /* TrackSolution.swift */,
 			);
 			path = SudokuTest;
 			sourceTree = "<group>";
@@ -269,6 +272,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFDE91111CBFF4BB007370D0 /* TrackSolution.swift in Sources */,
 				BFADC0051C8C8CA200F48E54 /* ViewController.swift in Sources */,
 				BF4F76101CB2F5E4006A71BE /* GameBoardLabels.swift in Sources */,
 				BF70DE761CB00321006BB30D /* Cell.swift in Sources */,
