@@ -16,7 +16,7 @@
 		BFADC0081C8C8CA200F48E54 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFADC0061C8C8CA200F48E54 /* Main.storyboard */; };
 		BFADC00A1C8C8CA200F48E54 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFADC0091C8C8CA200F48E54 /* Assets.xcassets */; };
 		BFADC00D1C8C8CA200F48E54 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFADC00B1C8C8CA200F48E54 /* LaunchScreen.storyboard */; };
-		BFADC0181C8C8CA200F48E54 /* SudokuTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFADC0171C8C8CA200F48E54 /* SudokuTestTests.swift */; };
+		BFADC0181C8C8CA200F48E54 /* SudokuTestCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFADC0171C8C8CA200F48E54 /* SudokuTestCellTests.swift */; };
 		BFADC0231C8C8CA300F48E54 /* SudokuTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFADC0221C8C8CA300F48E54 /* SudokuTestUITests.swift */; };
 		BFDE91111CBFF4BB007370D0 /* TrackSolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDE91101CBFF4BB007370D0 /* TrackSolution.swift */; };
 /* End PBXBuildFile section */
@@ -51,7 +51,7 @@
 		BFADC00C1C8C8CA200F48E54 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BFADC00E1C8C8CA200F48E54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BFADC0131C8C8CA200F48E54 /* SudokuTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SudokuTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		BFADC0171C8C8CA200F48E54 /* SudokuTestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuTestTests.swift; sourceTree = "<group>"; };
+		BFADC0171C8C8CA200F48E54 /* SudokuTestCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuTestCellTests.swift; sourceTree = "<group>"; };
 		BFADC0191C8C8CA200F48E54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BFADC01E1C8C8CA200F48E54 /* SudokuTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SudokuTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFADC0221C8C8CA300F48E54 /* SudokuTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuTestUITests.swift; sourceTree = "<group>"; };
@@ -125,7 +125,7 @@
 		BFADC0161C8C8CA200F48E54 /* SudokuTestTests */ = {
 			isa = PBXGroup;
 			children = (
-				BFADC0171C8C8CA200F48E54 /* SudokuTestTests.swift */,
+				BFADC0171C8C8CA200F48E54 /* SudokuTestCellTests.swift */,
 				BFADC0191C8C8CA200F48E54 /* Info.plist */,
 			);
 			path = SudokuTestTests;
@@ -286,7 +286,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BFADC0181C8C8CA200F48E54 /* SudokuTestTests.swift in Sources */,
+				BFADC0181C8C8CA200F48E54 /* SudokuTestCellTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

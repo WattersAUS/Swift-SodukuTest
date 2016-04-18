@@ -33,8 +33,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.sudokuBoard = GameBoard(size: boardDimensions, setDifficulty: self.gameDifficulty)
-        self.displayBoard = GameBoardLabels(size: boardDimensions)
+        self.sudokuBoard = GameBoard(size: self.boardDimensions, setDifficulty: self.gameDifficulty)
+        self.displayBoard = GameBoardLabels(size: self.boardDimensions)
         self.view.backgroundColor = UIColor.lightGrayColor()
         self.initialStatusPanelDisplay()
         self.initialSudokuBoardDisplay()
