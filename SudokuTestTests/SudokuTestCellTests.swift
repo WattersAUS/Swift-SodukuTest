@@ -37,14 +37,14 @@ class SudokuTestCellTests: XCTestCase {
         XCTAssertEqual(testCell.cellWidth(), 3, "Incorrect initial Cell width reported")
     }
     
-    func testCellInitialisedAsImcomplete() {
+    func testCellInitialisedAsIncomplete() {
         var testCell: Cell!
         testCell = Cell(size: 3)
         // and cell should be set to incomplete
         XCTAssertNotEqual(testCell.isCellCompleted(), true, "Incorrect initial Cell state reported")
     }
 
-    func testCellArrayEntriesSetToZero() {
+    func testCellArrayEntriesInitialisedToZero() {
         var testCell: Cell!
         testCell = Cell(size: 3)
         // the array entries are all set to 0
@@ -112,31 +112,77 @@ class SudokuTestCellTests: XCTestCase {
         XCTAssertEqual(testCell.isCellCompleted(), true, "Incorrect Cell complete value reported")
     }
     
-//    func testCellInitialisedCorrectlyWithSize() {
-//        var testCell: Cell!
-//        testCell = Cell(size: 3)
-//        // we should see a size == 3 for width and depth
-//        XCTAssertEqual(testCell.cellDepth(), 3, "Incorrect initial Cell depth reported")
-//        XCTAssertEqual(testCell.cellWidth(), 3, "Incorrect initial Cell width reported")
-//        // and cell should be set to incomplete
-//        XCTAssertNotEqual(testCell.isCellCompleted(), true, "Incorrect initial Cell state reported")
-//    }
+    func testCellClearWorksAsExpected() {
+        var testCell: Cell!
+        testCell = Cell(size: 3)
+        // populate cell array
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 0, number: 5), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 1, number: 7), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 2, number: 1), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 0, number: 2), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 1, number: 3), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 2, number: 8), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 0, number: 6), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 1, number: 4), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 2, number: 9), true, "Incorrect Cell complete value reported")
+        XCTAssertEqual(testCell.isCellCompleted(), true, "Incorrect Cell complete value reported")
+        // now clear cell and make sure all values are set to 0
+        testCell.clearCell()
+        // test cell is set to cleared
+        XCTAssertEqual(testCell.isCellCompleted(), false, "Incorrect Cell incomplete value reported")
+        // now check the cells set to 0
+        XCTAssertEqual(testCell.getNumberAtCellPosition(0, column: 0), 0, "Cell value not initialised")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(0, column: 1), 0, "Cell value not initialised")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(0, column: 2), 0, "Cell value not initialised")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(1, column: 0), 0, "Cell value not initialised")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(1, column: 1), 0, "Cell value not initialised")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(1, column: 2), 0, "Cell value not initialised")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(2, column: 0), 0, "Cell value not initialised")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(2, column: 1), 0, "Cell value not initialised")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(2, column: 2), 0, "Cell value not initialised")
+    }
     
-//    func testBoardCleared() {
-//        self.testBoard.clearBoard()
-//    }
-//
-//    func testBoardBuilt() {
-//        self.testBoard.buildSolution()
-//    }
-//    
-//    func testGameBoardBuilt() {
-//        self.testBoard.buildGameBoard()
-//    }
-//
-//    func testOriginBoardBuilt() {
-//        self.testBoard.buildOriginBoard()
-//    }
+    func testCellNumberUsedInRow() {
+        var testCell: Cell!
+        testCell = Cell(size: 3)
+        // populate cell array row
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 0, number: 5), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 1, number: 7), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 2, number: 1), false, "Incorrect Cell incomplete value reported")
+        // test correct value found in row and incorrect value not found in row
+        XCTAssertEqual(testCell.isNumberUsedInRow(5, row: 0), true, "Not detected value in row")
+        XCTAssertEqual(testCell.isNumberUsedInRow(8, row: 0), false, "Not detected value not in row")
+        // test row limits work
+        XCTAssertEqual(testCell.isNumberUsedInRow(5, row: -1), false, "Not detected incorrect row")
+        XCTAssertEqual(testCell.isNumberUsedInRow(5, row: 3), false, "Not detected incorrect row")
+    }
+    
+    func testCellNumberUsedInColumn() {
+        var testCell: Cell!
+        testCell = Cell(size: 3)
+        // populate cell array column
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 0, number: 5), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 1, number: 7), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 2, number: 1), false, "Incorrect Cell incomplete value reported")
+        // test correct value found in row and incorrect value not found in row
+        XCTAssertEqual(testCell.isNumberUsedInColumn(5, column: 0), true, "Not detected value in column")
+        XCTAssertEqual(testCell.isNumberUsedInColumn(8, column: 0), false, "Not detected value not in column")
+        // test row limits work
+        XCTAssertEqual(testCell.isNumberUsedInColumn(5, column: -1), false, "Not detected incorrect column")
+        XCTAssertEqual(testCell.isNumberUsedInColumn(5, column: 3), false, "Not detected incorrect column")
+    }
+    
+    func testCellGetValuesFromRow() {
+        var testCell: Cell!
+        testCell = Cell(size: 3)
+        // populate cell array row
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 0, number: 5), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 1, number: 7), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 2, number: 1), false, "Incorrect Cell incomplete value reported")
+        // retrieve rows and test right values returned
+        
+        // TO DO TEST!!!
+    }
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
