@@ -84,7 +84,20 @@ class Cell: NSObject, NSCopying {
         return self.cellCompleted
     }
     
-    //public functions
+    // public - object state functions
+    func cellWidth() -> Int {
+        return self.cellColumns
+    }
+    
+    func cellDepth() -> Int {
+        return self.cellRows
+    }
+    
+    func isCellCompleted() -> Bool {
+        return self.cellCompleted
+    }
+    
+    // public functions - act on whole object
     func clearCell() {
         for index: Int in 0 ..< self.cellCoordinates.count {
             self.cellNumbers[self.cellCoordinates[index].row][self.cellCoordinates[index].column] = 0
@@ -94,6 +107,73 @@ class Cell: NSObject, NSCopying {
         return
     }
     
+    // public functions - number level operations
+    func clearNumberAtCellPosition(row: Int, column: Int) {
+        if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns {
+            return
+        }
+        self.setNumberAsUnUsed(self.cellNumbers[row][column])
+        self.cellNumbers[row][column] = 0
+        self.cellCompleted = false
+        return
+    }
+
+    func getNumberAtCellPosition(row: Int, column: Int) -> Int {
+        if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns {
+            return 0
+        }
+        return self.cellNumbers[row][column]
+    }
+    
+    func setNumberAtCellPosition(row: Int, column: Int, number: Int) -> Bool {
+        if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns || number < 1 || number > self.numbersUsed.count {
+            return false
+        }
+        if self.cellNumbers[row][column] > 0 {
+            return false
+        }
+        self.cellNumbers[row][column] = number
+        self.setNumberAsUsed(self.cellNumbers[row][column])
+        return self.checkForCellCompleted()
+    }
+
+    // public functions - row/column level operations
+    func getValuesFromRow(row: Int) -> [Int] {
+        var values: [Int] = []
+        if row < 0 || row >= self.cellRows {
+            return values
+        }
+        for column: Int in 0 ..< self.cellColumns {
+            values.append(self.cellNumbers[row][column])
+        }
+        return values
+    }
+    
+    func isNumberUsedInRow(number: Int, row: Int) -> Bool {
+        if row < 0 || row >= self.cellRows {
+            return false
+        }
+        for column: Int in 0 ..< self.cellColumns {
+            if number == self.cellNumbers[row][column] {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func isNumberUsedInColumn(number: Int, column: Int) -> Bool {
+        if column < 0 || column >= self.cellColumns {
+            return false
+        }
+        for row: Int in 0 ..< self.cellRows {
+            if number == self.cellNumbers[row][column] {
+                return true
+            }
+        }
+        return false
+    }
+    
+    // public functions - random driven operations
     func getRandomUnUsedNumber() -> Int {
         let numberUsage: [Int] = self.getNumbersArray()
         var numbersToUse: [Int] = []
@@ -135,82 +215,7 @@ class Cell: NSObject, NSCopying {
         return (self.cellCoordinates[index].row, self.cellCoordinates[index].column)
     }
     
-    func clearNumberAtCellPosition(row: Int, column: Int) {
-        if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns {
-            return
-        }
-        self.setNumberAsUnUsed(self.cellNumbers[row][column])
-        self.cellNumbers[row][column] = 0
-        self.cellCompleted = false
-        return
-    }
-    
-    func setNumberAtCellPosition(row: Int, column: Int, number: Int) -> Bool {
-        if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns || number < 1 || number > self.numbersUsed.count {
-            return false
-        }
-        if self.cellNumbers[row][column] > 0 {
-            return false
-        }
-        self.cellNumbers[row][column] = number
-        self.setNumberAsUsed(self.cellNumbers[row][column])
-        return self.checkForCellCompleted()
-    }
-    
-    func getNumberAtCellPosition(row: Int, column: Int) -> Int {
-        if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns {
-            return 0
-        }
-        return self.cellNumbers[row][column]
-    }
-    
-    func getValuesFromRow(row: Int) -> [Int] {
-        var values: [Int] = []
-        if row < 0 || row >= self.cellRows {
-            return values
-        }
-        for column: Int in 0 ..< self.cellColumns {
-            values.append(self.cellNumbers[row][column])
-        }
-        return values
-    }
-    
-    func isNumberUsedInRow(number: Int, row: Int) -> Bool {
-        if row < 0 || row >= self.cellRows {
-            return false
-        }
-        for column: Int in 0 ..< self.cellColumns {
-            if number == self.cellNumbers[row][column] {
-                return true
-            }
-        }
-        return false
-    }
-    
-    func isNumberUsedInColumn(number: Int, column: Int) -> Bool {
-        if column < 0 || column >= self.cellColumns {
-            return false
-        }
-        for row: Int in 0 ..< self.cellRows {
-            if number == self.cellNumbers[row][column] {
-                return true
-            }
-        }
-        return false
-    }
-    
-    func isCellCompleted() -> Bool {
-        return self.cellCompleted
-    }
-    
-    func cellWidth() -> Int {
-        return self.cellColumns
-    }
-    
-    func cellDepth() -> Int {
-        return self.cellRows
-    }
-    
+    // copy object operation
     func copyWithZone(zone: NSZone) -> AnyObject {
         let copy = Cell(size: self.cellRows)
         copy.cellCompleted = self.cellCompleted

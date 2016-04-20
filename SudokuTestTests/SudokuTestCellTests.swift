@@ -180,8 +180,64 @@ class SudokuTestCellTests: XCTestCase {
         XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 1, number: 7), false, "Incorrect Cell incomplete value reported")
         XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 2, number: 1), false, "Incorrect Cell incomplete value reported")
         // retrieve rows and test right values returned
+        var testValues: [Int] = testCell.getValuesFromRow(0)
+        XCTAssertEqual(testValues.count, 3, "Wrong size array returned")
+        if testValues.count == 3 {
+            XCTAssertEqual(testValues[0], 5, "Incorrect Integer returned in array[0]")
+            XCTAssertEqual(testValues[1], 7, "Incorrect Integer returned in array[1]")
+            XCTAssertEqual(testValues[2], 1, "Incorrect Integer returned in array[2]")
+        }
+        // try to retrieve a row out of range
+        testValues = testCell.getValuesFromRow(-1)
+        XCTAssertEqual(testValues.count, 0, "Wrong size array returned")
+        testValues = testCell.getValuesFromRow(3)
+        XCTAssertEqual(testValues.count, 0, "Wrong size array returned")
+    }
+    
+    func testCellRandomUnUsedRoutines() {
+        var testCell: Cell!
+        testCell = Cell(size: 3)
+        // populate cell array except row = 2, column = 0
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 0, number: 5), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 1, number: 7), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 2, number: 1), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 0, number: 2), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 1, number: 3), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 2, number: 8), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 1, number: 4), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 2, number: 9), false, "Incorrect Cell complete value reported")
+        // now test last unused number is returned
+        XCTAssertEqual(testCell.getRandomUnUsedNumber(), 6, "Incorrect last unused number reported")
+        // and the correct last position
+        var unUsedPosn: (unUsedRow: Int, unUsedColumn: Int) = testCell.getRandomUnUsedPosition()
+        XCTAssertEqual(unUsedPosn.unUsedRow, 2, "Incorrect last unused row position reported")
+        XCTAssertEqual(unUsedPosn.unUsedColumn, 0, "Incorrect last unused column position reported")
+        // use that position and reset another and test again
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 0, number: 6), true, "Incorrect Cell incomplete value reported")
+        testCell.clearNumberAtCellPosition(1, column: 1)
+        unUsedPosn = testCell.getRandomUnUsedPosition()
+        XCTAssertEqual(unUsedPosn.unUsedRow, 1, "Incorrect last unused row position reported")
+        XCTAssertEqual(unUsedPosn.unUsedColumn, 1, "Incorrect last unused column position reported")
+        // complete cell and test that row = -1, column = -1 returned
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 0, number: 3), true, "Incorrect Cell incomplete value reported")
         
-        // TO DO TEST!!!
+        // TO BE COMPLETED!!!!
+    }
+
+    func testCellRandomUsedRoutines() {
+        var testCell: Cell!
+        testCell = Cell(size: 3)
+        // populate cell array position row = 1, column = 2 only
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 2, number: 8), false, "Incorrect Cell incomplete value reported")
+        var usedPosn: (usedRow: Int, usedColumn: Int) = testCell.getRandomUsedPosition()
+        XCTAssertEqual(usedPosn.usedRow, 1, "Incorrect last unused row position reported")
+        XCTAssertEqual(usedPosn.usedColumn, 2, "Incorrect last unused column position reported")
+        // use that position and reset another and test again
+        testCell.clearNumberAtCellPosition(1, column: 2)
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 1, number: 8), false, "Incorrect Cell incomplete value reported")
+        usedPosn = testCell.getRandomUsedPosition()
+        XCTAssertEqual(usedPosn.usedRow, 1, "Incorrect last unused row position reported")
+        XCTAssertEqual(usedPosn.usedColumn, 1, "Incorrect last unused column position reported")
     }
     
     func testPerformanceExample() {
