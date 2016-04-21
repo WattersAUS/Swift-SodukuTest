@@ -219,25 +219,73 @@ class SudokuTestCellTests: XCTestCase {
         XCTAssertEqual(unUsedPosn.unUsedRow, 1, "Incorrect last unused row position reported")
         XCTAssertEqual(unUsedPosn.unUsedColumn, 1, "Incorrect last unused column position reported")
         // complete cell and test that row = -1, column = -1 returned
-        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 0, number: 3), true, "Incorrect Cell incomplete value reported")
-        
-        // TO BE COMPLETED!!!!
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 1, number: 3), true, "Incorrect Cell incomplete value reported")
+        unUsedPosn = testCell.getRandomUnUsedPosition()
+        XCTAssertEqual(unUsedPosn.unUsedRow, -1, "Incorrect last unused row position reported")
+        XCTAssertEqual(unUsedPosn.unUsedColumn, -1, "Incorrect last unused column position reported")
     }
 
     func testCellRandomUsedRoutines() {
         var testCell: Cell!
         testCell = Cell(size: 3)
+        // with no used cells we should get row = -1, column = -1 back
+        var usedPosn: (usedRow: Int, usedColumn: Int) = testCell.getRandomUsedPosition()
+        XCTAssertEqual(usedPosn.usedRow, -1, "Incorrect used row position reported")
+        XCTAssertEqual(usedPosn.usedColumn, -1, "Incorrect used column position reported")
         // populate cell array position row = 1, column = 2 only
         XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 2, number: 8), false, "Incorrect Cell incomplete value reported")
-        var usedPosn: (usedRow: Int, usedColumn: Int) = testCell.getRandomUsedPosition()
-        XCTAssertEqual(usedPosn.usedRow, 1, "Incorrect last unused row position reported")
-        XCTAssertEqual(usedPosn.usedColumn, 2, "Incorrect last unused column position reported")
+        usedPosn = testCell.getRandomUsedPosition()
+        XCTAssertEqual(usedPosn.usedRow, 1, "Incorrect used row position reported")
+        XCTAssertEqual(usedPosn.usedColumn, 2, "Incorrect used column position reported")
         // use that position and reset another and test again
         testCell.clearNumberAtCellPosition(1, column: 2)
         XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 1, number: 8), false, "Incorrect Cell incomplete value reported")
         usedPosn = testCell.getRandomUsedPosition()
         XCTAssertEqual(usedPosn.usedRow, 1, "Incorrect last unused row position reported")
         XCTAssertEqual(usedPosn.usedColumn, 1, "Incorrect last unused column position reported")
+    }
+    
+    func testCellCopy() {
+        var testCell: Cell!
+        testCell = Cell(size: 3)
+        // build up cell ready for copy
+        // populate cell array
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 0, number: 5), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 1, number: 7), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 2, number: 1), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 0, number: 2), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 1, number: 3), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 2, number: 8), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 0, number: 6), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 1, number: 4), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 2, number: 9), true, "Incorrect Cell complete value reported")
+        XCTAssertEqual(testCell.isCellCompleted(), true, "Incorrect Cell complete value reported")
+        // now copy cell
+        var copyCell: Cell!
+        copyCell = testCell.copy() as! Cell
+        // test cell dimensions
+        XCTAssertEqual(copyCell.cellDepth(), testCell.cellDepth(), "Cell Depth not copied")
+        XCTAssertEqual(copyCell.cellWidth(), testCell.cellWidth(), "Cell Width not copied")
+        XCTAssertEqual(copyCell.cellDepth(), 3, "Cell Depth not correct")
+        XCTAssertEqual(copyCell.cellWidth(), 3, "Cell Width not correct")
+        //cell completion
+        XCTAssertEqual(copyCell.isCellCompleted(), testCell.isCellCompleted(), "Cell completed value not correct")
+        // test all cell values have been copied as expected
+        XCTAssertEqual(copyCell.getNumberAtCellPosition(0, column: 0), testCell.getNumberAtCellPosition(0, column: 0), "Copied value is not correct for [0,0]")
+        XCTAssertEqual(copyCell.getNumberAtCellPosition(0, column: 1), testCell.getNumberAtCellPosition(0, column: 1), "Copied value is not correct for [0,1]")
+        XCTAssertEqual(copyCell.getNumberAtCellPosition(0, column: 2), testCell.getNumberAtCellPosition(0, column: 2), "Copied value is not correct for [0,2]")
+        XCTAssertEqual(copyCell.getNumberAtCellPosition(1, column: 0), testCell.getNumberAtCellPosition(1, column: 0), "Copied value is not correct for [1,0]")
+        XCTAssertEqual(copyCell.getNumberAtCellPosition(1, column: 1), testCell.getNumberAtCellPosition(1, column: 1), "Copied value is not correct for [1,1]")
+        XCTAssertEqual(copyCell.getNumberAtCellPosition(1, column: 2), testCell.getNumberAtCellPosition(1, column: 2), "Copied value is not correct for [1,2]")
+        XCTAssertEqual(copyCell.getNumberAtCellPosition(2, column: 0), testCell.getNumberAtCellPosition(2, column: 0), "Copied value is not correct for [2,0]")
+        XCTAssertEqual(copyCell.getNumberAtCellPosition(2, column: 1), testCell.getNumberAtCellPosition(2, column: 1), "Copied value is not correct for [2,1]")
+        XCTAssertEqual(copyCell.getNumberAtCellPosition(2, column: 2), testCell.getNumberAtCellPosition(2, column: 2), "Copied value is not correct for [2,2]")
+        // reset a cell in the original and compare. to test it is a copied object and not a copied pointer only
+        copyCell.clearNumberAtCellPosition(1, column: 1)
+        XCTAssertNotEqual(copyCell.getNumberAtCellPosition(1, column: 1), testCell.getNumberAtCellPosition(1, column: 1), "Copied value is not correct for [1,1]")
+        XCTAssertEqual(copyCell.getNumberAtCellPosition(1, column: 1), 0, "Copied value is not cleared as expected")
+        //cell completion
+        XCTAssertNotEqual(copyCell.isCellCompleted(), testCell.isCellCompleted(), "Cell completed value not correct")
     }
     
     func testPerformanceExample() {
