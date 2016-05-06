@@ -56,4 +56,22 @@ class CellLabels {
         }
         return
     }
+    
+    func setLabelToSelectedColour(row: Int, column: Int) {
+        if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns {
+            return
+        }
+        let label: UILabel = self.cellNumbers[row][column]
+        label.backgroundColor = UIColor.grayColor()
+        return
+    }
+
+    func setLabelToDefaultColour(row: Int, column: Int) {
+        if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns {
+            return
+        }
+        let label: UILabel = self.cellNumbers[row][column]
+        label.backgroundColor = UIColor.whiteColor()
+        return
+    }
 }

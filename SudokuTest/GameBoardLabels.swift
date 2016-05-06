@@ -10,7 +10,7 @@ import Foundation
 
 class GameBoardLabels {
     
-    var solutionLabels: [[CellLabels]] = []
+    var gameLabels: [[CellLabels]] = []
     var boardCoordinates: [(row: Int, column: Int)] = []
     var boardRows: Int = 0
     var boardColumns: Int = 0
@@ -29,7 +29,7 @@ class GameBoardLabels {
                     rowOfCells.append(CellLabels(size: self.boardColumns))
                 }
             }
-            self.solutionLabels.append(rowOfCells)
+            self.gameLabels.append(rowOfCells)
         }
     }
 

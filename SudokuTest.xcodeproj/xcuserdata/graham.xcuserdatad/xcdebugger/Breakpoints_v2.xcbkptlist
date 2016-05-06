@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SudokuTest/GameBoard.swift"
-            timestampString = "482091286.020614"
+            timestampString = "483995164.02608"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "170"
-            endingLineNumber = "170"
+            startingLineNumber = "210"
+            endingLineNumber = "210"
             landmarkName = "buildGameBoard()"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SudokuTest/GameBoard.swift"
-            timestampString = "482091286.020614"
+            timestampString = "483995164.02608"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "176"
-            endingLineNumber = "176"
+            startingLineNumber = "216"
+            endingLineNumber = "216"
             landmarkName = "buildGameBoard()"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,13 +74,91 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SudokuTest/ViewController.swift"
-            timestampString = "482002846.496268"
+            timestampString = "484256727.143606"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
             landmarkName = "setupSudokuBoardContainerDisplay()"
             landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SudokuTestTests/SudokuTestGameBoardTests.swift"
+            timestampString = "483388873.060406"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
+            landmarkName = "testGameBoardInitialisedToZero()"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SudokuTestTests.SudokuTestGameBoardTests.testGameBoardInitialisedToZero () -&gt; ()"
+                  moduleName = "SudokuTestTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/graham/Documents/Development/Shiny%20Idea/SudokuTest/SudokuTestTests/SudokuTestGameBoardTests.swift"
+                  timestampString = "483991247.969897"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "69"
+                  endingLineNumber = "69"
+                  offsetFromSymbolStart = "1416">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SudokuTestTests.SudokuTestGameBoardTests.(testGameBoardInitialisedToZero () -&gt; ()).(implicit closure #1)"
+                  moduleName = "SudokuTestTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/graham/Documents/Development/Shiny%20Idea/SudokuTest/SudokuTestTests/SudokuTestGameBoardTests.swift"
+                  timestampString = "483991247.970142"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "69"
+                  endingLineNumber = "69"
+                  offsetFromSymbolStart = "39">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SudokuTestTests.SudokuTestGameBoardTests.(testGameBoardInitialisedToZero () -&gt; ()).(implicit closure #2)"
+                  moduleName = "SudokuTestTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/graham/Documents/Development/Shiny%20Idea/SudokuTest/SudokuTestTests/SudokuTestGameBoardTests.swift"
+                  timestampString = "483991247.970304"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "69"
+                  endingLineNumber = "69"
+                  offsetFromSymbolStart = "12">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SudokuTestTests.SudokuTestGameBoardTests.(testGameBoardInitialisedToZero () -&gt; ()).(implicit closure #3)"
+                  moduleName = "SudokuTestTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/graham/Documents/Development/Shiny%20Idea/SudokuTest/SudokuTestTests/SudokuTestGameBoardTests.swift"
+                  timestampString = "483991247.970452"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "69"
+                  endingLineNumber = "69"
+                  offsetFromSymbolStart = "4">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

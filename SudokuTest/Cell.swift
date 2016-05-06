@@ -149,6 +149,17 @@ class Cell: NSObject, NSCopying {
         return values
     }
     
+    func getValuesFromColumn(column: Int) -> [Int] {
+        var values: [Int] = []
+        if column < 0 || column >= self.cellColumns {
+            return values
+        }
+        for row: Int in 0 ..< self.cellRows {
+            values.append(self.cellNumbers[row][column])
+        }
+        return values
+    }
+    
     func isNumberUsedInRow(number: Int, row: Int) -> Bool {
         if row < 0 || row >= self.cellRows {
             return false
@@ -213,6 +224,31 @@ class Cell: NSObject, NSCopying {
             index = Int(arc4random_uniform(UInt32(self.cellCoordinates.count)))
         }
         return (self.cellCoordinates[index].row, self.cellCoordinates[index].column)
+    }
+    
+    // public functions - mirror image cells (to be used in special game mode)
+    func mirrorVertically() {
+        for row: Int in 0 ..< Int(round(Double(self.cellRows / 2))) {
+            let rowOne: [Int] = self.getValuesFromRow(row)
+            let rowTwo: [Int] = self.getValuesFromRow(self.cellRows - row - 1)
+            for column: Int in 0 ..< rowOne.count {
+                cellNumbers[row][column] = rowTwo[column]
+                cellNumbers[self.cellRows - row - 1][column] = rowOne[column]
+            }
+        }
+        return
+    }
+
+    func mirrorHorizontally() {
+        for column: Int in 0 ..< Int(round(Double(self.cellColumns / 2))) {
+            let columnOne: [Int] = self.getValuesFromColumn(column)
+            let columnTwo: [Int] = self.getValuesFromColumn(self.cellColumns - column - 1)
+            for row: Int in 0 ..< columnOne.count {
+                cellNumbers[row][column] = columnTwo[row]
+                cellNumbers[row][self.cellColumns - column - 1] = columnOne[row]
+            }
+        }
+        return
     }
     
     // copy object operation

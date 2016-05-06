@@ -27,6 +27,7 @@ class SudokuTestCellTests: XCTestCase {
         // we should see a size == 3 for width and depth where we passed value not = 3
         XCTAssertEqual(testCell.cellDepth(), 3, "Incorrect initial Cell depth reported")
         XCTAssertEqual(testCell.cellWidth(), 3, "Incorrect initial Cell width reported")
+        XCTAssertNotEqual(testCell.isCellCompleted(), true, "Incorrect initial Cell state reported")
     }
 
     func testCellInitialSizeSetCorrectly() {
@@ -35,15 +36,9 @@ class SudokuTestCellTests: XCTestCase {
         // we should see a size == 3 for width
         XCTAssertEqual(testCell.cellDepth(), 3, "Incorrect initial Cell depth reported")
         XCTAssertEqual(testCell.cellWidth(), 3, "Incorrect initial Cell width reported")
-    }
-    
-    func testCellInitialisedAsIncomplete() {
-        var testCell: Cell!
-        testCell = Cell(size: 3)
-        // and cell should be set to incomplete
         XCTAssertNotEqual(testCell.isCellCompleted(), true, "Incorrect initial Cell state reported")
     }
-
+    
     func testCellArrayEntriesInitialisedToZero() {
         var testCell: Cell!
         testCell = Cell(size: 3)
@@ -194,6 +189,28 @@ class SudokuTestCellTests: XCTestCase {
         XCTAssertEqual(testValues.count, 0, "Wrong size array returned")
     }
     
+    func testCellGetValuesFromColumn() {
+        var testCell: Cell!
+        testCell = Cell(size: 3)
+        // populate cell array column
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 0, number: 5), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 0, number: 2), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 0, number: 6), false, "Incorrect Cell incomplete value reported")
+        // retrieve columns and test right values returned
+        var testValues: [Int] = testCell.getValuesFromColumn(0)
+        XCTAssertEqual(testValues.count, 3, "Wrong size array returned")
+        if testValues.count == 3 {
+            XCTAssertEqual(testValues[0], 5, "Incorrect Integer returned in array[0]")
+            XCTAssertEqual(testValues[1], 2, "Incorrect Integer returned in array[1]")
+            XCTAssertEqual(testValues[2], 6, "Incorrect Integer returned in array[2]")
+        }
+        // try to retrieve a column out of range
+        testValues = testCell.getValuesFromColumn(-1)
+        XCTAssertEqual(testValues.count, 0, "Wrong size array returned")
+        testValues = testCell.getValuesFromColumn(3)
+        XCTAssertEqual(testValues.count, 0, "Wrong size array returned")
+    }
+    
     func testCellRandomUnUsedRoutines() {
         var testCell: Cell!
         testCell = Cell(size: 3)
@@ -286,6 +303,62 @@ class SudokuTestCellTests: XCTestCase {
         XCTAssertEqual(copyCell.getNumberAtCellPosition(1, column: 1), 0, "Copied value is not cleared as expected")
         //cell completion
         XCTAssertNotEqual(copyCell.isCellCompleted(), testCell.isCellCompleted(), "Cell completed value not correct")
+    }
+    
+    func testCellMirrorVertically() {
+        var testCell: Cell!
+        testCell = Cell(size: 3)
+        // populate cell array
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 0, number: 5), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 1, number: 7), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 2, number: 1), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 0, number: 2), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 1, number: 3), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 2, number: 8), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 0, number: 6), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 1, number: 4), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 2, number: 9), true, "Incorrect Cell complete value reported")
+        XCTAssertEqual(testCell.isCellCompleted(), true, "Incorrect Cell complete value reported")
+        // mirror image the cell and test
+        testCell.mirrorVertically()
+        XCTAssertEqual(testCell.getNumberAtCellPosition(0, column: 0), 6, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(0, column: 1), 4, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(0, column: 2), 9, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(1, column: 0), 2, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(1, column: 1), 3, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(1, column: 2), 8, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(2, column: 0), 5, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(2, column: 1), 7, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(2, column: 2), 1, "Incorrect Cell complete value reported")
+        XCTAssertEqual(testCell.isCellCompleted(), true, "Incorrect Cell complete value reported")
+    }
+    
+    func testCellMirrorHorizontally() {
+        var testCell: Cell!
+        testCell = Cell(size: 3)
+        // populate cell array
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 0, number: 5), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 1, number: 7), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 2, number: 1), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 0, number: 2), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 1, number: 3), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 2, number: 8), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 0, number: 6), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 1, number: 4), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 2, number: 9), true, "Incorrect Cell complete value reported")
+        XCTAssertEqual(testCell.isCellCompleted(), true, "Incorrect Cell complete value reported")
+        // mirror image the cell and test
+        testCell.mirrorHorizontally()
+        XCTAssertEqual(testCell.getNumberAtCellPosition(0, column: 0), 1, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(0, column: 1), 7, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(0, column: 2), 5, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(1, column: 0), 8, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(1, column: 1), 3, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(1, column: 2), 2, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(2, column: 0), 9, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(2, column: 1), 4, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(2, column: 2), 6, "Incorrect Cell complete value reported")
+        XCTAssertEqual(testCell.isCellCompleted(), true, "Incorrect Cell complete value reported")
     }
     
     func testPerformanceExample() {
