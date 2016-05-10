@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BF4F76101CB2F5E4006A71BE /* GameBoardLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4F760F1CB2F5E4006A71BE /* GameBoardLabels.swift */; };
+		BF5F88951CE2334C00A53360 /* CellImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5F88941CE2334C00A53360 /* CellImages.swift */; };
 		BF70DE761CB00321006BB30D /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF70DE751CB00321006BB30D /* Cell.swift */; };
 		BF70DE781CB01857006BB30D /* GameBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF70DE771CB01857006BB30D /* GameBoard.swift */; };
 		BF87FFCD1CB18DC1004A857C /* CellLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF87FFCC1CB18DC1004A857C /* CellLabels.swift */; };
@@ -41,6 +42,7 @@
 
 /* Begin PBXFileReference section */
 		BF4F760F1CB2F5E4006A71BE /* GameBoardLabels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoardLabels.swift; sourceTree = "<group>"; };
+		BF5F88941CE2334C00A53360 /* CellImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellImages.swift; sourceTree = "<group>"; };
 		BF70DE751CB00321006BB30D /* Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		BF70DE771CB01857006BB30D /* GameBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoard.swift; sourceTree = "<group>"; };
 		BF87FFCC1CB18DC1004A857C /* CellLabels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellLabels.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				BF70DE771CB01857006BB30D /* GameBoard.swift */,
 				BF4F760F1CB2F5E4006A71BE /* GameBoardLabels.swift */,
 				BFDE91101CBFF4BB007370D0 /* TrackSolution.swift */,
+				BF5F88941CE2334C00A53360 /* CellImages.swift */,
 			);
 			path = SudokuTest;
 			sourceTree = "<group>";
@@ -276,6 +279,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BFDE91111CBFF4BB007370D0 /* TrackSolution.swift in Sources */,
+				BF5F88951CE2334C00A53360 /* CellImages.swift in Sources */,
 				BFADC0051C8C8CA200F48E54 /* ViewController.swift in Sources */,
 				BF4F76101CB2F5E4006A71BE /* GameBoardLabels.swift in Sources */,
 				BF70DE761CB00321006BB30D /* Cell.swift in Sources */,

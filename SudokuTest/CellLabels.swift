@@ -25,7 +25,7 @@ class CellLabels {
             var rowOfNumbers: [UILabel] = []
             for _: Int in 0 ..< self.cellColumns {
                 let label = UILabel()
-                label.font = UIFont(name: "MarkerFelt-Wide", size: 40)
+                label.font = UIFont(name: "MarkerFelt-Wide", size: 60)
                 label.textAlignment = NSTextAlignment.Center
                 rowOfNumbers.append(label)
             }
