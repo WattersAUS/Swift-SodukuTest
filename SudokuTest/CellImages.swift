@@ -41,4 +41,11 @@ class CellImages {
         return
     }
     
+    func setToSelectedImage(row: Int, column: Int) {
+        return
+    }
+
+    func setToDefaultImage(row: Int, column: Int) {
+        return
+    }
 }

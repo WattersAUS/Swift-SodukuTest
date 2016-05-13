@@ -7,14 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BF0FE00E1CE354C200880A42 /* TrackSolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0FE00D1CE354C200880A42 /* TrackSolution.swift */; };
 		BF2BF03F1CE28DFF00DFB59D /* Ideas.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */; };
 		BF4F76101CB2F5E4006A71BE /* GameBoardLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4F760F1CB2F5E4006A71BE /* GameBoardLabels.swift */; };
+		BF5A87F01CE5EB20008045F9 /* DefaultCell.png in Resources */ = {isa = PBXBuildFile; fileRef = BF5A87EF1CE5EB1F008045F9 /* DefaultCell.png */; };
 		BF5F88951CE2334C00A53360 /* CellImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5F88941CE2334C00A53360 /* CellImages.swift */; };
 		BF70DE761CB00321006BB30D /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF70DE751CB00321006BB30D /* Cell.swift */; };
 		BF70DE781CB01857006BB30D /* GameBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF70DE771CB01857006BB30D /* GameBoard.swift */; };
 		BF87FFCD1CB18DC1004A857C /* CellLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF87FFCC1CB18DC1004A857C /* CellLabels.swift */; };
 		BF9C0ED91CC919E5004C1ABC /* SudokuTestGameBoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9C0ED81CC919E5004C1ABC /* SudokuTestGameBoardTests.swift */; };
+		BFA3DF541CE393DD007CBC0E /* SudokuTestTrackSolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA3DF531CE393DD007CBC0E /* SudokuTestTrackSolution.swift */; };
+		BFA3DF621CE5303A007CBC0E /* Forward.png in Resources */ = {isa = PBXBuildFile; fileRef = BFA3DF561CE5303A007CBC0E /* Forward.png */; };
+		BFA3DF631CE5303A007CBC0E /* Rewind.png in Resources */ = {isa = PBXBuildFile; fileRef = BFA3DF571CE5303A007CBC0E /* Rewind.png */; };
+		BFA3DF651CE5303A007CBC0E /* SelectNumber_1.png in Resources */ = {isa = PBXBuildFile; fileRef = BFA3DF591CE5303A007CBC0E /* SelectNumber_1.png */; };
+		BFA3DF661CE5303A007CBC0E /* SelectNumber_2.png in Resources */ = {isa = PBXBuildFile; fileRef = BFA3DF5A1CE5303A007CBC0E /* SelectNumber_2.png */; };
+		BFA3DF671CE5303A007CBC0E /* SelectNumber_3.png in Resources */ = {isa = PBXBuildFile; fileRef = BFA3DF5B1CE5303A007CBC0E /* SelectNumber_3.png */; };
+		BFA3DF681CE5303A007CBC0E /* SelectNumber_4.png in Resources */ = {isa = PBXBuildFile; fileRef = BFA3DF5C1CE5303A007CBC0E /* SelectNumber_4.png */; };
+		BFA3DF691CE5303A007CBC0E /* SelectNumber_5.png in Resources */ = {isa = PBXBuildFile; fileRef = BFA3DF5D1CE5303A007CBC0E /* SelectNumber_5.png */; };
+		BFA3DF6A1CE5303A007CBC0E /* SelectNumber_6.png in Resources */ = {isa = PBXBuildFile; fileRef = BFA3DF5E1CE5303A007CBC0E /* SelectNumber_6.png */; };
+		BFA3DF6B1CE5303A007CBC0E /* SelectNumber_7.png in Resources */ = {isa = PBXBuildFile; fileRef = BFA3DF5F1CE5303A007CBC0E /* SelectNumber_7.png */; };
+		BFA3DF6C1CE5303A007CBC0E /* SelectNumber_8.png in Resources */ = {isa = PBXBuildFile; fileRef = BFA3DF601CE5303A007CBC0E /* SelectNumber_8.png */; };
+		BFA3DF6D1CE5303A007CBC0E /* SelectNumber_9.png in Resources */ = {isa = PBXBuildFile; fileRef = BFA3DF611CE5303A007CBC0E /* SelectNumber_9.png */; };
+		BFA3DF6F1CE5333B007CBC0E /* GameBoardImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA3DF6E1CE5333B007CBC0E /* GameBoardImages.swift */; };
+		BFA3DF711CE537C7007CBC0E /* Background_001.png in Resources */ = {isa = PBXBuildFile; fileRef = BFA3DF701CE537C7007CBC0E /* Background_001.png */; };
 		BFADC0031C8C8CA200F48E54 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFADC0021C8C8CA200F48E54 /* AppDelegate.swift */; };
 		BFADC0051C8C8CA200F48E54 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFADC0041C8C8CA200F48E54 /* ViewController.swift */; };
 		BFADC0081C8C8CA200F48E54 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFADC0061C8C8CA200F48E54 /* Main.storyboard */; };
@@ -43,14 +57,28 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		BF0FE00D1CE354C200880A42 /* TrackSolution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackSolution.swift; sourceTree = "<group>"; };
 		BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Ideas.rtf; sourceTree = "<group>"; };
 		BF4F760F1CB2F5E4006A71BE /* GameBoardLabels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoardLabels.swift; sourceTree = "<group>"; };
+		BF5A87EF1CE5EB1F008045F9 /* DefaultCell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultCell.png; sourceTree = "<group>"; };
 		BF5F88941CE2334C00A53360 /* CellImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellImages.swift; sourceTree = "<group>"; };
 		BF70DE751CB00321006BB30D /* Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		BF70DE771CB01857006BB30D /* GameBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoard.swift; sourceTree = "<group>"; };
 		BF87FFCC1CB18DC1004A857C /* CellLabels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellLabels.swift; sourceTree = "<group>"; };
 		BF9C0ED81CC919E5004C1ABC /* SudokuTestGameBoardTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SudokuTestGameBoardTests.swift; sourceTree = "<group>"; };
+		BFA3DF531CE393DD007CBC0E /* SudokuTestTrackSolution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SudokuTestTrackSolution.swift; sourceTree = "<group>"; };
+		BFA3DF561CE5303A007CBC0E /* Forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Forward.png; sourceTree = "<group>"; };
+		BFA3DF571CE5303A007CBC0E /* Rewind.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Rewind.png; sourceTree = "<group>"; };
+		BFA3DF591CE5303A007CBC0E /* SelectNumber_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SelectNumber_1.png; sourceTree = "<group>"; };
+		BFA3DF5A1CE5303A007CBC0E /* SelectNumber_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SelectNumber_2.png; sourceTree = "<group>"; };
+		BFA3DF5B1CE5303A007CBC0E /* SelectNumber_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SelectNumber_3.png; sourceTree = "<group>"; };
+		BFA3DF5C1CE5303A007CBC0E /* SelectNumber_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SelectNumber_4.png; sourceTree = "<group>"; };
+		BFA3DF5D1CE5303A007CBC0E /* SelectNumber_5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SelectNumber_5.png; sourceTree = "<group>"; };
+		BFA3DF5E1CE5303A007CBC0E /* SelectNumber_6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SelectNumber_6.png; sourceTree = "<group>"; };
+		BFA3DF5F1CE5303A007CBC0E /* SelectNumber_7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SelectNumber_7.png; sourceTree = "<group>"; };
+		BFA3DF601CE5303A007CBC0E /* SelectNumber_8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SelectNumber_8.png; sourceTree = "<group>"; };
+		BFA3DF611CE5303A007CBC0E /* SelectNumber_9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SelectNumber_9.png; sourceTree = "<group>"; };
+		BFA3DF6E1CE5333B007CBC0E /* GameBoardImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoardImages.swift; sourceTree = "<group>"; };
+		BFA3DF701CE537C7007CBC0E /* Background_001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Background_001.png; sourceTree = "<group>"; };
 		BFADBFFF1C8C8CA200F48E54 /* SudokuTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SudokuTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFADC0021C8C8CA200F48E54 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BFADC0041C8C8CA200F48E54 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -92,6 +120,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BFA3DF551CE5301E007CBC0E /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				BFA3DF701CE537C7007CBC0E /* Background_001.png */,
+				BF5A87EF1CE5EB1F008045F9 /* DefaultCell.png */,
+				BFA3DF561CE5303A007CBC0E /* Forward.png */,
+				BFA3DF571CE5303A007CBC0E /* Rewind.png */,
+				BFA3DF591CE5303A007CBC0E /* SelectNumber_1.png */,
+				BFA3DF5A1CE5303A007CBC0E /* SelectNumber_2.png */,
+				BFA3DF5B1CE5303A007CBC0E /* SelectNumber_3.png */,
+				BFA3DF5C1CE5303A007CBC0E /* SelectNumber_4.png */,
+				BFA3DF5D1CE5303A007CBC0E /* SelectNumber_5.png */,
+				BFA3DF5E1CE5303A007CBC0E /* SelectNumber_6.png */,
+				BFA3DF5F1CE5303A007CBC0E /* SelectNumber_7.png */,
+				BFA3DF601CE5303A007CBC0E /* SelectNumber_8.png */,
+				BFA3DF611CE5303A007CBC0E /* SelectNumber_9.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
 		BFADBFF61C8C8CA200F48E54 = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +163,7 @@
 		BFADC0011C8C8CA200F48E54 /* SudokuTest */ = {
 			isa = PBXGroup;
 			children = (
+				BFA3DF551CE5301E007CBC0E /* Images */,
 				BFADC0021C8C8CA200F48E54 /* AppDelegate.swift */,
 				BFADC0041C8C8CA200F48E54 /* ViewController.swift */,
 				BFADC0061C8C8CA200F48E54 /* Main.storyboard */,
@@ -126,6 +175,7 @@
 				BF87FFCC1CB18DC1004A857C /* CellLabels.swift */,
 				BF70DE771CB01857006BB30D /* GameBoard.swift */,
 				BF4F760F1CB2F5E4006A71BE /* GameBoardLabels.swift */,
+				BFA3DF6E1CE5333B007CBC0E /* GameBoardImages.swift */,
 				BFDE91101CBFF4BB007370D0 /* TrackSolution.swift */,
 				BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */,
 			);
@@ -138,7 +188,7 @@
 				BFADC0191C8C8CA200F48E54 /* Info.plist */,
 				BFADC0171C8C8CA200F48E54 /* SudokuTestCellTests.swift */,
 				BF9C0ED81CC919E5004C1ABC /* SudokuTestGameBoardTests.swift */,
-				BF0FE00D1CE354C200880A42 /* TrackSolution.swift */,
+				BFA3DF531CE393DD007CBC0E /* SudokuTestTrackSolution.swift */,
 			);
 			path = SudokuTestTests;
 			sourceTree = "<group>";
@@ -257,10 +307,23 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFA3DF671CE5303A007CBC0E /* SelectNumber_3.png in Resources */,
 				BFADC00D1C8C8CA200F48E54 /* LaunchScreen.storyboard in Resources */,
+				BFA3DF691CE5303A007CBC0E /* SelectNumber_5.png in Resources */,
 				BF2BF03F1CE28DFF00DFB59D /* Ideas.rtf in Resources */,
+				BFA3DF6B1CE5303A007CBC0E /* SelectNumber_7.png in Resources */,
+				BFA3DF711CE537C7007CBC0E /* Background_001.png in Resources */,
+				BFA3DF6C1CE5303A007CBC0E /* SelectNumber_8.png in Resources */,
+				BFA3DF6D1CE5303A007CBC0E /* SelectNumber_9.png in Resources */,
+				BFA3DF681CE5303A007CBC0E /* SelectNumber_4.png in Resources */,
+				BFA3DF631CE5303A007CBC0E /* Rewind.png in Resources */,
+				BF5A87F01CE5EB20008045F9 /* DefaultCell.png in Resources */,
 				BFADC00A1C8C8CA200F48E54 /* Assets.xcassets in Resources */,
 				BFADC0081C8C8CA200F48E54 /* Main.storyboard in Resources */,
+				BFA3DF621CE5303A007CBC0E /* Forward.png in Resources */,
+				BFA3DF651CE5303A007CBC0E /* SelectNumber_1.png in Resources */,
+				BFA3DF661CE5303A007CBC0E /* SelectNumber_2.png in Resources */,
+				BFA3DF6A1CE5303A007CBC0E /* SelectNumber_6.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,6 +351,7 @@
 				BFDE91111CBFF4BB007370D0 /* TrackSolution.swift in Sources */,
 				BF5F88951CE2334C00A53360 /* CellImages.swift in Sources */,
 				BFADC0051C8C8CA200F48E54 /* ViewController.swift in Sources */,
+				BFA3DF6F1CE5333B007CBC0E /* GameBoardImages.swift in Sources */,
 				BF4F76101CB2F5E4006A71BE /* GameBoardLabels.swift in Sources */,
 				BF70DE761CB00321006BB30D /* Cell.swift in Sources */,
 				BFADC0031C8C8CA200F48E54 /* AppDelegate.swift in Sources */,
@@ -301,7 +365,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BFADC0181C8C8CA200F48E54 /* SudokuTestCellTests.swift in Sources */,
-				BF0FE00E1CE354C200880A42 /* TrackSolution.swift in Sources */,
+				BFA3DF541CE393DD007CBC0E /* SudokuTestTrackSolution.swift in Sources */,
 				BF9C0ED91CC919E5004C1ABC /* SudokuTestGameBoardTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
