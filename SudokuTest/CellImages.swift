@@ -32,20 +32,10 @@ class CellImages {
         return
     }
 
-    // NEEDS WORK HERE!!!!! to set default/clear image and enable setting of right image when needed
-    private func clearImageView(imageView: UIImageView) {
-        return
-    }
-    
-    private func setImageView(imageView: UIImageView) {
-        return
-    }
-    
-    func setToSelectedImage(row: Int, column: Int) {
+    func setToImage(row: Int, column: Int, imageToSet: UIImage) {
+        let imageView: UIImageView = cellNumbers[row][column]
+        imageView.image = imageToSet
         return
     }
 
-    func setToDefaultImage(row: Int, column: Int) {
-        return
-    }
 }

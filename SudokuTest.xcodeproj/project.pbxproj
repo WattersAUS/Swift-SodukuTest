@@ -8,8 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		BF2BF03F1CE28DFF00DFB59D /* Ideas.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */; };
+		BF3258E81CE8DD5A00FF11F1 /* DefaultImage.png in Resources */ = {isa = PBXBuildFile; fileRef = BF3258E71CE8DD5A00FF11F1 /* DefaultImage.png */; };
+		BF3258EA1CE8E66A00FF11F1 /* SelectedImage.png in Resources */ = {isa = PBXBuildFile; fileRef = BF3258E91CE8E66A00FF11F1 /* SelectedImage.png */; };
 		BF4F76101CB2F5E4006A71BE /* GameBoardLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4F760F1CB2F5E4006A71BE /* GameBoardLabels.swift */; };
-		BF5A87F01CE5EB20008045F9 /* DefaultCell.png in Resources */ = {isa = PBXBuildFile; fileRef = BF5A87EF1CE5EB1F008045F9 /* DefaultCell.png */; };
 		BF5F88951CE2334C00A53360 /* CellImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5F88941CE2334C00A53360 /* CellImages.swift */; };
 		BF70DE761CB00321006BB30D /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF70DE751CB00321006BB30D /* Cell.swift */; };
 		BF70DE781CB01857006BB30D /* GameBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF70DE771CB01857006BB30D /* GameBoard.swift */; };
@@ -58,8 +59,9 @@
 
 /* Begin PBXFileReference section */
 		BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Ideas.rtf; sourceTree = "<group>"; };
+		BF3258E71CE8DD5A00FF11F1 /* DefaultImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultImage.png; sourceTree = "<group>"; };
+		BF3258E91CE8E66A00FF11F1 /* SelectedImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SelectedImage.png; sourceTree = "<group>"; };
 		BF4F760F1CB2F5E4006A71BE /* GameBoardLabels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoardLabels.swift; sourceTree = "<group>"; };
-		BF5A87EF1CE5EB1F008045F9 /* DefaultCell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultCell.png; sourceTree = "<group>"; };
 		BF5F88941CE2334C00A53360 /* CellImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellImages.swift; sourceTree = "<group>"; };
 		BF70DE751CB00321006BB30D /* Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		BF70DE771CB01857006BB30D /* GameBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoard.swift; sourceTree = "<group>"; };
@@ -124,7 +126,8 @@
 			isa = PBXGroup;
 			children = (
 				BFA3DF701CE537C7007CBC0E /* Background_001.png */,
-				BF5A87EF1CE5EB1F008045F9 /* DefaultCell.png */,
+				BF3258E71CE8DD5A00FF11F1 /* DefaultImage.png */,
+				BF3258E91CE8E66A00FF11F1 /* SelectedImage.png */,
 				BFA3DF561CE5303A007CBC0E /* Forward.png */,
 				BFA3DF571CE5303A007CBC0E /* Rewind.png */,
 				BFA3DF591CE5303A007CBC0E /* SelectNumber_1.png */,
@@ -312,15 +315,16 @@
 				BFA3DF691CE5303A007CBC0E /* SelectNumber_5.png in Resources */,
 				BF2BF03F1CE28DFF00DFB59D /* Ideas.rtf in Resources */,
 				BFA3DF6B1CE5303A007CBC0E /* SelectNumber_7.png in Resources */,
+				BF3258E81CE8DD5A00FF11F1 /* DefaultImage.png in Resources */,
 				BFA3DF711CE537C7007CBC0E /* Background_001.png in Resources */,
 				BFA3DF6C1CE5303A007CBC0E /* SelectNumber_8.png in Resources */,
 				BFA3DF6D1CE5303A007CBC0E /* SelectNumber_9.png in Resources */,
 				BFA3DF681CE5303A007CBC0E /* SelectNumber_4.png in Resources */,
 				BFA3DF631CE5303A007CBC0E /* Rewind.png in Resources */,
-				BF5A87F01CE5EB20008045F9 /* DefaultCell.png in Resources */,
 				BFADC00A1C8C8CA200F48E54 /* Assets.xcassets in Resources */,
 				BFADC0081C8C8CA200F48E54 /* Main.storyboard in Resources */,
 				BFA3DF621CE5303A007CBC0E /* Forward.png in Resources */,
+				BF3258EA1CE8E66A00FF11F1 /* SelectedImage.png in Resources */,
 				BFA3DF651CE5303A007CBC0E /* SelectNumber_1.png in Resources */,
 				BFA3DF661CE5303A007CBC0E /* SelectNumber_2.png in Resources */,
 				BFA3DF6A1CE5303A007CBC0E /* SelectNumber_6.png in Resources */,
