@@ -254,6 +254,16 @@ class GameBoard: NSObject, NSCopying {
         }
         return self.gameBoardCells[boardRow][boardColumn].getNumberAtCellPosition(cellRow, column: cellColumn)
     }
+
+    func getNumberFromSolutionBoard(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) -> Int {
+        if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
+            return 0
+        }
+        if cellRow < 0 || cellRow >= self.solutionBoardCells[boardRow][boardColumn].cellDepth() || cellColumn < 0 || cellColumn >= self.solutionBoardCells[boardRow][boardColumn].cellWidth() {
+            return 0
+        }
+        return self.solutionBoardCells[boardRow][boardColumn].getNumberAtCellPosition(cellRow, column: cellColumn)
+    }
     
     // bit of a hack needs work
     func getBoardWidthInCells() -> Int {

@@ -38,4 +38,9 @@ class CellImages {
         return
     }
 
+    func unsetToImage(row: Int, column: Int) {
+        let imageView: UIImageView = cellNumbers[row][column]
+        imageView.image = nil
+        return
+    }
 }
