@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     var displayBoard: GameBoardImages!
     var debug: Int = 1
     var boardDimensions: Int = 3
-    var gameDifficulty: Int = 7
+    var gameDifficulty: Int = 5
     
     // where to start drawing the board
     let kMainViewMargin: CGFloat = 40.0
@@ -318,7 +318,7 @@ class ViewController: UIViewController {
     }
     
     func getPositionOfControlPanelImageTapped(location: CGPoint) -> (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) {
-        for y: Int in 0 ..< self.displayBoard.boardRows {
+        for y: Int in 0 ..< 12 {
             for x: Int in 0 ..< self.displayBoard.boardColumns {
                 let cellImages: CellImages = self.displayBoard.gameImages[y][x]
                 for j: Int in 0 ..< cellImages.cellRows {
@@ -383,6 +383,7 @@ class ViewController: UIViewController {
                 let cellImages: CellImages = self.displayBoard.gameImages[y][x]
                 for j: Int in 0 ..< cellImages.cellRows {
                     for k: Int in 0 ..< cellImages.cellColumns {
+                        cellImages.unsetToImage(j, column: k)
                         let number: Int = self.sudokuBoard.getNumberFromGameBoard(y, boardColumn: x, cellRow: j, cellColumn: k) - 1
                         if (number > -1) {
                             cellImages.setToImage(j, column: k, imageToSet: self.imageDefaultLibrary[self.activeImageSet][number])
