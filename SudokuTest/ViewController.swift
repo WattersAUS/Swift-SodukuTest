@@ -10,8 +10,6 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var sudokuBoard: GameBoard!
-    var displayBoard: GameBoardImages!
     var debug: Int = 1
     var boardDimensions: Int = 3
     var gameDifficulty: Int = 5
@@ -22,13 +20,23 @@ class ViewController: UIViewController {
     // the board to solve
     var viewSudokuBoard: UIView!
     let kCellMargin: CGFloat = 5
+    var sudokuBoard: GameBoard!
+    var displayBoard: GameBoardImages!
+    // current selected board position (if any, -1 if none)
+    var boardSelectedPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) = (-1, -1, -1, -1)
     
     // the control panel
     var viewControlPanel: UIView!
     let kPanelMargin: CGFloat = 5
+    var controlPanelImages: CellImages!
+    // current selected board position (if any, -1 if none)
+    var panelSelectedPosition: (panelRow: Int, panelColumn: Int) = (-1, -1)
 
     // numbers to insert into the board, rewind, replay, reset etc
     var selectedImage: UIImage = UIImage(named:"Selected.png")!
+
+    // which set of images is currently active
+    var activeImageSet: Int = 0
     // default image set
     var imageDefaultLibrary: [[UIImage]] = [[
         UIImage(named:"Image001_default.png")!,
@@ -80,22 +88,17 @@ class ViewController: UIViewController {
         ],[
         ]]
     
-    // which set of images is currently active
-    var activeImageSet: Int = 0
-    
-    // current selected board positiom (if any, -1 if none)
-    var currentSelectedPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) = (-1, -1, -1, -1)
-    
     // start of the code!!!!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.sudokuBoard = GameBoard(size: self.boardDimensions, setDifficulty: self.gameDifficulty)
         self.displayBoard = GameBoardImages(size: self.boardDimensions)
+        self.controlPanelImages = CellImages(rows: 6, columns: 2)
         self.view.backgroundColor = UIColor.lightGrayColor()
         self.activeImageSet = 0
         self.initialSudokuBoardDisplay()
-        self.initialControlPanelDisplay()        
+        self.initialControlPanelDisplay()
     }
 
     override func didReceiveMemoryWarning() {
@@ -131,12 +134,13 @@ class ViewController: UIViewController {
                 for x: Int in 0 ..< boardRows {
                     var kStart: CGFloat = 0
                     for k: Int in 0 ..< boardColumns {
-                        let cellImages: CellImages = self.displayBoard.gameImages[y][x]
-                        let newImage: UIImageView = cellImages.cellNumbers[j][k]
                         let xCoord: CGFloat = xStart + kStart
                         let yCoord: CGFloat = yStart + jStart
-                        newImage.frame = CGRect(x: xCoord, y: yCoord, width: cellWidth, height: cellWidth)
-                        self.viewSudokuBoard.addSubview(newImage)
+                        let cellImages: CellImages = self.displayBoard.gameImages[y][x]
+                        let content: CellContent = cellImages.cellContents[j][k]
+                        let imageContent: UIImageView = content.cellImageView
+                        imageContent.frame = CGRect(x: xCoord, y: yCoord, width: cellWidth, height: cellWidth)
+                        self.viewSudokuBoard.addSubview(imageContent)
                         kStart += cellWidth + cellMargin
                     }
                     xStart += kStart + (cellMargin * 2)
@@ -181,21 +185,21 @@ class ViewController: UIViewController {
         if self.sudokuBoard.originBoardCells[cellPosition.boardRow][cellPosition.boardColumn].getNumberAtCellPosition(cellPosition.cellRow, column: cellPosition.cellColumn) > 0 {
             return
         }
-        // if the user selectd the same position then wipe it out
-        if (self.currentSelectedPosition == cellPosition) {
+        // if the user selected the same position, clear it
+        if (self.boardSelectedPosition == cellPosition) {
             self.setCellToDefaultImage(cellPosition)
-            self.currentSelectedPosition = (-1,-1,-1,-1)
+            self.boardSelectedPosition = (-1,-1,-1,-1)
             return
         }
-        // if we already have a position and the user had selected another position
-        if (self.currentSelectedPosition != (-1,-1,-1,-1)) {
-            if (self.currentSelectedPosition != cellPosition) {
-                self.setCellToDefaultImage(self.currentSelectedPosition)
+        // if we already have a position and the user had selected another
+        if (self.boardSelectedPosition != (-1,-1,-1,-1)) {
+            if (self.boardSelectedPosition != cellPosition) {
+                self.setCellToDefaultImage(self.boardSelectedPosition)
             }
         }
         // update currently selected position
-        self.currentSelectedPosition = (cellPosition.boardRow, cellPosition.boardColumn, cellPosition.cellRow, cellPosition.cellColumn)
-        self.setCellToSelectedImage(self.currentSelectedPosition)
+        self.boardSelectedPosition = (cellPosition.boardRow, cellPosition.boardColumn, cellPosition.cellRow, cellPosition.cellColumn)
+        self.setCellToSelectedImage(self.boardSelectedPosition)
         return
     }
     
@@ -205,8 +209,9 @@ class ViewController: UIViewController {
                 let cellImages: CellImages = self.displayBoard.gameImages[y][x]
                 for j: Int in 0 ..< cellImages.cellRows {
                     for k: Int in 0 ..< cellImages.cellColumns {
-                        let cellImage: UIImageView = cellImages.cellNumbers[j][k]
-                        if self.isTapWithinSudokuBoardImage(location, image: cellImage) == true {
+                        let cellContent: CellContent = cellImages.cellContents[j][k]
+                        let cellImage: UIImageView = cellContent.cellImageView
+                        if self.isTapWithinImage(location, image: cellImage) == true {
                             return(y, x, j, k)
                         }
                     }
@@ -216,7 +221,16 @@ class ViewController: UIViewController {
         return(-1, -1, -1, -1)
     }
     
-    func isTapWithinSudokuBoardImage(location: CGPoint, image: UIImageView) -> Bool {
+//    func isTapWithinSudokuBoardImage(location: CGPoint, image: UIImageView) -> Bool {
+//        if (location.x >= image.frame.origin.x) && (location.x <= (image.frame.origin.x + image.frame.width)) {
+//            if (location.y >= image.frame.origin.y) && (location.y <= (image.frame.origin.y + image.frame.height)) {
+//                return true
+//            }
+//        }
+//        return false
+//    }
+
+    func isTapWithinImage(location: CGPoint, image: UIImageView) -> Bool {
         if (location.x >= image.frame.origin.x) && (location.x <= (image.frame.origin.x + image.frame.width)) {
             if (location.y >= image.frame.origin.y) && (location.y <= (image.frame.origin.y + image.frame.height)) {
                 return true
@@ -241,27 +255,27 @@ class ViewController: UIViewController {
         self.viewControlPanel = UIView(frame: CGRect(x: originX, y: originY, width: frameWidth, height: frameHeight))
         self.view.addSubview(self.viewControlPanel)
         self.addInitialImagesToControlPanelView()
-        //self.initialiseControlPanelUIViewToAcceptTouch(self.viewSudokuBoard)
+        self.initialiseControlPanelUIViewToAcceptTouch(self.viewControlPanel)
         return
     }
     
     // add the image containers onto the control panel
     func addInitialImagesToControlPanelView() {
         let cellWidth: CGFloat = 65
-        var xCoord: CGFloat = 0
         var yCoord: CGFloat = 0
-        for i: Int in 0 ..< 12 {
-            let imageView = UIImageView()
-            if ((i & 1) == 1) {
+        var i: Int = 0
+        for row: Int in 0 ..< 6 {
+            var xCoord: CGFloat = 0
+            for column: Int in 0 ..< 2 {
+                let cellContent: CellContent = self.controlPanelImages.cellContents[row][column]
+                let imageView: UIImageView = cellContent.cellImageView
                 imageView.frame = CGRect(x: xCoord, y: yCoord, width: cellWidth, height: cellWidth)
-                yCoord += cellWidth + 8
-                xCoord = 0
-            } else {
-                imageView.frame = CGRect(x: xCoord, y: yCoord, width: cellWidth, height: cellWidth)
+                imageView.image = self.imageDefaultLibrary[self.activeImageSet][i]
+                self.viewControlPanel.addSubview(imageView)
                 xCoord += cellWidth + 18
+                i += 1
             }
-            imageView.image = self.imageDefaultLibrary[self.activeImageSet][i]
-            self.viewControlPanel.addSubview(imageView)
+            yCoord += cellWidth + 8
         }
         return
     }
@@ -290,57 +304,43 @@ class ViewController: UIViewController {
         if self.sudokuBoard.gameBoardCells.count == 0 {
             return
         }
-        // has the user tapped in a cell?
-        let cellPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) = self.getPositionOfControlPanelImageTapped(recognizer.locationInView(recognizer.view))
-        if cellPosition.boardColumn == -1 {
+        // has the user tapped in a control panel icon?
+        let panelPosition: (panelRow: Int, panelColumn: Int) = self.getPositionOfControlPanelImageTapped(recognizer.locationInView(recognizer.view))
+        if panelPosition.panelColumn == -1 {
             return
         }
-        // the user cannot select an 'origin' cell
-        if self.sudokuBoard.originBoardCells[cellPosition.boardRow][cellPosition.boardColumn].getNumberAtCellPosition(cellPosition.cellRow, column: cellPosition.cellColumn) > 0 {
-            return
-        }
-        // if the user selectd the same position then wipe it out
-        if (self.currentSelectedPosition == cellPosition) {
-            self.setCellToDefaultImage(cellPosition)
-            self.currentSelectedPosition = (-1,-1,-1,-1)
-            return
-        }
-        // if we already have a position and the user had selected another position
-        if (self.currentSelectedPosition != (-1,-1,-1,-1)) {
-            if (self.currentSelectedPosition != cellPosition) {
-                self.setCellToDefaultImage(self.currentSelectedPosition)
-            }
-        }
+        
+        // REVAMP for CONTROL HANDLING
+//        // if the user selectd the same position then wipe it out
+//        if (self.currentSelectedPosition == cellPosition) {
+//            self.setCellToDefaultImage(cellPosition)
+//            self.currentSelectedPosition = (-1,-1,-1,-1)
+//            return
+//        }
+//        // if we already have a position and the user had selected another position
+//        if (self.currentSelectedPosition != (-1,-1,-1,-1)) {
+//            if (self.currentSelectedPosition != cellPosition) {
+//                self.setCellToDefaultImage(self.currentSelectedPosition)
+//            }
+//        }
+        
         // update currently selected position
-        self.currentSelectedPosition = (cellPosition.boardRow, cellPosition.boardColumn, cellPosition.cellRow, cellPosition.cellColumn)
-        self.setCellToSelectedImage(self.currentSelectedPosition)
+        self.panelSelectedPosition = panelPosition
+        //self.setCellToSelectedImage(self.currentSelectedPosition)
         return
     }
     
-    func getPositionOfControlPanelImageTapped(location: CGPoint) -> (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) {
-        for y: Int in 0 ..< 12 {
-            for x: Int in 0 ..< self.displayBoard.boardColumns {
-                let cellImages: CellImages = self.displayBoard.gameImages[y][x]
-                for j: Int in 0 ..< cellImages.cellRows {
-                    for k: Int in 0 ..< cellImages.cellColumns {
-                        let cellImage: UIImageView = cellImages.cellNumbers[j][k]
-                        if self.isTapWithinControlPanelImage(location, image: cellImage) == true {
-                            return(y, x, j, k)
-                        }
-                    }
+    func getPositionOfControlPanelImageTapped(location: CGPoint) -> (panelRow: Int, panelColumn: Int) {
+        for y: Int in 0 ..< self.controlPanelImages.cellRows {
+            for x: Int in 0 ..< self.controlPanelImages.cellColumns {
+                let cellContent: CellContent = self.controlPanelImages.cellContents[y][x]
+                let panelImage: UIImageView = cellContent.cellImageView
+                if self.isTapWithinImage(location, image: panelImage) == true {
+                    return(y, x)
                 }
             }
         }
-        return(-1, -1, -1, -1)
-    }
-    
-    func isTapWithinControlPanelImage(location: CGPoint, image: UIImageView) -> Bool {
-        if (location.x >= image.frame.origin.x) && (location.x <= (image.frame.origin.x + image.frame.width)) {
-            if (location.y >= image.frame.origin.y) && (location.y <= (image.frame.origin.y + image.frame.height)) {
-                return true
-            }
-        }
-        return false
+        return(-1, -1)
     }
     
     //
@@ -350,7 +350,7 @@ class ViewController: UIViewController {
     // update cell colours when selected or deselected
     func setCellToSelectedImage(boardPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)) {
         let cellImages: CellImages = self.displayBoard.gameImages[boardPosition.boardRow][boardPosition.boardColumn]
-        cellImages.setToImage(boardPosition.cellRow, column: boardPosition.cellColumn, imageToSet: self.selectedImage)
+        cellImages.setToImage(boardPosition.cellRow, column: boardPosition.cellColumn, imageToSet: self.selectedImage, imageState: 0)
         return
     }
     
@@ -386,7 +386,7 @@ class ViewController: UIViewController {
                         cellImages.unsetToImage(j, column: k)
                         let number: Int = self.sudokuBoard.getNumberFromGameBoard(y, boardColumn: x, cellRow: j, cellColumn: k) - 1
                         if (number > -1) {
-                            cellImages.setToImage(j, column: k, imageToSet: self.imageDefaultLibrary[self.activeImageSet][number])
+                            cellImages.setToImage(j, column: k, imageToSet: self.imageDefaultLibrary[self.activeImageSet][number], imageState: 0)
                         }
                     }
                 }

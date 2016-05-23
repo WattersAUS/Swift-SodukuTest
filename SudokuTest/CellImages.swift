@@ -9,9 +9,14 @@
 import Foundation
 import UIKit
 
+// to hold reference to image/type of image displayed ie. default, selected, highlighted
+struct CellContent {
+    var cellImageView: UIImageView!
+    var cellState: Int!
+}
+
 class CellImages {
-    
-    var cellNumbers: [[UIImageView]] = []
+    var cellContents: [[CellContent]] = []
     var cellColumns: Int = 0
     var cellRows: Int = 0
 
@@ -41,28 +46,32 @@ class CellImages {
     }
 
     private func allocateImageArray(rows: Int, columns: Int) {
+        for _: Int in 0 ..< rows {
+            var rowOfImages: [CellContent] = []
+            for _: Int in 0 ..< columns {
+                var image = CellContent()
+                image.cellImageView = UIImageView()
+                image.cellState = -1
+                rowOfImages.append(image)
+            }
+            self.cellContents.append(rowOfImages)
+        }
         self.cellRows = rows
         self.cellColumns = columns
-        for _: Int in 0 ..< self.cellRows {
-            var rowOfNumbers: [UIImageView] = []
-            for _: Int in 0 ..< self.cellColumns {
-                let imageView = UIImageView()
-                rowOfNumbers.append(imageView)
-            }
-            self.cellNumbers.append(rowOfNumbers)
-        }
-        return
-    }
-    
-    func setToImage(row: Int, column: Int, imageToSet: UIImage) {
-        let imageView: UIImageView = cellNumbers[row][column]
-        imageView.image = imageToSet
         return
     }
 
+    func setToImage(row: Int, column: Int, imageToSet: UIImage, imageState: Int) {
+        var image: CellContent = cellContents[row][column]
+        image.cellImageView.image = imageToSet
+        image.cellState = imageState
+        return
+    }
+    
     func unsetToImage(row: Int, column: Int) {
-        let imageView: UIImageView = cellNumbers[row][column]
-        imageView.image = nil
+        var image: CellContent = cellContents[row][column]
+        image.cellImageView.image = nil
+        image.cellState = -1
         return
     }
 }

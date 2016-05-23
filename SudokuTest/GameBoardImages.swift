@@ -16,21 +16,28 @@ class GameBoardImages {
     var boardColumns: Int = 0
     
     init (size: Int = 3) {
-        self.boardColumns = size
-        if self.boardColumns != 3 {
-            self.boardColumns = 3
+        var setSize: Int = size
+        if setSize != 3 {
+            setSize = 3
         }
-        self.boardRows = self.boardColumns
-        for row: Int in 0 ..< self.boardRows {
-            var rowOfCells: [CellImages] = [CellImages(size: self.boardColumns)]
-            for column: Int in 0 ..< boardColumns {
+        self.allocateImageArray(setSize, columns: setSize)
+        return
+    }
+
+    private func allocateImageArray(rows: Int, columns: Int) {
+        self.boardRows = rows
+        self.boardColumns = columns
+        for row: Int in 0 ..< rows {
+            var rowOfCells: [CellImages] = [CellImages(rows: rows, columns: columns)]
+            for column: Int in 0 ..< columns {
                 self.boardCoordinates.append((row, column))
                 if column > 0 {
-                    rowOfCells.append(CellImages(size: self.boardColumns))
+                    rowOfCells.append(CellImages(rows: rows, columns: columns))
                 }
             }
             self.gameImages.append(rowOfCells)
         }
+        return
     }
     
 }
