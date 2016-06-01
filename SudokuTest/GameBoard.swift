@@ -10,11 +10,11 @@ import Foundation
 
 class GameBoard: NSObject, NSCopying {
     
+    // will contain the solution to the puzzle
     private var solutionBoardCells: [[Cell]] = []
-
-    // this is the solution with random numbers blanked out (to create the game board, the one displayed to the user)
+    // the solution with random numbers blanked out (this will be the board shown to the user)
     var gameBoardCells: [[Cell]] = []
-    // the game board before the user starts (used to restart board functions)
+    // the board before the user starts (used to restart board functions)
     var originBoardCells: [[Cell]] = []
 
     private var boardCoordinates: [(row: Int, column: Int)] = []
@@ -245,6 +245,7 @@ class GameBoard: NSObject, NSCopying {
         return dumpOfBoard
     }
     
+    // get a number from the board the user is completing
     func getNumberFromGameBoard(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) -> Int {
         if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
             return 0
@@ -254,7 +255,8 @@ class GameBoard: NSObject, NSCopying {
         }
         return self.gameBoardCells[boardRow][boardColumn].getNumberAtCellPosition(cellRow, column: cellColumn)
     }
-
+    
+    // get a number from the solution board
     func getNumberFromSolutionBoard(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) -> Int {
         if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
             return 0
@@ -283,6 +285,19 @@ class GameBoard: NSObject, NSCopying {
     
     func getBoardColumns() -> Int {
         return self.boardColumns
+    }
+    
+    func getLocationsOfNumberOnBoard(number: Int) -> [(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)] {
+        var returnCoords: [(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)] = []
+        for row: Int in 0 ..< self.boardRows {
+            for column: Int in 0 ..< self.boardColumns {
+                let cellCoords: (cellRow: Int, cellColumn: Int) = self.gameBoardCells[row][column].getLocationOfNumberInCell(number)
+                if (cellCoords != (-1,-1)) {
+                    returnCoords.append((row, column, cellCoords.cellRow, cellCoords.cellColumn))
+                }
+            }
+        }
+        return(returnCoords)
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {

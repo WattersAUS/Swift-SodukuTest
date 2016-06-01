@@ -361,6 +361,39 @@ class SudokuTestCellTests: XCTestCase {
         XCTAssertEqual(testCell.isCellCompleted(), true, "Incorrect Cell complete value reported")
     }
     
+    func testGetLocationOfNumber() {
+        var testCell: Cell!
+        testCell = Cell(size: 3)
+        // populate cell array
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 0, number: 5), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 2, number: 1), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 0, number: 2), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 2, number: 8), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 1, number: 4), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 2, number: 9), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.isCellCompleted(), false, "Incorrect Cell incomplete value reported")
+        // test location of numbers used are valid
+        var location: (Int, Int) = testCell.getLocationOfNumberInCell(5)
+        XCTAssertEqual(location == (0, 0), true, "Incorrect Coordinate reported")
+        location = testCell.getLocationOfNumberInCell(1)
+        XCTAssertEqual(location == (0, 2), true, "Incorrect Coordinate reported")
+        location = testCell.getLocationOfNumberInCell(2)
+        XCTAssertEqual(location == (1, 0), true, "Incorrect Coordinate reported")
+        location = testCell.getLocationOfNumberInCell(8)
+        XCTAssertEqual(location == (1, 2), true, "Incorrect Coordinate reported")
+        location = testCell.getLocationOfNumberInCell(4)
+        XCTAssertEqual(location == (2, 1), true, "Incorrect Coordinate reported")
+        location = testCell.getLocationOfNumberInCell(9)
+        XCTAssertEqual(location == (2, 2), true, "Incorrect Coordinate reported")
+        // now the missing values
+        location = testCell.getLocationOfNumberInCell(3)
+        XCTAssertEqual(location == (-1, -1), true, "Incorrect Coordinate reported")
+        location = testCell.getLocationOfNumberInCell(6)
+        XCTAssertEqual(location == (-1, -1), true, "Incorrect Coordinate reported")
+        location = testCell.getLocationOfNumberInCell(7)
+        XCTAssertEqual(location == (-1, -1), true, "Incorrect Coordinate reported")
+    }
+    
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measureBlock {

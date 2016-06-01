@@ -221,24 +221,6 @@ class ViewController: UIViewController {
         return(-1, -1, -1, -1)
     }
     
-//    func isTapWithinSudokuBoardImage(location: CGPoint, image: UIImageView) -> Bool {
-//        if (location.x >= image.frame.origin.x) && (location.x <= (image.frame.origin.x + image.frame.width)) {
-//            if (location.y >= image.frame.origin.y) && (location.y <= (image.frame.origin.y + image.frame.height)) {
-//                return true
-//            }
-//        }
-//        return false
-//    }
-
-    func isTapWithinImage(location: CGPoint, image: UIImageView) -> Bool {
-        if (location.x >= image.frame.origin.x) && (location.x <= (image.frame.origin.x + image.frame.width)) {
-            if (location.y >= image.frame.origin.y) && (location.y <= (image.frame.origin.y + image.frame.height)) {
-                return true
-            }
-        }
-        return false
-    }
-    
     //
     // end of board display code
     //
@@ -259,7 +241,7 @@ class ViewController: UIViewController {
         return
     }
     
-    // add the image containers onto the control panel
+    // add the image containers onto the control panel, set to default image and set state to 'default'
     func addInitialImagesToControlPanelView() {
         let cellWidth: CGFloat = 65
         var yCoord: CGFloat = 0
@@ -267,10 +249,11 @@ class ViewController: UIViewController {
         for row: Int in 0 ..< 6 {
             var xCoord: CGFloat = 0
             for column: Int in 0 ..< 2 {
-                let cellContent: CellContent = self.controlPanelImages.cellContents[row][column]
+                var cellContent: CellContent = self.controlPanelImages.cellContents[row][column]
                 let imageView: UIImageView = cellContent.cellImageView
                 imageView.frame = CGRect(x: xCoord, y: yCoord, width: cellWidth, height: cellWidth)
                 imageView.image = self.imageDefaultLibrary[self.activeImageSet][i]
+                cellContent.cellState = 0
                 self.viewControlPanel.addSubview(imageView)
                 xCoord += cellWidth + 18
                 i += 1
@@ -279,12 +262,6 @@ class ViewController: UIViewController {
         }
         return
     }
-    
-//    func calculateControlPanelCellWidth(boardColumns: Int, margin: CGFloat) -> CGFloat {
-//        var cellWidth: CGFloat = self.viewControlPanel.bounds.width
-//        cellWidth -= (CGFloat(boardColumns + 1) * margin)
-//        return cellWidth / CGFloat(boardColumns)
-//    }
     
     // sets up and allows touches to be detected on SudokuBoard view only
     func initialiseControlPanelUIViewToAcceptTouch(view: UIView) {
@@ -297,7 +274,7 @@ class ViewController: UIViewController {
     }
     
     func detectedControlPanelUIViewTapped(recognizer: UITapGestureRecognizer) {
-        if(recognizer.state != UIGestureRecognizerState.Ended) {
+        if recognizer.state != UIGestureRecognizerState.Ended {
             return
         }
         // check we have a board in play otherwise ignore
@@ -305,37 +282,40 @@ class ViewController: UIViewController {
             return
         }
         // has the user tapped in a control panel icon?
-        let panelPosition: (panelRow: Int, panelColumn: Int) = self.getPositionOfControlPanelImageTapped(recognizer.locationInView(recognizer.view))
-        if panelPosition.panelColumn == -1 {
+        let panelPosn: (panelRow: Int, panelColumn: Int) = self.getPositionOfControlPanelImageTapped(recognizer.locationInView(recognizer.view))
+        if panelPosn == (-1, -1) {
             return
         }
-        
-        // REVAMP for CONTROL HANDLING
-//        // if the user selectd the same position then wipe it out
-//        if (self.currentSelectedPosition == cellPosition) {
-//            self.setCellToDefaultImage(cellPosition)
-//            self.currentSelectedPosition = (-1,-1,-1,-1)
-//            return
-//        }
-//        // if we already have a position and the user had selected another position
-//        if (self.currentSelectedPosition != (-1,-1,-1,-1)) {
-//            if (self.currentSelectedPosition != cellPosition) {
-//                self.setCellToDefaultImage(self.currentSelectedPosition)
-//            }
-//        }
-        
-        // update currently selected position
-        self.panelSelectedPosition = panelPosition
-        //self.setCellToSelectedImage(self.currentSelectedPosition)
+        // another position was selected them unselect (display default image) only need to do this is we didn;t have a previously selected position
+        if self.panelSelectedPosition != (-1, -1) {
+            if self.panelSelectedPosition != panelPosn {
+                for row: Int in 0 ..< 6 {
+                    for column: Int in 0 ..< 2 {
+                        let currentPosn: (panelPosn :Int, panelColumn: Int) = (row, column)
+                        if panelPosn != currentPosn {
+                            
+                        }
+                    }
+                }
+            }
+        }
+        // update currently selected position and convert to an index posn in the control panel array, then set to an appropriate image
+        self.panelSelectedPosition = panelPosn
+        let panelIndex: Int = (panelPosn.panelRow * 2) + panelPosn.panelColumn
+        if self.controlPanelImages.cellContents[panelPosn.panelRow][panelPosn.panelColumn].cellState < 1 {
+            self.controlPanelImages.setToImage(panelPosn.panelRow, column: panelPosn.panelColumn, imageToSet: self.imageHighlightLibrary[self.activeImageSet][panelIndex], imageState: 1)
+            
+        } else {
+            self.controlPanelImages.setToImage(panelPosn.panelRow, column: panelPosn.panelColumn, imageToSet: self.imageDefaultLibrary[self.activeImageSet][panelIndex], imageState: 0)
+            
+        }
         return
     }
     
     func getPositionOfControlPanelImageTapped(location: CGPoint) -> (panelRow: Int, panelColumn: Int) {
         for y: Int in 0 ..< self.controlPanelImages.cellRows {
             for x: Int in 0 ..< self.controlPanelImages.cellColumns {
-                let cellContent: CellContent = self.controlPanelImages.cellContents[y][x]
-                let panelImage: UIImageView = cellContent.cellImageView
-                if self.isTapWithinImage(location, image: panelImage) == true {
+                if self.isTapWithinImage(location, image: self.controlPanelImages.cellContents[y][x].cellImageView) == true {
                     return(y, x)
                 }
             }
@@ -343,10 +323,28 @@ class ViewController: UIViewController {
         return(-1, -1)
     }
     
+    func setControlPanelImage() {
+        return
+    }
+    
+    func updateControlPanelDisplay() {
+        return
+    }
+    
     //
     // end of control panel code
     //
     
+    // detect if the user has selected within a designated image view
+    func isTapWithinImage(location: CGPoint, image: UIImageView) -> Bool {
+        if (location.x >= image.frame.origin.x) && (location.x <= (image.frame.origin.x + image.frame.width)) {
+            if (location.y >= image.frame.origin.y) && (location.y <= (image.frame.origin.y + image.frame.height)) {
+                return true
+            }
+        }
+        return false
+    }
+
     // update cell colours when selected or deselected
     func setCellToSelectedImage(boardPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)) {
         let cellImages: CellImages = self.displayBoard.gameImages[boardPosition.boardRow][boardPosition.boardColumn]
@@ -394,10 +392,5 @@ class ViewController: UIViewController {
         }
         return
     }
-
-    func updateControlPanelDisplay() {
-        return
-    }
-
     
 }

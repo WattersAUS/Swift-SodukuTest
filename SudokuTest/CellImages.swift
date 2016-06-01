@@ -62,16 +62,27 @@ class CellImages {
     }
 
     func setToImage(row: Int, column: Int, imageToSet: UIImage, imageState: Int) {
-        var image: CellContent = cellContents[row][column]
-        image.cellImageView.image = imageToSet
-        image.cellState = imageState
+        if (row < 0) || (row > self.cellRows) || (column < 0 ) || (column > self.cellColumns) {
+            return
+        }
+        self.cellContents[row][column].cellImageView.image = imageToSet
+        self.cellContents[row][column].cellState = imageState
         return
     }
     
     func unsetToImage(row: Int, column: Int) {
-        var image: CellContent = cellContents[row][column]
-        image.cellImageView.image = nil
-        image.cellState = -1
+        if (row < 0) || (row > self.cellRows) || (column < 0 ) || (column > self.cellColumns) {
+            return
+        }
+        self.cellContents[row][column].cellImageView.image = nil
+        self.cellContents[row][column].cellState = -1
         return
+    }
+    
+    func getImageState(row: Int, column: Int) -> Int {
+        if (row < 0) || (row > self.cellRows) || (column < 0 ) || (column > self.cellColumns) {
+            return -2
+        }
+        return self.cellContents[row][column].cellState
     }
 }

@@ -164,6 +164,9 @@ class Cell: NSObject, NSCopying {
         if row < 0 || row >= self.cellRows {
             return false
         }
+        if numbersUsed[number - 1] == 0 {
+            return false
+        }
         for column: Int in 0 ..< self.cellColumns {
             if number == self.cellNumbers[row][column] {
                 return true
@@ -176,12 +179,29 @@ class Cell: NSObject, NSCopying {
         if column < 0 || column >= self.cellColumns {
             return false
         }
+        if numbersUsed[number - 1] == 0 {
+            return false
+        }
         for row: Int in 0 ..< self.cellRows {
             if number == self.cellNumbers[row][column] {
                 return true
             }
         }
         return false
+    }
+    
+    func getLocationOfNumberInCell(number: Int) -> (Int, Int) {
+        if number < 1 || number > self.numbersUsed.count {
+            return (-1, -1)
+        }
+        for row: Int in 0 ..< self.cellRows {
+            for column: Int in 0 ..< self.cellColumns {
+                if number == self.cellNumbers[row][column] {
+                    return (row, column)
+                }
+            }
+        }
+        return (-1, -1)
     }
     
     // public functions - random driven operations
