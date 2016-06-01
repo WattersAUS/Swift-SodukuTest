@@ -286,17 +286,11 @@ class ViewController: UIViewController {
         if panelPosn == (-1, -1) {
             return
         }
-        // another position was selected them unselect (display default image) only need to do this is we didn;t have a previously selected position
+        // another position was selected then unselect (display default image) only need to do this is we didn't have a previously selected position
         if self.panelSelectedPosition != (-1, -1) {
             if self.panelSelectedPosition != panelPosn {
-                for row: Int in 0 ..< 6 {
-                    for column: Int in 0 ..< 2 {
-                        let currentPosn: (panelPosn :Int, panelColumn: Int) = (row, column)
-                        if panelPosn != currentPosn {
-                            
-                        }
-                    }
-                }
+                let pIndex: Int = (self.panelSelectedPosition.panelRow * 2) + self.panelSelectedPosition.panelColumn
+                self.controlPanelImages.setToImage(panelSelectedPosition.panelRow, column: panelSelectedPosition.panelColumn, imageToSet: self.imageDefaultLibrary[self.activeImageSet][pIndex], imageState: 0)
             }
         }
         // update currently selected position and convert to an index posn in the control panel array, then set to an appropriate image
@@ -304,10 +298,9 @@ class ViewController: UIViewController {
         let panelIndex: Int = (panelPosn.panelRow * 2) + panelPosn.panelColumn
         if self.controlPanelImages.cellContents[panelPosn.panelRow][panelPosn.panelColumn].cellState < 1 {
             self.controlPanelImages.setToImage(panelPosn.panelRow, column: panelPosn.panelColumn, imageToSet: self.imageHighlightLibrary[self.activeImageSet][panelIndex], imageState: 1)
-            
         } else {
             self.controlPanelImages.setToImage(panelPosn.panelRow, column: panelPosn.panelColumn, imageToSet: self.imageDefaultLibrary[self.activeImageSet][panelIndex], imageState: 0)
-            
+            self.panelSelectedPosition = (-1, -1)
         }
         return
     }
