@@ -51,8 +51,20 @@ class ViewController: UIViewController {
         UIImage(named:"ImageClear_default.png")!,
         UIImage(named:"ImageReverse_default.png")!,
         UIImage(named:"ImageForward_default.png")!
-        ],[
-        ]]
+    ],[
+        UIImage(named:"Alt001_default.png")!,
+        UIImage(named:"Alt002_default.png")!,
+        UIImage(named:"Alt003_default.png")!,
+        UIImage(named:"Alt004_default.png")!,
+        UIImage(named:"Alt005_default.png")!,
+        UIImage(named:"Alt006_default.png")!,
+        UIImage(named:"Alt007_default.png")!,
+        UIImage(named:"Alt008_default.png")!,
+        UIImage(named:"Alt009_default.png")!,
+        UIImage(named:"ImageClear_default.png")!,
+        UIImage(named:"ImageReverse_default.png")!,
+        UIImage(named:"ImageForward_default.png")!
+    ]]
 
     // highlighted image set to use when user has selected 'number' to insert hightlight common images across board
     var imageHighlightLibrary: [[UIImage]] = [[
@@ -68,8 +80,20 @@ class ViewController: UIViewController {
         UIImage(named:"ImageClear_highlight.png")!,
         UIImage(named:"ImageReverse_highlight.png")!,
         UIImage(named:"ImageForward_highlight.png")!
-        ],[
-        ]]
+    ],[
+        UIImage(named:"Alt001_highlight.png")!,
+        UIImage(named:"Alt002_highlight.png")!,
+        UIImage(named:"Alt003_highlight.png")!,
+        UIImage(named:"Alt004_highlight.png")!,
+        UIImage(named:"Alt005_highlight.png")!,
+        UIImage(named:"Alt006_highlight.png")!,
+        UIImage(named:"Alt007_highlight.png")!,
+        UIImage(named:"Alt008_highlight.png")!,
+        UIImage(named:"Alt009_highlight.png")!,
+        UIImage(named:"ImageClear_highlight.png")!,
+        UIImage(named:"ImageReverse_highlight.png")!,
+        UIImage(named:"ImageForward_highlight.png")!
+    ]]
     
     // when user selects from control panel
     var imageSelectLibrary: [[UIImage]] = [[
@@ -85,8 +109,20 @@ class ViewController: UIViewController {
         UIImage(named:"ImageClear_select.png")!,
         UIImage(named:"ImageReverse_select.png")!,
         UIImage(named:"ImageForward_select.png")!
-        ],[
-        ]]
+    ],[
+        UIImage(named:"Alt001_select.png")!,
+        UIImage(named:"Alt002_select.png")!,
+        UIImage(named:"Alt003_select.png")!,
+        UIImage(named:"Alt004_select.png")!,
+        UIImage(named:"Alt005_select.png")!,
+        UIImage(named:"Alt006_select.png")!,
+        UIImage(named:"Alt007_select.png")!,
+        UIImage(named:"Alt008_select.png")!,
+        UIImage(named:"Alt009_select.png")!,
+        UIImage(named:"ImageClear_select.png")!,
+        UIImage(named:"ImageReverse_select.png")!,
+        UIImage(named:"ImageForward_select.png")!
+    ]]
     
     // start of the code!!!!
     override func viewDidLoad() {
@@ -96,7 +132,7 @@ class ViewController: UIViewController {
         self.displayBoard = GameBoardImages(size: self.boardDimensions)
         self.controlPanelImages = CellImages(rows: 6, columns: 2)
         self.view.backgroundColor = UIColor.lightGrayColor()
-        self.activeImageSet = 0
+        self.activeImageSet = 1
         self.initialSudokuBoardDisplay()
         self.initialControlPanelDisplay()
     }
