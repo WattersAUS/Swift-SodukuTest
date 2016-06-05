@@ -21,7 +21,7 @@ class TrackSolution: NSObject, NSCopying {
         return
     }
     
-    // only add the coord if in bounds of the board we're tracking and it hasn't already been added
+    // only add the coord if in bounds of the board we're tracking, and it hasn't already been added
     func addCoordinate(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) -> Int {
         if boardRow < 0 || boardColumn < 0 || cellRow < 0 || cellColumn < 0 {
             return -1

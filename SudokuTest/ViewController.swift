@@ -19,7 +19,8 @@ class ViewController: UIViewController {
 
     // the board to solve
     var viewSudokuBoard: UIView!
-    let kCellMargin: CGFloat = 5
+    let kCellWidthMargin: CGFloat = 9
+    let kCellDepthMargin: CGFloat = 7
     var sudokuBoard: GameBoard!
     var displayBoard: GameBoardImages!
     // current selected board position (if any, -1 if none)
@@ -37,7 +38,7 @@ class ViewController: UIViewController {
 
     // which set of images is currently active
     var activeImageSet: Int = 0
-    // default image set
+    // default image set (imagestate == 0)
     var imageDefaultLibrary: [[UIImage]] = [[
         UIImage(named:"Image001_default.png")!,
         UIImage(named:"Image002_default.png")!,
@@ -66,7 +67,7 @@ class ViewController: UIViewController {
         UIImage(named:"ImageForward_default.png")!
     ]]
 
-    // highlighted image set to use when user has selected 'number' to insert hightlight common images across board
+    // highlighted image set to use when user has selected 'number' to insert hightlight common images across board (imagestate == 1)
     var imageHighlightLibrary: [[UIImage]] = [[
         UIImage(named:"Image001_highlight.png")!,
         UIImage(named:"Image002_highlight.png")!,
@@ -95,7 +96,7 @@ class ViewController: UIViewController {
         UIImage(named:"ImageForward_highlight.png")!
     ]]
     
-    // when user selects from control panel
+    // when user selects from control panel (imagestate == 2)
     var imageSelectLibrary: [[UIImage]] = [[
         UIImage(named:"Image001_select.png")!,
         UIImage(named:"Image002_select.png")!,
@@ -131,8 +132,8 @@ class ViewController: UIViewController {
         self.sudokuBoard = GameBoard(size: self.boardDimensions, setDifficulty: self.gameDifficulty)
         self.displayBoard = GameBoardImages(size: self.boardDimensions)
         self.controlPanelImages = CellImages(rows: 6, columns: 2)
-        self.view.backgroundColor = UIColor.lightGrayColor()
-        self.activeImageSet = 1
+        //self.view.backgroundColor = UIColor.lightGrayColor()
+        self.activeImageSet = 0
         self.initialSudokuBoardDisplay()
         self.initialControlPanelDisplay()
     }
@@ -142,10 +143,10 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    //
+    //----------------------------------------------------------------------------
     // Handle the board display, setup event handler and detect taps in the board
-    //
-    
+    //----------------------------------------------------------------------------
+
     // build the initial board display, with all cells = 0 (ie blank)
     func initialSudokuBoardDisplay() {
         let originX: CGFloat = self.view.bounds.origin.x + self.kMainViewMargin
@@ -154,19 +155,20 @@ class ViewController: UIViewController {
         let frameHeight: CGFloat = self.view.bounds.height - (2 * self.kMainViewMargin)
         self.viewSudokuBoard = UIView(frame: CGRect(x: originX, y: originY, width: frameWidth, height: frameHeight))
         self.view.addSubview(self.viewSudokuBoard)
-        self.addInitialImagesToSudokuBoardView(self.boardDimensions, boardColumns: self.boardDimensions, cellMargin: self.kCellMargin)
+        self.addImagesViewsToSudokuBoard(self.boardDimensions, boardColumns: self.boardDimensions, cellWidthMargin: self.kCellWidthMargin, cellDepthMargin: self.kCellDepthMargin)
         self.initialiseSudokuBoardUIViewToAcceptTouch(self.viewSudokuBoard)
         return
     }
     
     // add the image containers onto the board by working across until we need to go down a row
-    func addInitialImagesToSudokuBoardView(boardRows: Int, boardColumns: Int, cellMargin: CGFloat) {
-        let cellWidth: CGFloat = self.calculateBoardCellWidth(boardColumns * boardColumns, margin: cellMargin)
-        var yStart: CGFloat = cellMargin
+    func addImagesViewsToSudokuBoard(boardRows: Int, boardColumns: Int, cellWidthMargin: CGFloat, cellDepthMargin: CGFloat) {
+        let cellWidth: CGFloat = self.calculateBoardCellWidth(boardColumns * boardColumns, margin: cellWidthMargin)
+        let cellDepth: CGFloat = self.calculateBoardCellWidth(boardRows * boardRows, margin: cellWidthMargin)
+        var yStart: CGFloat = cellDepthMargin
         for y: Int in 0 ..< boardRows {
             var jStart: CGFloat = 0
             for j: Int in 0 ..< boardColumns {
-                var xStart: CGFloat = cellMargin
+                var xStart: CGFloat = cellWidthMargin
                 for x: Int in 0 ..< boardRows {
                     var kStart: CGFloat = 0
                     for k: Int in 0 ..< boardColumns {
@@ -177,13 +179,13 @@ class ViewController: UIViewController {
                         let imageContent: UIImageView = content.cellImageView
                         imageContent.frame = CGRect(x: xCoord, y: yCoord, width: cellWidth, height: cellWidth)
                         self.viewSudokuBoard.addSubview(imageContent)
-                        kStart += cellWidth + cellMargin
+                        kStart += cellWidth + cellWidthMargin
                     }
-                    xStart += kStart + (cellMargin * 2)
+                    xStart += kStart + (cellWidthMargin * 2)
                 }
-                jStart += cellWidth + cellMargin
+                jStart += cellDepth + cellDepthMargin
             }
-            yStart += jStart + (cellMargin * 2)
+            yStart += jStart + (cellDepthMargin * 2)
         }
         return
     }
@@ -192,6 +194,12 @@ class ViewController: UIViewController {
         var cellWidth: CGFloat = self.viewSudokuBoard.bounds.width
         cellWidth -= (CGFloat(boardColumns + 1) * margin)
         return cellWidth / CGFloat(boardColumns)
+    }
+    
+    func calculateBoardCellDepth(boardRows: Int, margin: CGFloat) -> CGFloat {
+        var cellDepth: CGFloat = self.viewSudokuBoard.bounds.height
+        cellDepth -= (CGFloat(boardRows + 1) * margin)
+        return cellDepth / CGFloat(boardRows)
     }
     
     // sets up and allows touches to be detected on SudokuBoard view only
@@ -203,7 +211,8 @@ class ViewController: UIViewController {
         view.userInteractionEnabled = true
         return
     }
-
+    
+    // handle the user interaction with the game board
     func detectedSudokuBoardUIViewTapped(recognizer: UITapGestureRecognizer) {
         if(recognizer.state != UIGestureRecognizerState.Ended) {
             return
@@ -223,14 +232,14 @@ class ViewController: UIViewController {
         }
         // if the user selected the same position, clear it
         if (self.boardSelectedPosition == cellPosition) {
-            self.setCellToDefaultImage(cellPosition)
+            self.setCellToBlankImage(cellPosition)
             self.boardSelectedPosition = (-1,-1,-1,-1)
             return
         }
         // if we already have a position and the user had selected another
         if (self.boardSelectedPosition != (-1,-1,-1,-1)) {
             if (self.boardSelectedPosition != cellPosition) {
-                self.setCellToDefaultImage(self.boardSelectedPosition)
+                self.setCellToBlankImage(self.boardSelectedPosition)
             }
         }
         // update currently selected position
@@ -257,14 +266,11 @@ class ViewController: UIViewController {
         return(-1, -1, -1, -1)
     }
     
-    //
-    // end of board display code
-    //
+    // eol
     
-    //
+    //------------------------------------------------------------------------------------
     // Handle the control panel display, setup event handler and detect taps in the board
-    //
-    
+    //------------------------------------------------------------------------------------
     func initialControlPanelDisplay() {
         let originX: CGFloat = 813
         let originY: CGFloat = 134
@@ -272,13 +278,13 @@ class ViewController: UIViewController {
         let frameHeight: CGFloat = 430
         self.viewControlPanel = UIView(frame: CGRect(x: originX, y: originY, width: frameWidth, height: frameHeight))
         self.view.addSubview(self.viewControlPanel)
-        self.addInitialImagesToControlPanelView()
+        self.addImageViewsToControlPanelView()
         self.initialiseControlPanelUIViewToAcceptTouch(self.viewControlPanel)
         return
     }
     
     // add the image containers onto the control panel, set to default image and set state to 'default'
-    func addInitialImagesToControlPanelView() {
+    func addImageViewsToControlPanelView() {
         let cellWidth: CGFloat = 65
         var yCoord: CGFloat = 0
         var i: Int = 0
@@ -309,6 +315,7 @@ class ViewController: UIViewController {
         return
     }
     
+    // handle user interactiom with the control panel
     func detectedControlPanelUIViewTapped(recognizer: UITapGestureRecognizer) {
         if recognizer.state != UIGestureRecognizerState.Ended {
             return
@@ -322,14 +329,15 @@ class ViewController: UIViewController {
         if panelPosn == (-1, -1) {
             return
         }
-        // another position was selected then unselect (display default image) only need to do this is we didn't have a previously selected position
+        // unselect old posn (display default image) only need to do this is we didn't have a previously selected position
         if self.panelSelectedPosition != (-1, -1) {
             if self.panelSelectedPosition != panelPosn {
                 let pIndex: Int = (self.panelSelectedPosition.panelRow * 2) + self.panelSelectedPosition.panelColumn
                 self.controlPanelImages.setToImage(panelSelectedPosition.panelRow, column: panelSelectedPosition.panelColumn, imageToSet: self.imageDefaultLibrary[self.activeImageSet][pIndex], imageState: 0)
+                self.unsetHighlightedNumbersOnBoard()
             }
         }
-        // update currently selected position and convert to an index posn in the control panel array, then set to an appropriate image
+        // update currently selected position, convert to index posn in the control panel, set to an appropriate image
         self.panelSelectedPosition = panelPosn
         let panelIndex: Int = (panelPosn.panelRow * 2) + panelPosn.panelColumn
         if self.controlPanelImages.cellContents[panelPosn.panelRow][panelPosn.panelColumn].cellState < 1 {
@@ -338,6 +346,7 @@ class ViewController: UIViewController {
             self.controlPanelImages.setToImage(panelPosn.panelRow, column: panelPosn.panelColumn, imageToSet: self.imageDefaultLibrary[self.activeImageSet][panelIndex], imageState: 0)
             self.panelSelectedPosition = (-1, -1)
         }
+        self.setHighlightedNumbersOnBoard(panelIndex)
         return
     }
     
@@ -351,18 +360,51 @@ class ViewController: UIViewController {
         }
         return(-1, -1)
     }
-    
-    func setControlPanelImage() {
+
+    // traverse game board and 'unset' any highlighted numbers
+    // ---->>>> (will be allowed by difficulty setting) <<<<------
+    func unsetHighlightedNumbersOnBoard() {
+        let locations: [(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)] = self.displayBoard.getLocationsOfHighlightedImagesOnBoard()
+        if locations.isEmpty == false {
+            for coords in locations {
+                self.setCellToDefaultImage(coords, number: self.sudokuBoard.gameBoardCells[coords.boardRow][coords.boardColumn].getNumberAtCellPosition(coords.cellRow, column: coords.cellColumn))
+            }
+        }
         return
     }
     
+    // traverse game board and 'set' any selected numbers to highlighted
+    // ---->>>> (will be allowed by difficulty setting) <<<<------
+    func setHighlightedNumbersOnBoard(index: Int) {
+        // index will give the 'number' selected from the control panel
+        let locations: [(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)] = self.sudokuBoard.getLocationsOfNumberOnBoard(index + 1)
+        if locations.isEmpty == false {
+            for coord in locations {
+                self.setCellToHighlightedImage(coord, number: index + 1)
+            }
+        }
+        return
+    }
+
+    // set numbers on the 'game' board to highlighted if the user selects the 'number' from the control panel
+    func setCellToHighlightedImage(boardPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int), number: Int) {
+        let cellImages: CellImages = self.displayBoard.gameImages[boardPosition.boardRow][boardPosition.boardColumn]
+        cellImages.setToImage(boardPosition.cellRow, column: boardPosition.cellColumn, imageToSet: self.imageHighlightLibrary[self.activeImageSet][number - 1], imageState: 1)
+        return
+    }
+    
+    // set numbers on the 'game' board to default if the user selects the 'number' from the control panel
+    func setCellToDefaultImage(boardPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int), number: Int) {
+        let cellImages: CellImages = self.displayBoard.gameImages[boardPosition.boardRow][boardPosition.boardColumn]
+        cellImages.setToImage(boardPosition.cellRow, column: boardPosition.cellColumn, imageToSet: self.imageDefaultLibrary[self.activeImageSet][number - 1], imageState: 0)
+        return
+    }
+
     func updateControlPanelDisplay() {
         return
     }
     
-    //
-    // end of control panel code
-    //
+    // eol
     
     // detect if the user has selected within a designated image view
     func isTapWithinImage(location: CGPoint, image: UIImageView) -> Bool {
@@ -374,19 +416,20 @@ class ViewController: UIViewController {
         return false
     }
 
-    // update cell colours when selected or deselected
+    // update cell image, selected or deselected
     func setCellToSelectedImage(boardPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)) {
         let cellImages: CellImages = self.displayBoard.gameImages[boardPosition.boardRow][boardPosition.boardColumn]
         cellImages.setToImage(boardPosition.cellRow, column: boardPosition.cellColumn, imageToSet: self.selectedImage, imageState: 0)
         return
     }
     
-    func setCellToDefaultImage(boardPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)) {
+    func setCellToBlankImage(boardPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)) {
         let cellImages: CellImages = self.displayBoard.gameImages[boardPosition.boardRow][boardPosition.boardColumn]
         cellImages.unsetToImage(boardPosition.cellRow, column: boardPosition.cellColumn)
         return
     }
     
+    // user presses the 'Start' button
     @IBAction func resetButtonPressed(sender: UIButton) {
         self.buildSudoku()
         self.updateSudokuBoardDisplay()
@@ -421,5 +464,10 @@ class ViewController: UIViewController {
         }
         return
     }
-    
+
+    // captures user pressing the 'Settings' button
+    @IBAction func settingButtonPressed(sender: UIButton) {
+        // NEEDS WORK HERE TO DISPLAY AND MANAGE THE SETTINGS DIALOG
+    }
+
 }

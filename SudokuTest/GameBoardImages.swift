@@ -40,4 +40,19 @@ class GameBoardImages {
         return
     }
     
+    func getLocationsOfHighlightedImagesOnBoard() -> [(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)] {
+        var returnCoords: [(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)] = []
+        for row: Int in 0 ..< self.boardRows {
+            for column: Int in 0 ..< self.boardColumns {
+                let highlighted: [(cellRow: Int, cellColumn: Int)] = self.gameImages[row][column].getLocationsOfCellsStateEqualTo(1)
+                if highlighted.isEmpty == false {
+                    for coord in highlighted {
+                        returnCoords.append((row, column, coord.cellRow, coord.cellColumn))
+                    }
+                }
+            }
+        }
+        return(returnCoords)
+    }
+    
 }
