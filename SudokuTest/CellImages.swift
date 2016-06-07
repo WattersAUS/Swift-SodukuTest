@@ -11,8 +11,8 @@ import UIKit
 
 // to hold reference to image/type of image displayed ie. default, selected, highlighted
 struct CellContent {
-    var cellImageView: UIImageView!
-    var cellState: Int!
+    var imageView: UIImageView!
+    var state: Int!
 }
 
 class CellImages {
@@ -26,7 +26,7 @@ class CellImages {
         if setRows != 3 {
             setRows = 3
         }
-        self.allocateImageArray(setRows, columns: setRows)
+        self.allocateCellArray(setRows, columns: setRows)
         return
     }
 
@@ -41,17 +41,17 @@ class CellImages {
         if (setRows < 3) || (setRows > 6) {
             setRows = 6
         }
-        self.allocateImageArray(setRows, columns: setColumns)
+        self.allocateCellArray(setRows, columns: setColumns)
         return
     }
 
-    private func allocateImageArray(rows: Int, columns: Int) {
+    private func allocateCellArray(rows: Int, columns: Int) {
         for _: Int in 0 ..< rows {
             var rowOfImages: [CellContent] = []
             for _: Int in 0 ..< columns {
                 var image = CellContent()
-                image.cellImageView = UIImageView()
-                image.cellState = -1
+                image.imageView = UIImageView()
+                image.state = -1
                 rowOfImages.append(image)
             }
             self.cellContents.append(rowOfImages)
@@ -62,21 +62,21 @@ class CellImages {
     }
     
     // public functions
-    func setToImage(row: Int, column: Int, imageToSet: UIImage, imageState: Int) {
+    func setImage(row: Int, column: Int, imageToSet: UIImage, imageState: Int) {
         if (row < 0) || (row > self.cellRows) || (column < 0 ) || (column > self.cellColumns) {
             return
         }
-        self.cellContents[row][column].cellImageView.image = imageToSet
-        self.cellContents[row][column].cellState = imageState
+        self.cellContents[row][column].imageView.image = imageToSet
+        self.cellContents[row][column].state = imageState
         return
     }
     
-    func unsetToImage(row: Int, column: Int) {
+    func unsetImage(row: Int, column: Int) {
         if (row < 0) || (row > self.cellRows) || (column < 0 ) || (column > self.cellColumns) {
             return
         }
-        self.cellContents[row][column].cellImageView.image = nil
-        self.cellContents[row][column].cellState = -1
+        self.cellContents[row][column].imageView.image = nil
+        self.cellContents[row][column].state = -1
         return
     }
     
@@ -84,14 +84,14 @@ class CellImages {
         if (row < 0) || (row > self.cellRows) || (column < 0 ) || (column > self.cellColumns) {
             return -2
         }
-        return self.cellContents[row][column].cellState
+        return self.cellContents[row][column].state
     }
     
     func getLocationsOfCellsStateEqualTo(state: Int) -> [(cellRow: Int, cellColumn: Int)] {
         var returnCoords: [(cellRow: Int, cellColumn: Int)] = []
         for row: Int in 0 ..< self.cellRows {
             for column: Int in 0 ..< self.cellColumns {
-                if self.cellContents[row][column].cellState == state {
+                if self.cellContents[row][column].state == state {
                     returnCoords.append((row, column))
                 }
             }
