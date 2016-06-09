@@ -104,18 +104,7 @@ class GameBoard: NSObject, NSCopying {
         return true
     }
     
-    private func copySolutionCellsToGameCells() {
-        self.gameBoardCells.removeAll()
-        for row: Int in 0 ..< self.boardRows {
-            var rowOfCells: [Cell] = [self.solutionBoardCells[row][0].copy() as! Cell]
-            for column: Int in 1 ..< self.boardColumns {
-                rowOfCells.append(self.solutionBoardCells[row][column].copy() as! Cell)
-            }
-            self.gameBoardCells.append(rowOfCells)
-        }
-        return
-    }
-    
+    // once we have a solved board, need to copy to origin where we will remove random numbers to produce the game board
     private func copySolutionCellsToOriginCells() {
         self.originBoardCells.removeAll()
         for row: Int in 0 ..< self.boardRows {
@@ -128,14 +117,15 @@ class GameBoard: NSObject, NSCopying {
         return
     }
     
-    private func copyGameCellsToOriginCells() {
-        self.originBoardCells.removeAll()
+    // for restarting, take the game board back to before the user started solving the puzzle
+    private func copyOriginCellsToGameCells() {
+        self.gameBoardCells.removeAll()
         for row: Int in 0 ..< self.boardRows {
-            var rowOfCells: [Cell] = [self.gameBoardCells[row][0].copy() as! Cell]
+            var rowOfCells: [Cell] = [self.originBoardCells[row][0].copy() as! Cell]
             for column: Int in 1 ..< self.boardColumns {
-                rowOfCells.append(self.gameBoardCells[row][column].copy() as! Cell)
+                rowOfCells.append(self.originBoardCells[row][column].copy() as! Cell)
             }
-            self.originBoardCells.append(rowOfCells)
+            self.gameBoardCells.append(rowOfCells)
         }
         return
     }
@@ -161,11 +151,13 @@ class GameBoard: NSObject, NSCopying {
         return
     }
     
+    //
     // public functions
+    //
     func clearBoard() {
         self.clearSolutionBoard()
-        self.clearGameBoard()
         self.clearOriginBoard()
+        self.clearGameBoard()
         return
     }
     
@@ -197,10 +189,11 @@ class GameBoard: NSObject, NSCopying {
         return
     }
 
-    func buildGameBoard() {
-        self.gameBoardCells.removeAll()
-        self.copySolutionCellsToGameCells()
-        for cellRowOfObj in self.gameBoardCells {
+    // from the prebuilt solution board, we need to remove random numbers (depending on the set difficulty)
+    func buildOriginBoard() {
+        self.originBoardCells.removeAll()
+        self.copySolutionCellsToOriginCells()
+        for cellRowOfObj in self.originBoardCells {
             for cellObj in cellRowOfObj {
                 // using the difficulty determine how many numbers to clear from each cell
                 var cellsToClear: Int = self.difficulty - Int(arc4random_uniform(UInt32(3))) + 1
@@ -216,9 +209,11 @@ class GameBoard: NSObject, NSCopying {
         return
     }
     
-    func buildOriginBoard() {
-        self.originBoardCells.removeAll()
-        self.copyGameCellsToOriginCells()
+    // always created from the 'origin' board, which is the solution with random numbers removed
+    func initialiseGameBoard() {
+        self.gameBoardCells.removeAll()
+        self.copyOriginCellsToGameCells()
+        return
     }
     
     func dumpSolutionBoard() -> String {
