@@ -69,21 +69,37 @@ class GameBoard: NSObject, NSCopying {
         }
     }
 
+    //
     // private functions
-    private func isNumberLegalInPosition(cellRow: Int, cellColumn: Int, rowInCell: Int, columnInCell: Int, number: Int) -> Bool {
-        for row: Int in 0 ..< cellRow {
-            if self.solutionBoardCells[row][cellColumn].isNumberUsedInColumn(number, column: columnInCell) == true {
+    //
+    private func isNumberLegalInSolution(row: Int, column: Int, cellRow: Int, cellColumn: Int, number: Int) -> Bool {
+        for boardRow: Int in 0 ..< row {
+            if self.solutionBoardCells[boardRow][column].isNumberUsedInColumn(number, column: cellColumn) == true {
                 return false
             }
         }
-        for column: Int in 0 ..< cellColumn {
-            if self.solutionBoardCells[cellRow][column].isNumberUsedInRow(number, row: rowInCell) == true {
+        for boardColumn: Int in 0 ..< column {
+            if self.solutionBoardCells[row][boardColumn].isNumberUsedInRow(number, row: cellRow) == true {
                 return false
             }
         }
         return true
     }
 
+    private func isNumberLegalInGame(row: Int, column: Int, cellRow: Int, cellColumn: Int, number: Int) -> Bool {
+        for boardRow: Int in 0 ..< self.boardRows {
+            if self.gameBoardCells[boardRow][column].isNumberUsedInColumn(number, column: cellColumn) == true {
+                return false
+            }
+        }
+        for boardColumn: Int in 0 ..< self.boardColumns {
+            if self.gameBoardCells[row][boardColumn].isNumberUsedInRow(number, row: cellRow) == true {
+                return false
+            }
+        }
+        return true
+    }
+    
     private func buildCell(row: Int, column: Int) -> Bool {
         var stalled: Int = 0
         while self.solutionBoardCells[row][column].isCellCompleted() == false {
@@ -91,7 +107,7 @@ class GameBoard: NSObject, NSCopying {
             let unUsedPosition: (unUsedRow: Int, unUsedColumn: Int) = self.solutionBoardCells[row][column].getRandomUnUsedPosition()
             let unUsedNumber: Int = self.solutionBoardCells[row][column].getRandomUnUsedNumber()
             // check if the unused number can exist in that location by checking adjacent solutionBoardCells
-            if isNumberLegalInPosition(row, cellColumn: column, rowInCell: unUsedPosition.unUsedRow, columnInCell: unUsedPosition.unUsedColumn, number: unUsedNumber) == true {
+            if isNumberLegalInSolution(row, column: column, cellRow: unUsedPosition.unUsedRow, cellColumn: unUsedPosition.unUsedColumn, number: unUsedNumber) == true {
                 self.solutionBoardCells[row][column].setNumberAtCellPosition(unUsedPosition.unUsedRow, column: unUsedPosition.unUsedColumn, number: unUsedNumber)
                 stalled = 0
             } else {
@@ -104,7 +120,9 @@ class GameBoard: NSObject, NSCopying {
         return true
     }
     
+    //
     // once we have a solved board, need to copy to origin where we will remove random numbers to produce the game board
+    //
     private func copySolutionCellsToOriginCells() {
         self.originBoardCells.removeAll()
         for row: Int in 0 ..< self.boardRows {
@@ -117,7 +135,9 @@ class GameBoard: NSObject, NSCopying {
         return
     }
     
+    //
     // for restarting, take the game board back to before the user started solving the puzzle
+    //
     private func copyOriginCellsToGameCells() {
         self.gameBoardCells.removeAll()
         for row: Int in 0 ..< self.boardRows {
@@ -189,7 +209,9 @@ class GameBoard: NSObject, NSCopying {
         return
     }
 
+    //
     // from the prebuilt solution board, we need to remove random numbers (depending on the set difficulty)
+    //
     func buildOriginBoard() {
         self.originBoardCells.removeAll()
         self.copySolutionCellsToOriginCells()
@@ -209,7 +231,9 @@ class GameBoard: NSObject, NSCopying {
         return
     }
     
-    // always created from the 'origin' board, which is the solution with random numbers removed
+    //
+    // always created from the 'origin' board, which is the solution with random numbers removed and where the user starts to solve the puzzle
+    //
     func initialiseGameBoard() {
         self.gameBoardCells.removeAll()
         self.copyOriginCellsToGameCells()
@@ -240,7 +264,9 @@ class GameBoard: NSObject, NSCopying {
         return dumpOfBoard
     }
     
+    //
     // get a number from the board the user is completing
+    //
     func getNumberFromGameBoard(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) -> Int {
         if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
             return 0
@@ -251,7 +277,9 @@ class GameBoard: NSObject, NSCopying {
         return self.gameBoardCells[boardRow][boardColumn].getNumberAtCellPosition(cellRow, column: cellColumn)
     }
     
+    //
     // get a number from the solution board
+    //
     func getNumberFromSolutionBoard(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) -> Int {
         if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
             return 0
@@ -262,7 +290,72 @@ class GameBoard: NSObject, NSCopying {
         return self.solutionBoardCells[boardRow][boardColumn].getNumberAtCellPosition(cellRow, column: cellColumn)
     }
     
+    //
+    // is the location an 'origin' posn, we'll use this to work out if the user can interact with that position
+    //
+    func isOriginBoardCellUsed(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) -> Bool {
+        if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
+            return false
+        }
+        if cellRow < 0 || cellRow >= self.originBoardCells[boardRow][boardColumn].cellDepth() || cellColumn < 0 || cellColumn >= self.originBoardCells[boardRow][boardColumn].cellWidth() {
+            return false
+        }
+        return (self.originBoardCells[boardRow][boardColumn].getNumberAtCellPosition(cellRow, column: cellColumn) == 0) ? false : true
+    }
+    
+    //
+    // is the location on the game board used
+    //
+    func isGameBoardCellUsed(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) -> Bool {
+        if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
+            return false
+        }
+        if cellRow < 0 || cellRow >= self.gameBoardCells[boardRow][boardColumn].cellDepth() || cellColumn < 0 || cellColumn >= self.gameBoardCells[boardRow][boardColumn].cellWidth() {
+            return false
+        }
+        return (self.gameBoardCells[boardRow][boardColumn].getNumberAtCellPosition(cellRow, column: cellColumn) == 0) ? false : true
+    }
+    
+    //
+    // populate a position on the game board if permissable
+    //
+    func setNumberOnGameBoard(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int, number: Int) -> Bool {
+        if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
+            return false
+        }
+        if cellRow < 0 || cellRow >= self.gameBoardCells[boardRow][boardColumn].cellDepth() || cellColumn < 0 || cellColumn >= self.gameBoardCells[boardRow][boardColumn].cellWidth() {
+            return false
+        }
+        if self.gameBoardCells[boardRow][boardColumn].isNumberUsedInCell(number) == true {
+            return false
+        }
+        if self.isNumberLegalInGame(boardRow, column: boardColumn, cellRow: cellRow, cellColumn: cellColumn, number: number) == false {
+            return false
+        }
+        //
+        // passed all the validation, so add it. could still be wrong ofc
+        //
+        self.gameBoardCells[boardRow][boardColumn].setNumberAtCellPosition(cellRow, column: cellColumn, number: number)
+        return true
+    }
+
+    //
+    // remove a number from the board
+    //
+    func clearNumberOnGameBoard(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) {
+        if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
+            return
+        }
+        if cellRow < 0 || cellRow >= self.gameBoardCells[boardRow][boardColumn].cellDepth() || cellColumn < 0 || cellColumn >= self.gameBoardCells[boardRow][boardColumn].cellWidth() {
+            return
+        }
+        self.gameBoardCells[boardRow][boardColumn].clearNumberAtCellPosition(cellRow, column: cellColumn)
+        return
+    }
+    
+    //
     // bit of a hack needs work
+    //
     func getBoardWidthInCells() -> Int {
         if self.solutionBoardCells.count < 1 {
             return self.boardColumns * self.boardColumns

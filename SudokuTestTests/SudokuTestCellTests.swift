@@ -167,6 +167,24 @@ class SudokuTestCellTests: XCTestCase {
         XCTAssertEqual(testCell.isNumberUsedInColumn(5, column: 3), false, "Not detected incorrect column")
     }
     
+    func testCellNumberUsedInCell() {
+        var testCell: Cell!
+        testCell = Cell(size: 3)
+        // populate cell array column
+        XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 0, number: 5), false, "Incorrect Cell incomplete value reported")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 2, number: 1), false, "Incorrect Cell incomplete value reported")
+        // test numbers in cell
+        XCTAssertEqual(testCell.isNumberUsedInCell(5), true, "Number not detected")
+        XCTAssertEqual(testCell.isNumberUsedInCell(2), false, "Number not present detected")
+        XCTAssertEqual(testCell.isNumberUsedInCell(1), true, "Number not detected")
+        XCTAssertEqual(testCell.isNumberUsedInCell(3), false, "Number not present detected")
+        XCTAssertEqual(testCell.isNumberUsedInCell(4), false, "Number not present detected")
+        XCTAssertEqual(testCell.isNumberUsedInCell(6), false, "Number not present detected")
+        XCTAssertEqual(testCell.isNumberUsedInCell(7), false, "Number not present detected")
+        XCTAssertEqual(testCell.isNumberUsedInCell(8), false, "Number not present detected")
+        XCTAssertEqual(testCell.isNumberUsedInCell(9), false, "Number not present detected")
+    }
+    
     func testCellGetValuesFromRow() {
         var testCell: Cell!
         testCell = Cell(size: 3)

@@ -41,7 +41,9 @@ class Cell: NSObject, NSCopying {
         return
     }
     
+    //
     // private functions
+    //
     private func resetCellUsage() {
         for index: Int in 0 ..< self.numbersUsed.count {
             self.numbersUsed[index] = 0
@@ -84,7 +86,9 @@ class Cell: NSObject, NSCopying {
         return self.cellCompleted
     }
     
+    //
     // public - object state functions
+    //
     func cellWidth() -> Int {
         return self.cellColumns
     }
@@ -97,17 +101,9 @@ class Cell: NSObject, NSCopying {
         return self.cellCompleted
     }
     
-    // public functions - act on whole object
-    func clearCell() {
-        for index: Int in 0 ..< self.cellCoordinates.count {
-            self.cellNumbers[self.cellCoordinates[index].row][self.cellCoordinates[index].column] = 0
-        }
-        self.resetCellUsage()
-        self.cellCompleted = false
-        return
-    }
-    
+    //
     // public functions - number level operations
+    //
     func clearNumberAtCellPosition(row: Int, column: Int) {
         if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns {
             return
@@ -137,7 +133,9 @@ class Cell: NSObject, NSCopying {
         return self.checkForCellCompleted()
     }
 
+    //
     // public functions - row/column level operations
+    //
     func getValuesFromRow(row: Int) -> [Int] {
         var values: [Int] = []
         if row < 0 || row >= self.cellRows {
@@ -190,8 +188,30 @@ class Cell: NSObject, NSCopying {
         return false
     }
     
+    //
+    // public functions - cell level operations
+    //
+    func clearCell() {
+        for index: Int in 0 ..< self.cellCoordinates.count {
+            self.cellNumbers[self.cellCoordinates[index].row][self.cellCoordinates[index].column] = 0
+        }
+        self.resetCellUsage()
+        self.cellCompleted = false
+        return
+    }
+    
+    func isNumberUsedInCell(number: Int) -> Bool {
+        if numbersUsed[number - 1] == 1 {
+            return true
+        }
+        return false
+    }
+    
     func getLocationOfNumberInCell(number: Int) -> (Int, Int) {
         if number < 1 || number > self.numbersUsed.count {
+            return (-1, -1)
+        }
+        if self.isNumberUsedInCell(number) == false {
             return (-1, -1)
         }
         for row: Int in 0 ..< self.cellRows {
@@ -204,7 +224,9 @@ class Cell: NSObject, NSCopying {
         return (-1, -1)
     }
     
+    //
     // public functions - random driven operations
+    //
     func getRandomUnUsedNumber() -> Int {
         let numberUsage: [Int] = self.getNumbersArray()
         var numbersToUse: [Int] = []
@@ -246,7 +268,9 @@ class Cell: NSObject, NSCopying {
         return (self.cellCoordinates[index].row, self.cellCoordinates[index].column)
     }
     
+    //
     // public functions - mirror image cells (to be used in special game mode)
+    //
     func mirrorVertically() {
         for row: Int in 0 ..< Int(round(Double(self.cellRows / 2))) {
             let rowOne: [Int] = self.getValuesFromRow(row)
@@ -271,7 +295,9 @@ class Cell: NSObject, NSCopying {
         return
     }
     
+    //
     // copy object operation
+    //
     func copyWithZone(zone: NSZone) -> AnyObject {
         let copy = Cell(size: self.cellRows)
         copy.cellCompleted = self.cellCompleted
