@@ -72,28 +72,28 @@ class GameBoard: NSObject, NSCopying {
     //
     // private functions
     //
-    private func isNumberLegalInSolution(row: Int, column: Int, cellRow: Int, cellColumn: Int, number: Int) -> Bool {
-        for boardRow: Int in 0 ..< row {
-            if self.solutionBoardCells[boardRow][column].isNumberUsedInColumn(number, column: cellColumn) == true {
+    private func isNumberLegalInSolution(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) -> Bool {
+        for boardRow: Int in 0 ..< coord.row {
+            if self.solutionBoardCells[boardRow][coord.column].isNumberUsedInColumn(number, column: coord.cellColumn) == true {
                 return false
             }
         }
-        for boardColumn: Int in 0 ..< column {
-            if self.solutionBoardCells[row][boardColumn].isNumberUsedInRow(number, row: cellRow) == true {
+        for boardColumn: Int in 0 ..< coord.column {
+            if self.solutionBoardCells[coord.row][boardColumn].isNumberUsedInRow(number, row: coord.cellRow) == true {
                 return false
             }
         }
         return true
     }
 
-    private func isNumberLegalInGame(row: Int, column: Int, cellRow: Int, cellColumn: Int, number: Int) -> Bool {
+    private func isNumberLegalInGame(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) -> Bool {
         for boardRow: Int in 0 ..< self.boardRows {
-            if self.gameBoardCells[boardRow][column].isNumberUsedInColumn(number, column: cellColumn) == true {
+            if self.gameBoardCells[boardRow][coord.column].isNumberUsedInColumn(number, column: coord.cellColumn) == true {
                 return false
             }
         }
         for boardColumn: Int in 0 ..< self.boardColumns {
-            if self.gameBoardCells[row][boardColumn].isNumberUsedInRow(number, row: cellRow) == true {
+            if self.gameBoardCells[coord.row][boardColumn].isNumberUsedInRow(number, row: coord.cellRow) == true {
                 return false
             }
         }
@@ -107,7 +107,7 @@ class GameBoard: NSObject, NSCopying {
             let unUsedPosition: (unUsedRow: Int, unUsedColumn: Int) = self.solutionBoardCells[row][column].getRandomUnUsedPosition()
             let unUsedNumber: Int = self.solutionBoardCells[row][column].getRandomUnUsedNumber()
             // check if the unused number can exist in that location by checking adjacent solutionBoardCells
-            if isNumberLegalInSolution(row, column: column, cellRow: unUsedPosition.unUsedRow, cellColumn: unUsedPosition.unUsedColumn, number: unUsedNumber) == true {
+            if isNumberLegalInSolution((row, column: column, cellRow: unUsedPosition.unUsedRow, cellColumn: unUsedPosition.unUsedColumn), number: unUsedNumber) == true {
                 self.solutionBoardCells[row][column].setNumberAtCellPosition(unUsedPosition.unUsedRow, column: unUsedPosition.unUsedColumn, number: unUsedNumber)
                 stalled = 0
             } else {
@@ -267,89 +267,89 @@ class GameBoard: NSObject, NSCopying {
     //
     // get a number from the board the user is completing
     //
-    func getNumberFromGameBoard(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) -> Int {
-        if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
+    func getNumberFromGameBoard(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) -> Int {
+        if coord.row < 0 || coord.row >= self.boardRows || coord.column < 0 || coord.column >= self.boardColumns {
             return 0
         }
-        if cellRow < 0 || cellRow >= self.gameBoardCells[boardRow][boardColumn].cellDepth() || cellColumn < 0 || cellColumn >= self.gameBoardCells[boardRow][boardColumn].cellWidth() {
+        if coord.cellRow < 0 || coord.cellRow >= self.gameBoardCells[coord.row][coord.column].cellDepth() || coord.cellColumn < 0 || coord.cellColumn >= self.gameBoardCells[coord.row][coord.column].cellWidth() {
             return 0
         }
-        return self.gameBoardCells[boardRow][boardColumn].getNumberAtCellPosition(cellRow, column: cellColumn)
+        return self.gameBoardCells[coord.row][coord.column].getNumberAtCellPosition(coord.cellRow, column: coord.cellColumn)
     }
-    
+
     //
     // get a number from the solution board
     //
-    func getNumberFromSolutionBoard(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) -> Int {
-        if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
+    func getNumberFromSolutionBoard(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) -> Int {
+        if coord.row < 0 || coord.row >= self.boardRows || coord.column < 0 || coord.column >= self.boardColumns {
             return 0
         }
-        if cellRow < 0 || cellRow >= self.solutionBoardCells[boardRow][boardColumn].cellDepth() || cellColumn < 0 || cellColumn >= self.solutionBoardCells[boardRow][boardColumn].cellWidth() {
+        if coord.cellRow < 0 || coord.cellRow >= self.solutionBoardCells[coord.row][coord.column].cellDepth() || coord.cellColumn < 0 || coord.cellColumn >= self.solutionBoardCells[coord.row][coord.column].cellWidth() {
             return 0
         }
-        return self.solutionBoardCells[boardRow][boardColumn].getNumberAtCellPosition(cellRow, column: cellColumn)
+        return self.solutionBoardCells[coord.row][coord.column].getNumberAtCellPosition(coord.cellRow, column: coord.cellColumn)
     }
     
     //
     // is the location an 'origin' posn, we'll use this to work out if the user can interact with that position
     //
-    func isOriginBoardCellUsed(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) -> Bool {
-        if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
+    func isOriginBoardCellUsed(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) -> Bool {
+        if coord.row < 0 || coord.row >= self.boardRows || coord.column < 0 || coord.column >= self.boardColumns {
             return false
         }
-        if cellRow < 0 || cellRow >= self.originBoardCells[boardRow][boardColumn].cellDepth() || cellColumn < 0 || cellColumn >= self.originBoardCells[boardRow][boardColumn].cellWidth() {
+        if coord.cellRow < 0 || coord.cellRow >= self.originBoardCells[coord.row][coord.column].cellDepth() || coord.cellColumn < 0 || coord.cellColumn >= self.originBoardCells[coord.row][coord.column].cellWidth() {
             return false
         }
-        return (self.originBoardCells[boardRow][boardColumn].getNumberAtCellPosition(cellRow, column: cellColumn) == 0) ? false : true
+        return (self.originBoardCells[coord.row][coord.column].getNumberAtCellPosition(coord.cellRow, column: coord.cellColumn) == 0) ? false : true
     }
     
     //
     // is the location on the game board used
     //
-    func isGameBoardCellUsed(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) -> Bool {
-        if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
+    func isGameBoardCellUsed(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) -> Bool {
+        if coord.row < 0 || coord.row >= self.boardRows || coord.column < 0 || coord.column >= self.boardColumns {
             return false
         }
-        if cellRow < 0 || cellRow >= self.gameBoardCells[boardRow][boardColumn].cellDepth() || cellColumn < 0 || cellColumn >= self.gameBoardCells[boardRow][boardColumn].cellWidth() {
+        if coord.cellRow < 0 || coord.cellRow >= self.gameBoardCells[coord.row][coord.column].cellDepth() || coord.cellColumn < 0 || coord.cellColumn >= self.gameBoardCells[coord.row][coord.column].cellWidth() {
             return false
         }
-        return (self.gameBoardCells[boardRow][boardColumn].getNumberAtCellPosition(cellRow, column: cellColumn) == 0) ? false : true
+        return (self.gameBoardCells[coord.row][coord.column].getNumberAtCellPosition(coord.cellRow, column: coord.cellColumn) == 0) ? false : true
     }
     
     //
     // populate a position on the game board if permissable
     //
-    func setNumberOnGameBoard(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int, number: Int) -> Bool {
-        if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
+    func setNumberOnGameBoard(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) -> Bool {
+        if coord.row < 0 || coord.row >= self.boardRows || coord.column < 0 || coord.column >= self.boardColumns {
             return false
         }
-        if cellRow < 0 || cellRow >= self.gameBoardCells[boardRow][boardColumn].cellDepth() || cellColumn < 0 || cellColumn >= self.gameBoardCells[boardRow][boardColumn].cellWidth() {
+        if coord.cellRow < 0 || coord.cellRow >= self.gameBoardCells[coord.row][coord.column].cellDepth() || coord.column < 0 || coord.column >= self.gameBoardCells[coord.row][coord.column].cellWidth() {
             return false
         }
-        if self.gameBoardCells[boardRow][boardColumn].isNumberUsedInCell(number) == true {
+        if self.gameBoardCells[coord.row][coord.column].isNumberUsedInCell(number) == true {
             return false
         }
-        if self.isNumberLegalInGame(boardRow, column: boardColumn, cellRow: cellRow, cellColumn: cellColumn, number: number) == false {
+        if self.isNumberLegalInGame(coord, number: number) == false {
             return false
         }
         //
         // passed all the validation, so add it. could still be wrong ofc
         //
-        self.gameBoardCells[boardRow][boardColumn].setNumberAtCellPosition(cellRow, column: cellColumn, number: number)
+        self.gameBoardCells[coord.row][coord.column].setNumberAtCellPosition(coord.cellRow, column: coord.cellColumn, number: number)
         return true
     }
 
     //
     // remove a number from the board
     //
-    func clearNumberOnGameBoard(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) {
-        if boardRow < 0 || boardRow >= self.boardRows || boardColumn < 0 || boardColumn >= self.boardColumns {
+    func clearNumberOnGameBoard(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
+        if coord.row < 0 || coord.row >= self.boardRows || coord.column < 0 || coord.column >= self.boardColumns {
             return
         }
-        if cellRow < 0 || cellRow >= self.gameBoardCells[boardRow][boardColumn].cellDepth() || cellColumn < 0 || cellColumn >= self.gameBoardCells[boardRow][boardColumn].cellWidth() {
+        if coord.cellRow < 0 || coord.cellRow >= self.gameBoardCells[coord.row][coord.column].cellDepth() || coord.cellColumn < 0 || coord.cellColumn >= self.gameBoardCells[coord.row][coord.column].cellWidth() {
             return
         }
-        self.gameBoardCells[boardRow][boardColumn].clearNumberAtCellPosition(cellRow, column: cellColumn)
+        self.gameBoardCells[coord.row][coord.column].clearNumberAtCellPosition(coord.cellRow, column: coord.cellColumn)
         return
     }
     
@@ -375,13 +375,13 @@ class GameBoard: NSObject, NSCopying {
         return self.boardColumns
     }
     
-    func getLocationsOfNumberOnBoard(number: Int) -> [(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)] {
-        var returnCoords: [(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)] = []
-        for row: Int in 0 ..< self.boardRows {
-            for column: Int in 0 ..< self.boardColumns {
-                let cellCoords: (cellRow: Int, cellColumn: Int) = self.gameBoardCells[row][column].getLocationOfNumberInCell(number)
+    func getLocationsOfNumberOnBoard(number: Int) -> [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] {
+        var returnCoords: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = []
+        for boardRow: Int in 0 ..< self.boardRows {
+            for boardColumn: Int in 0 ..< self.boardColumns {
+                let cellCoords: (cellRow: Int, cellColumn: Int) = self.gameBoardCells[boardRow][boardColumn].getLocationOfNumberInCell(number)
                 if (cellCoords != (-1,-1)) {
-                    returnCoords.append((row, column, cellCoords.cellRow, cellCoords.cellColumn))
+                    returnCoords.append((boardRow, boardColumn, cellCoords.cellRow, cellCoords.cellColumn))
                 }
             }
         }

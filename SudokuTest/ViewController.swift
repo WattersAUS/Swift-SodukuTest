@@ -28,7 +28,7 @@ class ViewController: UIViewController {
     var sudokuBoard: GameBoard!
     var displayBoard: GameBoardImages!
     // current selected board position (if any, -1 if none)
-    var boardSelectedPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) = (-1, -1, -1, -1)
+    var boardSelectedPosition: (row: Int, column: Int, cellRow: Int, cellColumn: Int) = (-1, -1, -1, -1)
     // has user started playing?
     var gameBoardInPlay: Bool = false
     
@@ -45,11 +45,6 @@ class ViewController: UIViewController {
     var controlPanelImages: CellImages!
     // current crtl panel position (if any)
     var controlSelected: (panelRow: Int, panelColumn: Int) = (-1, -1)
-
-    //
-    // placeholder image for position selection in board - TO BE REMOVED
-    var selectedImage: UIImage = UIImage(named:"Selected.png")!
-    // placeholder image for position selection in board - TO BE REMOVED
 
     //
     // image sets and related vars
@@ -316,14 +311,15 @@ class ViewController: UIViewController {
         //
         // has the user tapped in a cell?
         //
-        let cellPosn: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) = self.getPositionOfSudokuBoardImageTapped(recognizer.locationInView(recognizer.view))
-        if cellPosn.boardColumn == -1 {
+        let cellPosn: (row: Int, column: Int, cellRow: Int, cellColumn: Int) = self.getPositionOfSudokuBoardImageTapped(recognizer.locationInView(recognizer.view))
+        if cellPosn.column == -1 {
             return
         }
         //
         // and it's can't be a cell on the 'origin' board, as that's from before the user started solving
         //
-        if self.sudokuBoard.isOriginBoardCellUsed(cellPosn.boardRow, boardColumn: cellPosn.boardColumn, cellRow: cellPosn.cellRow, cellColumn: cellPosn.cellColumn) {
+        //if self.sudokuBoard.isOriginBoardCellUsed((cellPosn.row, column: cellPosn.column, cellRow: cellPosn.cellRow, cellColumn: cellPosn.cellColumn)) {
+        if self.sudokuBoard.isOriginBoardCellUsed(cellPosn) {
             return
         }
         //
@@ -335,12 +331,12 @@ class ViewController: UIViewController {
             //
             // if the posn already has a value the user must clear it first, otherwise populate it only if it's valid for that cell
             //
-            if self.sudokuBoard.isGameBoardCellUsed(cellPosn.boardRow, boardColumn: cellPosn.boardColumn, cellRow: cellPosn.cellRow, cellColumn: cellPosn.cellColumn) {
+            if self.sudokuBoard.isGameBoardCellUsed(cellPosn) {
                 return
             }
-            if self.sudokuBoard.setNumberOnGameBoard(cellPosn.boardRow, boardColumn: cellPosn.boardColumn, cellRow: cellPosn.cellRow, cellColumn: cellPosn.cellColumn, number: panelIndex + 1) {
-                self.boardSelectedPosition = (cellPosn.boardRow, cellPosn.boardColumn, cellPosn.cellRow, cellPosn.cellColumn)
-                self.setCellToSelectedImage(self.boardSelectedPosition, number: panelIndex + 1)
+            if self.sudokuBoard.setNumberOnGameBoard(cellPosn, number: panelIndex + 1) {
+                self.boardSelectedPosition = cellPosn
+                self.setCoordToSelectedImage(self.boardSelectedPosition, number: panelIndex + 1)
                 self.controlPanelImages.setImage(controlSelected.panelRow, column: controlSelected.panelColumn, imageToSet: self.imageDefaultLibrary[self.activeImageSet][panelIndex], imageState: imgStates.Default.rawValue)
                 self.unsetHighlightedNumbersOnBoard()
                 self.controlSelected = (-1, -1)
@@ -349,16 +345,13 @@ class ViewController: UIViewController {
             //
             // clear when user selects posn on board an it's populated by a user solution
             //
-            
-            // NEEDS WORK!!!!
-            
             self.controlPanelImages.setImage(controlSelected.panelRow, column: controlSelected.panelColumn, imageToSet: self.imageDefaultLibrary[self.activeImageSet][panelIndex], imageState: imgStates.Default.rawValue)
             self.controlSelected = (-1, -1)
-            if self.sudokuBoard.isGameBoardCellUsed(cellPosn.boardRow, boardColumn: cellPosn.boardColumn, cellRow: cellPosn.cellRow, cellColumn: cellPosn.cellColumn) == false {
+            if self.sudokuBoard.isGameBoardCellUsed(cellPosn) == false {
                 return
             }
-            self.sudokuBoard.clearNumberOnGameBoard(cellPosn.boardRow, boardColumn: cellPosn.boardColumn, cellRow: cellPosn.cellRow, cellColumn: cellPosn.cellColumn)
-            self.boardSelectedPosition = (cellPosn.boardRow, cellPosn.boardColumn, cellPosn.cellRow, cellPosn.cellColumn)
+            self.sudokuBoard.clearNumberOnGameBoard(cellPosn)
+            self.boardSelectedPosition = cellPosn
             self.setCellToBlankImage(self.boardSelectedPosition)
             break
         case 10:
@@ -380,7 +373,7 @@ class ViewController: UIViewController {
         return
     }
     
-    func getPositionOfSudokuBoardImageTapped(location: CGPoint) -> (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int) {
+    func getPositionOfSudokuBoardImageTapped(location: CGPoint) -> (row: Int, column: Int, cellRow: Int, cellColumn: Int) {
         for y: Int in 0 ..< self.displayBoard.boardRows {
             for x: Int in 0 ..< self.displayBoard.boardColumns {
                 for j: Int in 0 ..< self.displayBoard.gameImages[y][x].cellRows {
@@ -534,10 +527,14 @@ class ViewController: UIViewController {
     // traverse game board and 'unset' any selected numbers
     // ---->>>> (will be allowed by difficulty setting in later version) <<<<------
     func unsetHighlightedNumbersOnBoard() {
-        let locations: [(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)] = self.displayBoard.getLocationsOfHighlightedImagesOnBoard()
+        let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.displayBoard.getLocationsOfHighlightedImagesOnBoard()
         if locations.isEmpty == false {
             for coords in locations {
-                self.setCellToDefaultImage(coords, number: self.sudokuBoard.gameBoardCells[coords.boardRow][coords.boardColumn].getNumberAtCellPosition(coords.cellRow, column: coords.cellColumn))
+                if self.sudokuBoard.isOriginBoardCellUsed(coords) {
+                    self.setCoordToOriginImage(coords, number: self.sudokuBoard.getNumberFromGameBoard(coords))
+                } else {
+                    self.setCoordToDefaultImage(coords, number: self.sudokuBoard.getNumberFromGameBoard(coords))
+                }
             }
         }
         return
@@ -547,28 +544,42 @@ class ViewController: UIViewController {
     // ---->>>> (will be allowed by difficulty setting) <<<<------
     func setHighlightedNumbersOnBoard(index: Int) {
         // index will give the 'number' selected from the control panel
-        let locations: [(boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)] = self.sudokuBoard.getLocationsOfNumberOnBoard(index + 1)
+        let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.sudokuBoard.getLocationsOfNumberOnBoard(index + 1)
         if locations.isEmpty == false {
             for coord in locations {
-                self.setCellToSelectedImage(coord, number: index + 1)
+                self.setCoordToSelectedImage(coord, number: index + 1)
             }
         }
         return
     }
 
+    //
     // set numbers on the 'game' board to highlighted if the user selects the 'number' from the control panel
-    func setCellToSelectedImage(boardPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int), number: Int) {
-        self.displayBoard.gameImages[boardPosition.boardRow][boardPosition.boardColumn].setImage(boardPosition.cellRow, column: boardPosition.cellColumn, imageToSet: self.imageSelectLibrary[self.activeImageSet][number - 1], imageState: imgStates.Selected.rawValue)
+    //
+    func setCoordToSelectedImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
+        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageSelectLibrary[self.activeImageSet][number - 1], imageState: imgStates.Selected.rawValue)
         return
     }
     
+    //
     // set numbers on the 'game' board to default if the user selects the 'number' from the control panel
-    func setCellToDefaultImage(boardPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int), number: Int) {
-        self.displayBoard.gameImages[boardPosition.boardRow][boardPosition.boardColumn].setImage(boardPosition.cellRow, column: boardPosition.cellColumn, imageToSet: self.imageDefaultLibrary[self.activeImageSet][number - 1], imageState: imgStates.Default.rawValue)
+    //
+    func setCoordToDefaultImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
+        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageDefaultLibrary[self.activeImageSet][number - 1], imageState: imgStates.Default.rawValue)
         return
     }
 
+    //
+    // set numbers on the 'game' board to origin if they are also part of the origin board
+    //
+    func setCoordToOriginImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
+        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageOriginLibrary[self.activeImageSet][number - 1], imageState: imgStates.Origin.rawValue)
+        return
+    }
+    
+    //
     // detect if the user has selected within a designated image view
+    //
     func isTapWithinImage(location: CGPoint, image: UIImageView) -> Bool {
         if (location.x >= image.frame.origin.x) && (location.x <= (image.frame.origin.x + image.frame.width)) {
             if (location.y >= image.frame.origin.y) && (location.y <= (image.frame.origin.y + image.frame.height)) {
@@ -578,15 +589,8 @@ class ViewController: UIViewController {
         return false
     }
 
-    // ** FOLLOWING CODE TO BE DEPRECATED **
-    // update cell image, selected or deselected
-//    func setCellToSelectedImage(boardPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)) {
-//        self.displayBoard.gameImages[boardPosition.boardRow][boardPosition.boardColumn].setImage(boardPosition.cellRow, column: boardPosition.cellColumn, imageToSet: self.selectedImage, imageState: imgStates.Default.rawValue)
-//        return
-//    }
-    
-    func setCellToBlankImage(boardPosition: (boardRow: Int, boardColumn: Int, cellRow: Int, cellColumn: Int)) {
-        self.displayBoard.gameImages[boardPosition.boardRow][boardPosition.boardColumn].unsetImage(boardPosition.cellRow, column: boardPosition.cellColumn)
+    func setCellToBlankImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
+        self.displayBoard.gameImages[coord.row][coord.column].unsetImage(coord.cellRow, column: coord.cellColumn)
         return
     }
     
@@ -594,7 +598,9 @@ class ViewController: UIViewController {
     // user presses the 'Start' or 'Reset' button
     //----------------------------------------------------------------------------
     @IBAction func resetButtonPressed(sender: UIButton) {
-        // if we have 'Start' as the button we don't need to ask the user for reset instructions
+        //
+        // if we have 'Start', build the board
+        //
         if UIImagePNGRepresentation((sender.imageView?.image)!)!.isEqual(UIImagePNGRepresentation(self.startImageLibrary[imgStates.Default.rawValue])) == true {
             sender.setImage(self.resetImageLibrary[imgStates.Default.rawValue], forState: UIControlState.Normal)
             self.sudokuBoard.clearBoard()
@@ -637,7 +643,9 @@ class ViewController: UIViewController {
         }
     }
     
+    //
     // clear any selection the user might have left in the control panel
+    //
     func resetControlPanelSelection() {
         if self.controlSelected != (-1, -1) {
             let pInd: Int = (self.controlSelected.panelRow * 2) + self.controlSelected.panelColumn
@@ -652,9 +660,13 @@ class ViewController: UIViewController {
                 for j: Int in 0 ..< self.displayBoard.gameImages[y][x].cellRows {
                     for k: Int in 0 ..< self.displayBoard.gameImages[y][x].cellColumns {
                         self.displayBoard.gameImages[y][x].unsetImage(j, column: k)
-                        let number: Int = self.sudokuBoard.getNumberFromGameBoard(y, boardColumn: x, cellRow: j, cellColumn: k) - 1
+                        let number: Int = self.sudokuBoard.getNumberFromGameBoard((y, column: x, cellRow: j, cellColumn: k)) - 1
                         if (number > -1) {
-                            self.displayBoard.gameImages[y][x].setImage(j, column: k, imageToSet: self.imageDefaultLibrary[self.activeImageSet][number], imageState: imgStates.Default.rawValue)
+                            if self.sudokuBoard.isOriginBoardCellUsed((y, column: x, cellRow: j, cellColumn: k)) {
+                                self.displayBoard.gameImages[y][x].setImage(j, column: k, imageToSet: self.imageOriginLibrary[self.activeImageSet][number], imageState: imgStates.Origin.rawValue)
+                            } else {
+                                self.displayBoard.gameImages[y][x].setImage(j, column: k, imageToSet: self.imageDefaultLibrary[self.activeImageSet][number], imageState: imgStates.Default.rawValue)
+                            }
                         }
                     }
                 }
