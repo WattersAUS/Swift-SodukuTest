@@ -58,6 +58,7 @@ class ViewController: UIViewController {
         case Default = 0
         case Selected = 1
         case Highlighted = 2
+        case Origin = 3
     }
     enum imageSet: Int {
         case Default = 0
@@ -65,7 +66,9 @@ class ViewController: UIViewController {
         case Images = 3
     }
     var activeImageSet: Int = imageSet.Default.rawValue
+    //
     // images that will be swapped on starting/reseting board
+    //
     var startImageLibrary: [UIImage] = [
         UIImage(named:"ImageStart_default.png")!,
         UIImage(named:"ImageStart_select.png")!,
@@ -76,13 +79,17 @@ class ViewController: UIViewController {
         UIImage(named:"ImageReset_select.png")!,
         UIImage(named:"ImageReset_select.png")!
     ]
+    //
     // app settings dialog
+    //
     var settingsImageLibrary: [UIImage] = [
         UIImage(named:"AltSpanner_default.png")!,
         UIImage(named:"AltSpanner_select.png")!,
         UIImage(named:"AltSpanner_select.png")!
     ]
+    //
     // default image set (imagestate == 0)
+    //
     var imageDefaultLibrary: [[UIImage]] = [[
         UIImage(named:"Image001_default.png")!,
         UIImage(named:"Image002_default.png")!,
@@ -111,7 +118,9 @@ class ViewController: UIViewController {
         UIImage(named:"ImageForward_default.png")!
     ]]
 
+    //
     // when user selects from control panel (imagestate == 1)
+    //
     var imageSelectLibrary: [[UIImage]] = [[
         UIImage(named:"Image001_select.png")!,
         UIImage(named:"Image002_select.png")!,
@@ -140,7 +149,9 @@ class ViewController: UIViewController {
         UIImage(named:"ImageForward_select.png")!
     ]]
 
-    // highlighted images to use when the user wants to see the puzzle start position (imagestate == 2)
+    //
+    // highlighted images to use when the user wants to see the puzzle start position
+    //
     var imageHighlightLibrary: [[UIImage]] = [[
         UIImage(named:"Image001_highlight.png")!,
         UIImage(named:"Image002_highlight.png")!,
@@ -167,6 +178,37 @@ class ViewController: UIViewController {
         UIImage(named:"ImageClear_highlight.png")!,
         UIImage(named:"ImageReverse_highlight.png")!,
         UIImage(named:"ImageForward_highlight.png")!
+    ]]
+    
+    //
+    // images to highlight origin positions that cannot be deleted
+    //
+    var imageOriginLibrary: [[UIImage]] = [[
+        UIImage(named:"Image001_origin.png")!,
+        UIImage(named:"Image002_origin.png")!,
+        UIImage(named:"Image003_origin.png")!,
+        UIImage(named:"Image004_origin.png")!,
+        UIImage(named:"Image005_origin.png")!,
+        UIImage(named:"Image006_origin.png")!,
+        UIImage(named:"Image007_origin.png")!,
+        UIImage(named:"Image008_origin.png")!,
+        UIImage(named:"Image009_origin.png")!,
+        UIImage(named:"ImageClear_origin.png")!,
+        UIImage(named:"ImageReverse_origin.png")!,
+        UIImage(named:"ImageForward_origin.png")!
+    ],[
+        UIImage(named:"Alt001_origin.png")!,
+        UIImage(named:"Alt002_origin.png")!,
+        UIImage(named:"Alt003_origin.png")!,
+        UIImage(named:"Alt004_origin.png")!,
+        UIImage(named:"Alt005_origin.png")!,
+        UIImage(named:"Alt006_origin.png")!,
+        UIImage(named:"Alt007_origin.png")!,
+        UIImage(named:"Alt008_origin.png")!,
+        UIImage(named:"Alt009_origin.png")!,
+        UIImage(named:"ImageClear_origin.png")!,
+        UIImage(named:"ImageReverse_origin.png")!,
+        UIImage(named:"ImageForward_origin.png")!
     ]]
     
     //----------------------------------------------------------------------------
@@ -316,6 +358,7 @@ class ViewController: UIViewController {
                 return
             }
             self.sudokuBoard.clearNumberOnGameBoard(cellPosn.boardRow, boardColumn: cellPosn.boardColumn, cellRow: cellPosn.cellRow, cellColumn: cellPosn.cellColumn)
+            self.boardSelectedPosition = (cellPosn.boardRow, cellPosn.boardColumn, cellPosn.cellRow, cellPosn.cellColumn)
             self.setCellToBlankImage(self.boardSelectedPosition)
             break
         case 10:
@@ -441,18 +484,18 @@ class ViewController: UIViewController {
         // a new position needs to be highlighted
         //
         let panelIndex: Int = (panelPosn.panelRow * 2) + panelPosn.panelColumn
-        self.controlPanelImages.setImage(panelPosn.panelRow, column: panelPosn.panelColumn, imageToSet: self.imageSelectLibrary[self.activeImageSet][panelIndex], imageState: imgStates.Selected.rawValue)
-        self.controlSelected = panelPosn
         //
         // only need to highlight numbers on the board when the control panel numbers are selected, otherwise another function needs to be performed
         //
         switch panelIndex {
         case 0..<9:
+            self.controlPanelImages.setImage(panelPosn.panelRow, column: panelPosn.panelColumn, imageToSet: self.imageSelectLibrary[self.activeImageSet][panelIndex], imageState: imgStates.Selected.rawValue)
             self.setHighlightedNumbersOnBoard(panelIndex)
         case 9:
             //
             // clear when user selects posn on board an it's populated by a user solution
             //
+            self.controlPanelImages.setImage(panelPosn.panelRow, column: panelPosn.panelColumn, imageToSet: self.imageOriginLibrary[self.activeImageSet][panelIndex], imageState: imgStates.Origin.rawValue)
             break
         case 10:
             //
@@ -470,6 +513,10 @@ class ViewController: UIViewController {
             //
             break
         }
+        //
+        // make sure we store the control panel posn, as we'll need this if the user goes and selects a posn on the game board
+        //
+        self.controlSelected = panelPosn
         return
     }
     
