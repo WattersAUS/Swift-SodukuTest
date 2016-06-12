@@ -40,13 +40,16 @@ class GameBoardImages {
         return
     }
     
-    func getLocationsOfHighlightedImagesOnBoard() -> [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] {
+    //
+    // we use this to pass back to the ViewController an array of images selected by the user when selecting a control panel 'number'
+    //
+    func getLocationsOfImages(imageState: Int) -> [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] {
         var returnCoords: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = []
         for boardRow: Int in 0 ..< self.boardRows {
             for boardColumn: Int in 0 ..< self.boardColumns {
-                let highlighted: [(cellRow: Int, cellColumn: Int)] = self.gameImages[boardRow][boardColumn].getLocationsOfCellsStateEqualTo(1)
-                if highlighted.isEmpty == false {
-                    for coord in highlighted {
+                let images: [(cellRow: Int, cellColumn: Int)] = self.gameImages[boardRow][boardColumn].getLocationsOfCellsStateEqualTo(imageState)
+                if images.isEmpty == false {
+                    for coord in images {
                         returnCoords.append((boardRow, boardColumn, coord.cellRow, coord.cellColumn))
                     }
                 }

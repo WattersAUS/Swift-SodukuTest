@@ -66,7 +66,7 @@ class SudokuTestGameBoardTests: XCTestCase {
             for bColumns: Int in 0 ..< testBoard.getBoardColumns() {
                 for cRows: Int in 0 ..< testBoard.getBoardRows() {
                     for cColumns: Int in 0 ..< testBoard.getBoardColumns() {
-                        XCTAssertEqual(testBoard.getNumberFromGameBoard(bRows, boardColumn: bColumns, cellRow: cRows, cellColumn: cColumns), 0, "Cell not initialised correctly")
+                        XCTAssertEqual(testBoard.getNumberFromGameBoard((bRows, column: bColumns, cellRow: cRows, cellColumn: cColumns)), 0, "Cell not initialised correctly")
                     }
                 }
             }
