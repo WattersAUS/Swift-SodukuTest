@@ -35,7 +35,7 @@ class ViewController: UIViewController {
     //
     // user progress through puzzle
     //
-    var userProgress: TrackSolution!
+    var userSolution: TrackSolution!
     
     //
     // the control panel
@@ -215,6 +215,7 @@ class ViewController: UIViewController {
         self.sudokuBoard = GameBoard(size: self.boardDimensions, setDifficulty: self.gameDifficulty)
         self.displayBoard = GameBoardImages(size: self.boardDimensions)
         self.controlPanelImages = CellImages(rows: 6, columns: 2)
+        self.userSolution = TrackSolution(row: self.boardDimensions, column: self.boardDimensions, cellRow: self.boardDimensions, cellColumn: self.boardDimensions)
         self.activeImageSet = imageSet.Default.rawValue
         self.initialSudokuBoardDisplay()
         self.initialControlPanelDisplay()
@@ -241,6 +242,7 @@ class ViewController: UIViewController {
             }
             self.sudokuBoard.buildOriginBoard()
             self.sudokuBoard.initialiseGameBoard()
+            self.userSolution.clearCoordinates()
             self.updateSudokuBoardDisplay()
             self.controlSelected = (-1, -1)
             self.boardSelectedPosition = (-1, -1, -1, -1)
@@ -261,6 +263,7 @@ class ViewController: UIViewController {
             let resetAction = UIAlertAction(title: "Reset the board to the beginning", style: .Default) { (action:UIAlertAction!) in
                 self.resetControlPanelSelection()
                 self.sudokuBoard.initialiseGameBoard()
+                self.userSolution.clearCoordinates()
                 self.updateSudokuBoardDisplay()
                 self.controlSelected = (-1, -1)
                 self.boardSelectedPosition = (-1, -1, -1, -1)
@@ -271,6 +274,7 @@ class ViewController: UIViewController {
                 self.resetControlPanelSelection()
                 sender.setImage(self.startImageLibrary[imgStates.Default.rawValue], forState: UIControlState.Normal)
                 self.sudokuBoard.clearBoard()
+                self.userSolution.clearCoordinates()
                 self.updateSudokuBoardDisplay()
                 self.controlSelected = (-1, -1)
                 self.boardSelectedPosition = (-1, -1, -1, -1)
@@ -568,6 +572,7 @@ class ViewController: UIViewController {
             }
             if self.sudokuBoard.setNumberOnGameBoard(posn, number: index + 1) {
                 self.setCoordToHighlightedImage(posn, number: index + 1)
+                self.userSolution.addCoordinate(posn)
             }
         case 9:
             //
@@ -578,6 +583,7 @@ class ViewController: UIViewController {
             }
             self.sudokuBoard.clearNumberOnGameBoard(posn)
             self.setCellToBlankImage(posn)
+            self.userSolution.removeCoordinate(posn)
             self.boardSelectedPosition = (-1, -1, -1, -1)
             break
         default:
@@ -682,74 +688,74 @@ class ViewController: UIViewController {
         return false
     }
 
-    //
-    // main loop to determine how we process the user request, will depend on the function and whether a board position was chose first or not
-    //
-    // control panel positions are:
-    //  0 - 8   = numbers 1-9
-    //      9   = bin / delete
-    //     10   = rewind
-    //     11   = fforward
-    //
-    func userGameInteraction(panel: (row: Int, column: Int), coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
-        //
-        // Called from the board and the control panel had not been set. then just store the selected board location
-        //
-        if panel.row == -1 && self.controlSelected.row == -1 {
-            self.boardSelectedPosition = coord
-            return
-        }
-        //
-        // need to convert the panel posn into an index, irrespective where it came from
-        //
-        let index: Int = (panel.row != -1) ? (panel.row * 2) + panel.column : (self.controlSelected.row * 2) + self.controlSelected.column
-        switch index {
-        case 0..<9:
-            if coord.row != -1 {
-                //
-                // if the user already has a board posn active just place the numnber if it's valid
-                //
-                if self.sudokuBoard.isGameBoardCellUsed(coord) {
-                    return
-                }
-                if self.sudokuBoard.setNumberOnGameBoard(coord, number: index + 1) {
-                    self.setCoordToHighlightedImage(coord, number: index + 1)
-                }
-            }
-        case 9:
-            //
-            // when user selects posn on board an it's populated by a user solution, clear it!
-            //
-            if coord.row != -1 {
-                //
-                // remove the number at the board posn if already selected
-                //
-                if self.sudokuBoard.isGameBoardCellUsed(coord) == false {
-                    return
-                }
-                self.sudokuBoard.clearNumberOnGameBoard(coord)
-                self.setCellToBlankImage(coord)
-                self.boardSelectedPosition = (-1, -1, -1, -1)
-            }
-            break
-        case 10:
-            //
-            // rewind up to the first user solution
-            //
-            break
-        case 11:
-            //
-            // fast forward (if user has rewound solution) to the last user solution
-            //
-            break
-        default:
-            //
-            // should never happen
-            //
-            break
-        }
-        return
-    }
+//    //
+//    // main loop to determine how we process the user request, will depend on the function and whether a board position was chose first or not
+//    //
+//    // control panel positions are:
+//    //  0 - 8   = numbers 1-9
+//    //      9   = bin / delete
+//    //     10   = rewind
+//    //     11   = fforward
+//    //
+//    func userGameInteraction(panel: (row: Int, column: Int), coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
+//        //
+//        // Called from the board and the control panel had not been set. then just store the selected board location
+//        //
+//        if panel.row == -1 && self.controlSelected.row == -1 {
+//            self.boardSelectedPosition = coord
+//            return
+//        }
+//        //
+//        // need to convert the panel posn into an index, irrespective where it came from
+//        //
+//        let index: Int = (panel.row != -1) ? (panel.row * 2) + panel.column : (self.controlSelected.row * 2) + self.controlSelected.column
+//        switch index {
+//        case 0..<9:
+//            if coord.row != -1 {
+//                //
+//                // if the user already has a board posn active just place the numnber if it's valid
+//                //
+//                if self.sudokuBoard.isGameBoardCellUsed(coord) {
+//                    return
+//                }
+//                if self.sudokuBoard.setNumberOnGameBoard(coord, number: index + 1) {
+//                    self.setCoordToHighlightedImage(coord, number: index + 1)
+//                }
+//            }
+//        case 9:
+//            //
+//            // when user selects posn on board an it's populated by a user solution, clear it!
+//            //
+//            if coord.row != -1 {
+//                //
+//                // remove the number at the board posn if already selected
+//                //
+//                if self.sudokuBoard.isGameBoardCellUsed(coord) == false {
+//                    return
+//                }
+//                self.sudokuBoard.clearNumberOnGameBoard(coord)
+//                self.setCellToBlankImage(coord)
+//                self.boardSelectedPosition = (-1, -1, -1, -1)
+//            }
+//            break
+//        case 10:
+//            //
+//            // rewind up to the first user solution
+//            //
+//            break
+//        case 11:
+//            //
+//            // fast forward (if user has rewound solution) to the last user solution
+//            //
+//            break
+//        default:
+//            //
+//            // should never happen
+//            //
+//            break
+//        }
+//        return
+//    }
 
     //----------------------------------------------------------------------------
     // captures user pressing the 'Settings' button
