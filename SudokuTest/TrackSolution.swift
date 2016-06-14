@@ -44,6 +44,10 @@ class TrackSolution: NSObject, NSCopying {
     func countOfUserSolution() -> Int {
         return coords.count
     }
+    
+    func getCoordinatesInSolution() -> [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] {
+        return coords
+    }
 
     func getCoordinateAtIndex(index: Int) -> (row: Int, column: Int, cellRow: Int, cellColumn: Int) {
         if index > self.countOfUserSolution() - 1 {
