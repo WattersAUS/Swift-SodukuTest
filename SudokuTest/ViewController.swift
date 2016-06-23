@@ -216,7 +216,7 @@ class ViewController: UIViewController {
         self.displayBoard = GameBoardImages(size: self.boardDimensions)
         self.controlPanelImages = CellImages(rows: 6, columns: 2)
         self.userSolution = TrackSolution(row: self.boardDimensions, column: self.boardDimensions, cellRow: self.boardDimensions, cellColumn: self.boardDimensions)
-        self.activeImageSet = imageSet.Default.rawValue
+        self.activeImageSet = 1
         self.initialSudokuBoardDisplay()
         self.initialControlPanelDisplay()
     }
@@ -297,7 +297,7 @@ class ViewController: UIViewController {
     }
     
     //
-    // redisplay the whole current board
+    // redisplay the whole current board, remember origin cells look different
     //
     func updateSudokuBoardDisplay() {
         for y: Int in 0 ..< self.displayBoard.boardRows {
@@ -307,7 +307,11 @@ class ViewController: UIViewController {
                         self.setCellToBlankImage((y, column: x, cellRow: j, cellColumn: k))
                         let number: Int = self.sudokuBoard.getNumberFromGameBoard((y, column: x, cellRow: j, cellColumn: k))
                         if (number > 0) {
-                            self.setCoordToDefaultImage((y, column: x, cellRow: j, cellColumn: k), number: number)
+                            if self.sudokuBoard.isOriginBoardCellUsed((y, column: x, cellRow: j, cellColumn: k)) {
+                                self.setCoordToOriginImage((y, column: x, cellRow: j, cellColumn: k), number: number)
+                            } else {
+                                self.setCoordToDefaultImage((y, column: x, cellRow: j, cellColumn: k), number: number)
+                            }
                         }
                     }
                 }
@@ -386,13 +390,13 @@ class ViewController: UIViewController {
             return
         }
         //
-        // always unselect the old position if we have one, and unset any highlighted numbers if we have too
+        // always unselect the old position if we have one, and unset any selected numbers if we have too
         //
         if self.controlSelected != (-1, -1) {
             let index: Int = (self.controlSelected.row * 2) + self.controlSelected.column
             self.controlPanelImages.setImage(controlSelected.row, column: controlSelected.column, imageToSet: self.imageDefaultLibrary[self.activeImageSet][index], imageState: imgStates.Default.rawValue)
             if index < 9 {
-                self.unsetHighlightedNumbersOnBoard()
+                self.unsetSelectedNumbersOnBoard()
             }
         }
         let index: Int = (posn.row * 2) + posn.column
@@ -405,19 +409,19 @@ class ViewController: UIViewController {
                 self.controlSelected = (-1, -1)
                 return
             }
-            self.controlPanelImages.setImage(posn.row, column: posn.column, imageToSet: self.imageHighlightLibrary[self.activeImageSet][index], imageState: imgStates.Highlighted.rawValue)
-            self.setHighlightedNumbersOnBoard(index)
+            self.controlPanelImages.setImage(posn.row, column: posn.column, imageToSet: self.imageSelectLibrary[self.activeImageSet][index], imageState: imgStates.Selected.rawValue)
+            self.setSelectedNumbersOnBoard(index)
             break;
         case 9:
             //
             // for delete, we want to force the user to select a board position from the game board
             //
             if posn != self.controlSelected {
-                self.controlPanelImages.setImage(posn.row, column: posn.column, imageToSet: self.imageHighlightLibrary[self.activeImageSet][index], imageState: imgStates.Highlighted.rawValue)
+                self.controlPanelImages.setImage(posn.row, column: posn.column, imageToSet: self.imageSelectLibrary[self.activeImageSet][index], imageState: imgStates.Selected.rawValue)
                 //
                 // highlight all the positions we can remove
                 //
-                self.setHighlightedLocationsOnBoard(self.userSolution.getCoordinatesInSolution())
+                self.setSelectedLocationsOnBoard(self.userSolution.getCoordinatesInSolution())
             }
             break
         case 10:
@@ -427,7 +431,7 @@ class ViewController: UIViewController {
             if posn == self.controlSelected {
                 return
             }
-            self.controlPanelImages.setImage(posn.row, column: posn.column, imageToSet: self.imageHighlightLibrary[self.activeImageSet][index], imageState: imgStates.Highlighted.rawValue)
+            self.controlPanelImages.setImage(posn.row, column: posn.column, imageToSet: self.imageSelectLibrary[self.activeImageSet][index], imageState: imgStates.Selected.rawValue)
             break
         case 11:
             //
@@ -436,7 +440,7 @@ class ViewController: UIViewController {
             if posn == self.controlSelected {
                 return
             }
-            self.controlPanelImages.setImage(posn.row, column: posn.column, imageToSet: self.imageHighlightLibrary[self.activeImageSet][index], imageState: imgStates.Highlighted.rawValue)
+            self.controlPanelImages.setImage(posn.row, column: posn.column, imageToSet: self.imageSelectLibrary[self.activeImageSet][index], imageState: imgStates.Selected.rawValue)
             break
         default:
             //
@@ -557,7 +561,7 @@ class ViewController: UIViewController {
             return
         }
         //
-        // we process depending on the control panel if selected
+        // we process depending on the control panel posn selected
         //
         if self.controlSelected.row == -1 {
             return
@@ -569,7 +573,7 @@ class ViewController: UIViewController {
                 return
             }
             if self.sudokuBoard.setNumberOnGameBoard(posn, number: index + 1) {
-                self.setCoordToHighlightedImage(posn, number: index + 1)
+                self.setCoordToSelectedImage(posn, number: index + 1)
                 self.userSolution.addCoordinate(posn)
             }
         case 9:
@@ -614,48 +618,52 @@ class ViewController: UIViewController {
 
     // traverse game board and 'unset' any selected numbers
     // ---->>>> (will be allowed by difficulty setting in later version) <<<<------
-    func unsetHighlightedNumbersOnBoard() {
-        let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.displayBoard.getLocationsOfImages(imgStates.Highlighted.rawValue)
-        self.unsetHighlightedLocationsOnBoard(locations)
+    func unsetSelectedNumbersOnBoard() {
+        let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.displayBoard.getLocationsOfImages(imgStates.Selected.rawValue)
+        self.unsetSelectedLocationsOnBoard(locations)
         return
     }
 
     // traverse game board and 'set' any selected numbers to selected
     // ---->>>> (will be allowed by difficulty setting) <<<<------
-    func unsetHighlightedLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
+    func unsetSelectedLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
         if locations.isEmpty == false {
             for coord in locations {
-                self.setCoordToDefaultImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
+                if self.sudokuBoard.isOriginBoardCellUsed(coord) {
+                    self.setCoordToOriginImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
+                } else {
+                    self.setCoordToDefaultImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
+                }
             }
         }
         return
     }
     
-    // traverse game board and 'set' any selected numbers to selected
+    // traverse game board and 'set' any selected numbers
     // ---->>>> (will be allowed by difficulty setting) <<<<------
-    func setHighlightedNumbersOnBoard(index: Int) {
+    func setSelectedNumbersOnBoard(index: Int) {
         // index will give the 'number' selected from the control panel
         let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.sudokuBoard.getLocationsOfNumberOnBoard(index + 1)
-        self.setHighlightedLocationsOnBoard(locations)
+        self.setSelectedLocationsOnBoard(locations)
         return
     }
 
     // traverse game board and 'set' any selected numbers to selected
     // ---->>>> (will be allowed by difficulty setting) <<<<------
-    func setHighlightedLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
+    func setSelectedLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
         if locations.isEmpty == false {
             for coord in locations {
-                self.setCoordToHighlightedImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
+                self.setCoordToSelectedImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
             }
         }
         return
     }
     
     //
-    // set numbers on the 'game' board to highlighted if the user selects the 'number' from the control panel
+    // clear the current image at the coord
     //
-    func setCoordToSelectedImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
-        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageSelectLibrary[self.activeImageSet][number - 1], imageState: imgStates.Selected.rawValue)
+    func setCellToBlankImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
+        self.displayBoard.gameImages[coord.row][coord.column].unsetImage(coord.cellRow, column: coord.cellColumn)
         return
     }
     
@@ -668,14 +676,6 @@ class ViewController: UIViewController {
     }
 
     //
-    // set numbers on the 'game' board to origin if they are also part of the origin board
-    //
-    func setCoordToOriginImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
-        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageOriginLibrary[self.activeImageSet][number - 1], imageState: imgStates.Origin.rawValue)
-        return
-    }
-    
-    //
     // set numbers on the 'game' board to highlight if the user selects the number from the control panel
     //
     func setCoordToHighlightedImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
@@ -684,10 +684,18 @@ class ViewController: UIViewController {
     }
 
     //
-    // clear the current image at the coord
+    // set numbers on the 'game' board to origin if they are also part of the origin board
     //
-    func setCellToBlankImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
-        self.displayBoard.gameImages[coord.row][coord.column].unsetImage(coord.cellRow, column: coord.cellColumn)
+    func setCoordToOriginImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
+        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageOriginLibrary[self.activeImageSet][number - 1], imageState: imgStates.Origin.rawValue)
+        return
+    }
+    
+    //
+    // set numbers on the 'game' board to highlighted if the user selects the 'number' from the control panel
+    //
+    func setCoordToSelectedImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
+        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageSelectLibrary[self.activeImageSet][number - 1], imageState: imgStates.Selected.rawValue)
         return
     }
     
