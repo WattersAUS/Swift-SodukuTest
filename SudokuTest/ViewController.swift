@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     
     var debug: Int = 1
     var boardDimensions: Int = 3
-    var gameDifficulty: Int = 5
+    var gameDifficulty: Int = 8
 
     //
     // defaults for positioning UIImageView components
@@ -216,7 +216,7 @@ class ViewController: UIViewController {
         self.displayBoard = GameBoardImages(size: self.boardDimensions)
         self.controlPanelImages = CellImages(rows: 6, columns: 2)
         self.userSolution = TrackSolution(row: self.boardDimensions, column: self.boardDimensions, cellRow: self.boardDimensions, cellColumn: self.boardDimensions)
-        self.activeImageSet = 1
+        self.activeImageSet = 0
         self.initialSudokuBoardDisplay()
         self.initialControlPanelDisplay()
     }
@@ -347,7 +347,7 @@ class ViewController: UIViewController {
             for column: Int in 0 ..< 2 {
                 self.controlPanelImages.cellContents[row][column].imageView.frame = CGRect(x: xCoord, y: yCoord, width: cellWidth, height: cellWidth)
                 self.controlPanelImages.cellContents[row][column].imageView.image = self.imageDefaultLibrary[self.activeImageSet][i]
-                self.controlPanelImages.cellContents[row][column].state = 0
+                self.controlPanelImages.cellContents[row][column].state = imgStates.Origin.rawValue
                 self.viewControlPanel.addSubview(self.controlPanelImages.cellContents[row][column].imageView)
                 xCoord += cellWidth + 18
                 i += 1
