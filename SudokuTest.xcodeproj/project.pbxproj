@@ -51,6 +51,8 @@
 		BF0579A51D1C2C9400B426E7 /* ImageClear_highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = BF05798F1D1C2C9400B426E7 /* ImageClear_highlight.png */; };
 		BF0579A61D1C2C9400B426E7 /* ImageForward_highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = BF0579901D1C2C9400B426E7 /* ImageForward_highlight.png */; };
 		BF0579A71D1C2C9400B426E7 /* ImageReverse_highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = BF0579911D1C2C9400B426E7 /* ImageReverse_highlight.png */; };
+		BF05A2B31D24500B007165FA /* Chalk_001.aiff in Resources */ = {isa = PBXBuildFile; fileRef = BF05A2B11D24500B007165FA /* Chalk_001.aiff */; };
+		BF05A2B41D24500B007165FA /* Chalk_002.aiff in Resources */ = {isa = PBXBuildFile; fileRef = BF05A2B21D24500B007165FA /* Chalk_002.aiff */; };
 		BF0ACC3C1D1C790D00B4958C /* Alt001_origin.png in Resources */ = {isa = PBXBuildFile; fileRef = BF0ACC251D1C790D00B4958C /* Alt001_origin.png */; };
 		BF0ACC3D1D1C790D00B4958C /* Alt002_origin.png in Resources */ = {isa = PBXBuildFile; fileRef = BF0ACC261D1C790D00B4958C /* Alt002_origin.png */; };
 		BF0ACC3E1D1C790D00B4958C /* Alt003_origin.png in Resources */ = {isa = PBXBuildFile; fileRef = BF0ACC271D1C790D00B4958C /* Alt003_origin.png */; };
@@ -202,6 +204,8 @@
 		BF05798F1D1C2C9400B426E7 /* ImageClear_highlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ImageClear_highlight.png; sourceTree = "<group>"; };
 		BF0579901D1C2C9400B426E7 /* ImageForward_highlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ImageForward_highlight.png; sourceTree = "<group>"; };
 		BF0579911D1C2C9400B426E7 /* ImageReverse_highlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ImageReverse_highlight.png; sourceTree = "<group>"; };
+		BF05A2B11D24500B007165FA /* Chalk_001.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Chalk_001.aiff; sourceTree = "<group>"; };
+		BF05A2B21D24500B007165FA /* Chalk_002.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Chalk_002.aiff; sourceTree = "<group>"; };
 		BF0ACC251D1C790D00B4958C /* Alt001_origin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Alt001_origin.png; sourceTree = "<group>"; };
 		BF0ACC261D1C790D00B4958C /* Alt002_origin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Alt002_origin.png; sourceTree = "<group>"; };
 		BF0ACC271D1C790D00B4958C /* Alt003_origin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Alt003_origin.png; sourceTree = "<group>"; };
@@ -350,6 +354,15 @@
 			name = Delete;
 			sourceTree = "<group>";
 		};
+		BF05A2B01D244FEF007165FA /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				BF05A2B11D24500B007165FA /* Chalk_001.aiff */,
+				BF05A2B21D24500B007165FA /* Chalk_002.aiff */,
+			);
+			name = Sounds;
+			sourceTree = "<group>";
+		};
 		BF0638FE1CF1AD32003919DC /* Defaults */ = {
 			isa = PBXGroup;
 			children = (
@@ -486,6 +499,7 @@
 		BFADC0011C8C8CA200F48E54 /* SudokuTest */ = {
 			isa = PBXGroup;
 			children = (
+				BF05A2B01D244FEF007165FA /* Sounds */,
 				BFA3DF551CE5301E007CBC0E /* Images */,
 				BFADC0021C8C8CA200F48E54 /* AppDelegate.swift */,
 				BFADC0041C8C8CA200F48E54 /* ViewController.swift */,
@@ -758,6 +772,7 @@
 				BF0ACC401D1C790D00B4958C /* Alt005_origin.png in Resources */,
 				BFE5E5681D0A169100F56B7D /* Alt009_select.png in Resources */,
 				BFE5E5541D09E5C100F56B7D /* Image005_select.png in Resources */,
+				BF05A2B41D24500B007165FA /* Chalk_002.aiff in Resources */,
 				BF0ACC491D1C790D00B4958C /* Image004_origin.png in Resources */,
 				BFE5E56A1D0A169100F56B7D /* Alt007_select.png in Resources */,
 				BFE5E55E1D09E7E900F56B7D /* ImageClear_select.png in Resources */,
@@ -772,6 +787,7 @@
 				BF0ACC4E1D1C790D00B4958C /* Image009_origin.png in Resources */,
 				BF0ACC3C1D1C790D00B4958C /* Alt001_origin.png in Resources */,
 				BF0545291D21C9D100BEC634 /* Alt006_delete.png in Resources */,
+				BF05A2B31D24500B007165FA /* Chalk_001.aiff in Resources */,
 				BF0545391D21CF4E00BEC634 /* Image007_delete.png in Resources */,
 				BF0579991D1C2C9400B426E7 /* Alt008_highlight.png in Resources */,
 				BF0545341D21C9D100BEC634 /* Image009_delete.png in Resources */,

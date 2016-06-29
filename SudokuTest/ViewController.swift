@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
     
@@ -236,9 +237,15 @@ class ViewController: UIViewController {
     
     //
     // timer display and storage for counter etc
+    //
     @IBOutlet weak var gameTimer: UILabel!
     var timer: NSTimer!
     var timerSeconds: Int!
+    
+    //
+    // sound handling
+    //
+    var userDrawSounds: [AVAudioPlayer!] = []
     
     //----------------------------------------------------------------------------
     // start of the code!!!!
@@ -256,6 +263,9 @@ class ViewController: UIViewController {
         // set time to start
         self.timer = NSTimer()
         self.initialiseGameTimer()
+        // load sounds
+        userDrawSounds.append(self.loadSound("Chalk_001.aiff"))
+        userDrawSounds.append(self.loadSound("Chalk_002.aiff"))
     }
 
     override func didReceiveMemoryWarning() {
@@ -264,21 +274,48 @@ class ViewController: UIViewController {
     }
 
     //----------------------------------------------------------------------------
+    // load sounds
+    //----------------------------------------------------------------------------
+    func loadSound(soundName: String) -> AVAudioPlayer! {
+        var value: AVAudioPlayer!
+        do {
+            value = try AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource(soundName, ofType:nil)!))
+        } catch {
+            return nil
+        }
+        return value
+    }
+    
+    func playPlacementSound() {
+        let playSound: Int = Int(arc4random_uniform(UInt32(2)))
+        if userDrawSounds.count == 0 {
+            return
+        }
+        if userDrawSounds[playSound] == nil {
+            return
+        }
+        userDrawSounds[playSound].play()
+        return
+    }
+    
+    //----------------------------------------------------------------------------
     // time display handling
     //----------------------------------------------------------------------------
     func initialiseGameTimer() {
-        self.timer.invalidate()
+        if self.timer != nil {
+            self.timer.invalidate()
+        }
         self.timerSeconds = 0
         self.gameTimer.text = ""
         return
     }
     
     func startGameTimer() {
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(1, target:self, selector: #selector(ViewController.updateGameTimer), userInfo: nil, repeats: true)
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(1, target:self, selector: #selector(ViewController.updateGameTime), userInfo: nil, repeats: true)
         return
     }
     
-    func updateGameTimer() {
+    func updateGameTime() {
         self.timerSeconds = self.timerSeconds + 1
         self.gameTimer.text = String(format: "%02d", self.timerSeconds / 60) + ":" + String(format: "%02d", self.timerSeconds % 60)
         return
@@ -658,6 +695,7 @@ class ViewController: UIViewController {
             if self.sudokuBoard.setNumberOnGameBoard(posn, number: index + 1) {
                 self.setCoordToSelectImage(posn, number: index + 1)
                 self.userSolution.addCoordinate(posn)
+                self.playPlacementSound()
             }
         case 9:
             //
