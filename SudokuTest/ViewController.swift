@@ -234,6 +234,12 @@ class ViewController: UIViewController {
         UIImage(named:"ImageForward_delete.png")!
     ]]
     
+    //
+    // timer display and storage for counter etc
+    @IBOutlet weak var gameTimer: UILabel!
+    var timer: NSTimer!
+    var timerSeconds: Int!
+    
     //----------------------------------------------------------------------------
     // start of the code!!!!
     //----------------------------------------------------------------------------
@@ -247,11 +253,35 @@ class ViewController: UIViewController {
         self.activeImageSet = 0
         self.initialSudokuBoardDisplay()
         self.initialControlPanelDisplay()
+        // set time to start
+        self.timer = NSTimer()
+        self.initialiseGameTimer()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    //----------------------------------------------------------------------------
+    // time display handling
+    //----------------------------------------------------------------------------
+    func initialiseGameTimer() {
+        self.timer.invalidate()
+        self.timerSeconds = 0
+        self.gameTimer.text = ""
+        return
+    }
+    
+    func startGameTimer() {
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(1, target:self, selector: #selector(ViewController.updateGameTimer), userInfo: nil, repeats: true)
+        return
+    }
+    
+    func updateGameTimer() {
+        self.timerSeconds = self.timerSeconds + 1
+        self.gameTimer.text = String(format: "%02d", self.timerSeconds / 60) + ":" + String(format: "%02d", self.timerSeconds % 60)
+        return
     }
     
     //----------------------------------------------------------------------------
@@ -275,6 +305,8 @@ class ViewController: UIViewController {
             self.controlSelected = (-1, -1)
             self.boardSelectedPosition = (-1, -1, -1, -1)
             self.gameBoardInPlay = true
+            self.initialiseGameTimer()
+            self.startGameTimer()
         } else {
             //
             // then we can:
@@ -296,6 +328,8 @@ class ViewController: UIViewController {
                 self.controlSelected = (-1, -1)
                 self.boardSelectedPosition = (-1, -1, -1, -1)
                 self.gameBoardInPlay = true
+                self.initialiseGameTimer()
+                self.startGameTimer()
             }
             alertController.addAction(resetAction)
             let restartAction = UIAlertAction(title: "Restart the puzzle to blank", style: .Default) { (action:UIAlertAction!) in
@@ -307,6 +341,7 @@ class ViewController: UIViewController {
                 self.controlSelected = (-1, -1)
                 self.boardSelectedPosition = (-1, -1, -1, -1)
                 self.gameBoardInPlay = false
+                self.startGameTimer()
             }
             alertController.addAction(restartAction)
             self.presentViewController(alertController, animated: true, completion:nil)
