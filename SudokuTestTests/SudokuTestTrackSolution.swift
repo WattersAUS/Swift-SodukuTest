@@ -22,27 +22,27 @@ class SudokuTestTrackSolution: XCTestCase {
     }
 
     func testSolutionInitialSizeOverriddenCorrectly() {
-        var testSize: (maxBoardRows: Int, maxBoardColumns: Int, maxCellRows: Int, maxCellColumns: Int) = (-1, -1, -1, -1)
+        var testSize: (row: Int, column: Int, cellRow: Int, cellColumn: Int) = (-1, -1, -1, -1)
         var testTracker: TrackSolution!
         testTracker = TrackSolution()
         testSize = testTracker.getBoardSize()
         // we should see a size == 3 for width
-        XCTAssertEqual(testSize.maxBoardRows, 3, "Incorrect initial Board Rows reported")
-        XCTAssertEqual(testSize.maxBoardColumns, 3, "Incorrect initial Board Columns reported")
-        XCTAssertEqual(testSize.maxCellRows, 3, "Incorrect initial Cell Rows reported")
-        XCTAssertEqual(testSize.maxCellColumns, 3, "Incorrect initial Cell Columns reported")
+        XCTAssertEqual(testSize.row, 3, "Incorrect initial Board Rows reported")
+        XCTAssertEqual(testSize.column, 3, "Incorrect initial Board Columns reported")
+        XCTAssertEqual(testSize.cellRow, 3, "Incorrect initial Cell Rows reported")
+        XCTAssertEqual(testSize.cellColumn, 3, "Incorrect initial Cell Columns reported")
     }
     
     func testSolutionInitialSizeSetCorrectly() {
-        var testSize: (maxBoardRows: Int, maxBoardColumns: Int, maxCellRows: Int, maxCellColumns: Int) = (-1, -1, -1, -1)
+        var testSize: (row: Int, column: Int, cellRow: Int, cellColumn: Int) = (-1, -1, -1, -1)
         var testTracker: TrackSolution!
-        testTracker = TrackSolution(boardRows: 7, boardColumns: 5, cellRows: 6, cellColumns: 4)
+        testTracker = TrackSolution(row: 7, column: 5, cellRow: 6, cellColumn: 4)
         testSize = testTracker.getBoardSize()
         // we should see sizes reported as added
-        XCTAssertEqual(testSize.maxBoardRows, 7, "Incorrect initial Board Rows reported")
-        XCTAssertEqual(testSize.maxBoardColumns, 5, "Incorrect initial Board Columns reported")
-        XCTAssertEqual(testSize.maxCellRows, 6, "Incorrect initial Cell Rows reported")
-        XCTAssertEqual(testSize.maxCellColumns, 4, "Incorrect initial Cell Columns reported")
+        XCTAssertEqual(testSize.row, 7, "Incorrect initial Board Rows reported")
+        XCTAssertEqual(testSize.column, 5, "Incorrect initial Board Columns reported")
+        XCTAssertEqual(testSize.cellRow, 6, "Incorrect initial Cell Rows reported")
+        XCTAssertEqual(testSize.cellColumn, 4, "Incorrect initial Cell Columns reported")
     }
 
     func testSolutionSizeReturnedCorrectly() {
@@ -50,7 +50,7 @@ class SudokuTestTrackSolution: XCTestCase {
         testTracker = TrackSolution()
         // should be empty
         XCTAssertEqual(testTracker.countOfUserSolution(), 0, "Incorrect initial Solution Size reported")
-        testTracker.addCoordinate(0, boardColumn: 1, cellRow: 2, cellColumn: 3)
+        testTracker.addCoordinate((0, column: 1, cellRow: 2, cellColumn: 3))
     }
     
     func testPerformanceExample() {

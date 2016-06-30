@@ -245,7 +245,7 @@ class ViewController: UIViewController {
     //
     // sound handling
     //
-    var userDrawSounds: [AVAudioPlayer!] = []
+    var userPlacementSounds: [AVAudioPlayer!] = []
     
     //----------------------------------------------------------------------------
     // start of the code!!!!
@@ -264,8 +264,9 @@ class ViewController: UIViewController {
         self.timer = NSTimer()
         self.initialiseGameTimer()
         // load sounds
-        userDrawSounds.append(self.loadSound("Chalk_001.aiff"))
-        userDrawSounds.append(self.loadSound("Chalk_002.aiff"))
+        userPlacementSounds.append(self.loadSound("Chalk_001.aiff"))
+        userPlacementSounds.append(self.loadSound("Chalk_002.aiff"))
+        return
     }
 
     override func didReceiveMemoryWarning() {
@@ -286,15 +287,18 @@ class ViewController: UIViewController {
         return value
     }
     
+    //
+    // we choose from the amount available
+    //
     func playPlacementSound() {
-        let playSound: Int = Int(arc4random_uniform(UInt32(2)))
-        if userDrawSounds.count == 0 {
+        let playSound: Int = Int(arc4random_uniform(UInt32(self.userPlacementSounds.count)))
+        if userPlacementSounds.count == 0 {
             return
         }
-        if userDrawSounds[playSound] == nil {
+        if userPlacementSounds[playSound] == nil {
             return
         }
-        userDrawSounds[playSound].play()
+        userPlacementSounds[playSound].play()
         return
     }
     
@@ -357,7 +361,7 @@ class ViewController: UIViewController {
                 // nothing to do here, user bailed on reseting the game
             }
             alertController.addAction(cancelAction)
-            let resetAction = UIAlertAction(title: "Reset the board to the beginning", style: .Default) { (action:UIAlertAction!) in
+            let resetAction = UIAlertAction(title: "Restart the puzzle!", style: .Default) { (action:UIAlertAction!) in
                 self.resetControlPanelSelection()
                 self.sudokuBoard.initialiseGameBoard()
                 self.userSolution.clearCoordinates()
@@ -369,7 +373,7 @@ class ViewController: UIViewController {
                 self.startGameTimer()
             }
             alertController.addAction(resetAction)
-            let restartAction = UIAlertAction(title: "Restart the puzzle to blank", style: .Default) { (action:UIAlertAction!) in
+            let restartAction = UIAlertAction(title: "Clear the board!", style: .Default) { (action:UIAlertAction!) in
                 self.resetControlPanelSelection()
                 sender.setImage(self.startImageLibrary[imgStates.Default.rawValue], forState: UIControlState.Normal)
                 self.sudokuBoard.clearBoard()
@@ -378,7 +382,7 @@ class ViewController: UIViewController {
                 self.controlSelected = (-1, -1)
                 self.boardSelectedPosition = (-1, -1, -1, -1)
                 self.gameBoardInPlay = false
-                self.startGameTimer()
+                self.initialiseGameTimer()
             }
             alertController.addAction(restartAction)
             self.presentViewController(alertController, animated: true, completion:nil)
@@ -397,7 +401,7 @@ class ViewController: UIViewController {
     }
     
     //
-    // redisplay the whole current board, remember origin cells look different
+    // redisplay the whole current board
     //
     func updateSudokuBoardDisplay() {
         for y: Int in 0 ..< self.displayBoard.boardRows {
@@ -407,11 +411,7 @@ class ViewController: UIViewController {
                         self.setCellToBlankImage((y, column: x, cellRow: j, cellColumn: k))
                         let number: Int = self.sudokuBoard.getNumberFromGameBoard((y, column: x, cellRow: j, cellColumn: k))
                         if (number > 0) {
-                            if self.sudokuBoard.isOriginBoardCellUsed((y, column: x, cellRow: j, cellColumn: k)) {
-                                self.setCoordToOriginImage((y, column: x, cellRow: j, cellColumn: k), number: number)
-                            } else {
-                                self.setCoordToDefaultImage((y, column: x, cellRow: j, cellColumn: k), number: number)
-                            }
+                            self.setCoordToOriginImage((y, column: x, cellRow: j, cellColumn: k), number: number)
                         }
                     }
                 }
@@ -750,11 +750,7 @@ class ViewController: UIViewController {
     func unsetSelectLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
         if locations.isEmpty == false {
             for coord in locations {
-                if self.sudokuBoard.isOriginBoardCellUsed(coord) {
-                    self.setCoordToOriginImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
-                } else {
-                    self.setCoordToDefaultImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
-                }
+                self.setCoordToOriginImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
             }
         }
         return
@@ -793,11 +789,7 @@ class ViewController: UIViewController {
     func unsetDeleteLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
         if locations.isEmpty == false {
             for coord in locations {
-                if self.sudokuBoard.isOriginBoardCellUsed(coord) {
-                    self.setCoordToOriginImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
-                } else {
-                    self.setCoordToDefaultImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
-                }
+                self.setCoordToOriginImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
             }
         }
         return
