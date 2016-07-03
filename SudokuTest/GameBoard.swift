@@ -317,6 +317,22 @@ class GameBoard: NSObject, NSCopying {
     }
     
     //
+    // can the number exist in this position in the game
+    //
+    func isNumberValidOnGameBoard(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) -> Bool {
+        if coord.row < 0 || coord.row >= self.boardRows || coord.column < 0 || coord.column >= self.boardColumns {
+            return false
+        }
+        if coord.cellRow < 0 || coord.cellRow >= self.gameBoardCells[coord.row][coord.column].cellDepth() || coord.cellColumn < 0 || coord.cellColumn >= self.gameBoardCells[coord.row][coord.column].cellWidth() {
+            return false
+        }
+        if self.gameBoardCells[coord.row][coord.column].isNumberUsedInCell(number) == true {
+            return false
+        }
+        return self.isNumberLegalInGame(coord, number: number)
+    }
+    
+    //
     // populate a position on the game board if permissable
     //
     func setNumberOnGameBoard(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) -> Bool {
