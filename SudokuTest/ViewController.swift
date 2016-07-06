@@ -104,9 +104,7 @@ class ViewController: UIViewController {
         UIImage(named:"Image007_default.png")!,
         UIImage(named:"Image008_default.png")!,
         UIImage(named:"Image009_default.png")!,
-        UIImage(named:"ImageClear_default.png")!,
-        UIImage(named:"ImageReverse_default.png")!,
-        UIImage(named:"ImageForward_default.png")!
+        UIImage(named:"ImageClear_default.png")!
     ],[
         UIImage(named:"Alt001_default.png")!,
         UIImage(named:"Alt002_default.png")!,
@@ -117,9 +115,7 @@ class ViewController: UIViewController {
         UIImage(named:"Alt007_default.png")!,
         UIImage(named:"Alt008_default.png")!,
         UIImage(named:"Alt009_default.png")!,
-        UIImage(named:"ImageClear_default.png")!,
-        UIImage(named:"ImageReverse_default.png")!,
-        UIImage(named:"ImageForward_default.png")!
+        UIImage(named:"ImageClear_default.png")!
     ]]
     //
     // when user selects from control panel (imagestate == 1)
@@ -134,9 +130,7 @@ class ViewController: UIViewController {
         UIImage(named:"Image007_select.png")!,
         UIImage(named:"Image008_select.png")!,
         UIImage(named:"Image009_select.png")!,
-        UIImage(named:"ImageClear_select.png")!,
-        UIImage(named:"ImageReverse_select.png")!,
-        UIImage(named:"ImageForward_select.png")!
+        UIImage(named:"ImageClear_select.png")!
     ],[
         UIImage(named:"Alt001_select.png")!,
         UIImage(named:"Alt002_select.png")!,
@@ -147,9 +141,7 @@ class ViewController: UIViewController {
         UIImage(named:"Alt007_select.png")!,
         UIImage(named:"Alt008_select.png")!,
         UIImage(named:"Alt009_select.png")!,
-        UIImage(named:"ImageClear_select.png")!,
-        UIImage(named:"ImageReverse_select.png")!,
-        UIImage(named:"ImageForward_select.png")!
+        UIImage(named:"ImageClear_select.png")!
     ]]
     //
     // highlighted images to use when the user wants to see the puzzle start position
@@ -164,9 +156,7 @@ class ViewController: UIViewController {
         UIImage(named:"Image007_highlight.png")!,
         UIImage(named:"Image008_highlight.png")!,
         UIImage(named:"Image009_highlight.png")!,
-        UIImage(named:"ImageClear_highlight.png")!,
-        UIImage(named:"ImageReverse_highlight.png")!,
-        UIImage(named:"ImageForward_highlight.png")!
+        UIImage(named:"ImageClear_highlight.png")!
     ],[
         UIImage(named:"Alt001_highlight.png")!,
         UIImage(named:"Alt002_highlight.png")!,
@@ -177,9 +167,7 @@ class ViewController: UIViewController {
         UIImage(named:"Alt007_highlight.png")!,
         UIImage(named:"Alt008_highlight.png")!,
         UIImage(named:"Alt009_highlight.png")!,
-        UIImage(named:"ImageClear_highlight.png")!,
-        UIImage(named:"ImageReverse_highlight.png")!,
-        UIImage(named:"ImageForward_highlight.png")!
+        UIImage(named:"ImageClear_highlight.png")!
     ]]
     //
     // images to highlight origin positions that cannot be deleted
@@ -194,9 +182,7 @@ class ViewController: UIViewController {
         UIImage(named:"Image007_origin.png")!,
         UIImage(named:"Image008_origin.png")!,
         UIImage(named:"Image009_origin.png")!,
-        UIImage(named:"ImageClear_origin.png")!,
-        UIImage(named:"ImageReverse_origin.png")!,
-        UIImage(named:"ImageForward_origin.png")!
+        UIImage(named:"ImageClear_origin.png")!
     ],[
         UIImage(named:"Alt001_origin.png")!,
         UIImage(named:"Alt002_origin.png")!,
@@ -207,9 +193,7 @@ class ViewController: UIViewController {
         UIImage(named:"Alt007_origin.png")!,
         UIImage(named:"Alt008_origin.png")!,
         UIImage(named:"Alt009_origin.png")!,
-        UIImage(named:"ImageClear_origin.png")!,
-        UIImage(named:"ImageReverse_origin.png")!,
-        UIImage(named:"ImageForward_origin.png")!
+        UIImage(named:"ImageClear_origin.png")!
     ]]
     //
     // images to highlight origin positions that cannot be deleted
@@ -224,9 +208,7 @@ class ViewController: UIViewController {
         UIImage(named:"Image007_delete.png")!,
         UIImage(named:"Image008_delete.png")!,
         UIImage(named:"Image009_delete.png")!,
-        UIImage(named:"ImageClear_delete.png")!,
-        UIImage(named:"ImageReverse_delete.png")!,
-        UIImage(named:"ImageForward_delete.png")!
+        UIImage(named:"ImageClear_delete.png")!
     ],[
         UIImage(named:"Alt001_delete.png")!,
         UIImage(named:"Alt002_delete.png")!,
@@ -237,9 +219,7 @@ class ViewController: UIViewController {
         UIImage(named:"Alt007_delete.png")!,
         UIImage(named:"Alt008_delete.png")!,
         UIImage(named:"Alt009_delete.png")!,
-        UIImage(named:"ImageClear_delete.png")!,
-        UIImage(named:"ImageReverse_delete.png")!,
-        UIImage(named:"ImageForward_delete.png")!
+        UIImage(named:"ImageClear_delete.png")!
     ]]
     
     //
@@ -263,7 +243,7 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         self.sudokuBoard = GameBoard(size: self.boardDimensions, setDifficulty: self.gameDifficulty)
         self.displayBoard = GameBoardImages(size: self.boardDimensions)
-        self.controlPanelImages = CellImages(rows: 6, columns: 2)
+        self.controlPanelImages = CellImages(rows: 5, columns: 2)
         self.userSolution = TrackSolution(row: self.boardDimensions, column: self.boardDimensions, cellRow: self.boardDimensions, cellColumn: self.boardDimensions)
         // use default char set to start with
         self.activeImageSet = 0
@@ -286,7 +266,7 @@ class ViewController: UIViewController {
     }
 
     //----------------------------------------------------------------------------
-    // load sounds
+    // load/play sounds
     //----------------------------------------------------------------------------
     func loadSound(soundName: String) -> AVAudioPlayer! {
         var value: AVAudioPlayer!
@@ -298,9 +278,6 @@ class ViewController: UIViewController {
         return value
     }
     
-    //
-    // we choose from the placement sounds available
-    //
     func playPlacementSound() {
         let playSound: Int = Int(arc4random_uniform(UInt32(self.userPlacementSounds.count)))
         if userPlacementSounds.count == 0 {
@@ -318,6 +295,10 @@ class ViewController: UIViewController {
             return
         }
         userErrorSound.play()
+        return
+    }
+    
+    func playBuildSound() {
         return
     }
 
@@ -449,10 +430,10 @@ class ViewController: UIViewController {
     // Handle the control panel display, setup event handler and detect taps in the board
     //------------------------------------------------------------------------------------
     func setupControlPanelDisplay() {
-        let originX: CGFloat = 813
-        let originY: CGFloat = 134
+        let originX: CGFloat = 825
+        let originY: CGFloat = 210
         let frameWidth: CGFloat = 148
-        let frameHeight: CGFloat = 430
+        let frameHeight: CGFloat = 360
         self.viewControlPanel = UIView(frame: CGRect(x: originX, y: originY, width: frameWidth, height: frameHeight))
         self.view.addSubview(self.viewControlPanel)
         self.addImageViewsToControlPanelView()
@@ -467,7 +448,7 @@ class ViewController: UIViewController {
         let cellWidth: CGFloat = 65
         var yCoord: CGFloat = 0
         var i: Int = 0
-        for row: Int in 0 ..< 6 {
+        for row: Int in 0 ..< 5 {
             var xCoord: CGFloat = 0
             for column: Int in 0 ..< 2 {
                 self.controlPanelImages.cellContents[row][column].imageView.frame = CGRect(x: xCoord, y: yCoord, width: cellWidth, height: cellWidth)
@@ -595,7 +576,7 @@ class ViewController: UIViewController {
             break
         case 10:
             //
-            // rewind up to the first user solution, unless we have no moves to rewind too!
+            // restart/reset board
             //
             if self.userSolution.countOfUserSolution() == 0 {
                 return(-1, -1)
