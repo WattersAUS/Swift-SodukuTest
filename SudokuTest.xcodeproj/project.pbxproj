@@ -22,9 +22,10 @@
 		BFADC0181C8C8CA200F48E54 /* SudokuTestCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFADC0171C8C8CA200F48E54 /* SudokuTestCellTests.swift */; };
 		BFADC0231C8C8CA300F48E54 /* SudokuTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFADC0221C8C8CA300F48E54 /* SudokuTestUITests.swift */; };
 		BFD3B91A1D2AE12100C2AED6 /* Settings.xib in Resources */ = {isa = PBXBuildFile; fileRef = BFD3B9191D2AE12100C2AED6 /* Settings.xib */; };
-		BFD9215C1D30E723004E699B /* Chalk_001.aiff in Resources */ = {isa = PBXBuildFile; fileRef = BFD921591D30E723004E699B /* Chalk_001.aiff */; };
-		BFD9215D1D30E723004E699B /* Chalk_002.aiff in Resources */ = {isa = PBXBuildFile; fileRef = BFD9215A1D30E723004E699B /* Chalk_002.aiff */; };
-		BFD9215E1D30E723004E699B /* Mistake_001.aiff in Resources */ = {isa = PBXBuildFile; fileRef = BFD9215B1D30E723004E699B /* Mistake_001.aiff */; };
+		BFD921681D30E86F004E699B /* Chalk_001.aiff in Resources */ = {isa = PBXBuildFile; fileRef = BFD921651D30E86F004E699B /* Chalk_001.aiff */; };
+		BFD921691D30E86F004E699B /* Chalk_002.aiff in Resources */ = {isa = PBXBuildFile; fileRef = BFD921661D30E86F004E699B /* Chalk_002.aiff */; };
+		BFD9216A1D30E86F004E699B /* Mistake_001.aiff in Resources */ = {isa = PBXBuildFile; fileRef = BFD921671D30E86F004E699B /* Mistake_001.aiff */; };
+		BFD9216C1D311F4C004E699B /* RubOut_001.aiff in Resources */ = {isa = PBXBuildFile; fileRef = BFD9216B1D311F4C004E699B /* RubOut_001.aiff */; };
 		BFDE91111CBFF4BB007370D0 /* TrackSolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDE91101CBFF4BB007370D0 /* TrackSolution.swift */; };
 /* End PBXBuildFile section */
 
@@ -67,9 +68,10 @@
 		BFADC0221C8C8CA300F48E54 /* SudokuTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuTestUITests.swift; sourceTree = "<group>"; };
 		BFADC0241C8C8CA300F48E54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BFD3B9191D2AE12100C2AED6 /* Settings.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Settings.xib; sourceTree = "<group>"; };
-		BFD921591D30E723004E699B /* Chalk_001.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Chalk_001.aiff; sourceTree = "<group>"; };
-		BFD9215A1D30E723004E699B /* Chalk_002.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Chalk_002.aiff; sourceTree = "<group>"; };
-		BFD9215B1D30E723004E699B /* Mistake_001.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Mistake_001.aiff; sourceTree = "<group>"; };
+		BFD921651D30E86F004E699B /* Chalk_001.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Chalk_001.aiff; sourceTree = "<group>"; };
+		BFD921661D30E86F004E699B /* Chalk_002.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Chalk_002.aiff; sourceTree = "<group>"; };
+		BFD921671D30E86F004E699B /* Mistake_001.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Mistake_001.aiff; sourceTree = "<group>"; };
+		BFD9216B1D311F4C004E699B /* RubOut_001.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = RubOut_001.aiff; sourceTree = "<group>"; };
 		BFDE91101CBFF4BB007370D0 /* TrackSolution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackSolution.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -101,9 +103,10 @@
 		BF8C65481D30E48A0029B9DC /* Game Sounds */ = {
 			isa = PBXGroup;
 			children = (
-				BFD921591D30E723004E699B /* Chalk_001.aiff */,
-				BFD9215A1D30E723004E699B /* Chalk_002.aiff */,
-				BFD9215B1D30E723004E699B /* Mistake_001.aiff */,
+				BFD921651D30E86F004E699B /* Chalk_001.aiff */,
+				BFD921661D30E86F004E699B /* Chalk_002.aiff */,
+				BFD921671D30E86F004E699B /* Mistake_001.aiff */,
+				BFD9216B1D311F4C004E699B /* RubOut_001.aiff */,
 			);
 			name = "Game Sounds";
 			sourceTree = "<group>";
@@ -275,13 +278,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				BFADC00D1C8C8CA200F48E54 /* LaunchScreen.storyboard in Resources */,
+				BFD9216C1D311F4C004E699B /* RubOut_001.aiff in Resources */,
 				BF2BF03F1CE28DFF00DFB59D /* Ideas.rtf in Resources */,
-				BFD9215E1D30E723004E699B /* Mistake_001.aiff in Resources */,
+				BFD9216A1D30E86F004E699B /* Mistake_001.aiff in Resources */,
 				BFD3B91A1D2AE12100C2AED6 /* Settings.xib in Resources */,
 				BFADC00A1C8C8CA200F48E54 /* Assets.xcassets in Resources */,
 				BFADC0081C8C8CA200F48E54 /* Main.storyboard in Resources */,
-				BFD9215D1D30E723004E699B /* Chalk_002.aiff in Resources */,
-				BFD9215C1D30E723004E699B /* Chalk_001.aiff in Resources */,
+				BFD921691D30E86F004E699B /* Chalk_002.aiff in Resources */,
+				BFD921681D30E86F004E699B /* Chalk_001.aiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

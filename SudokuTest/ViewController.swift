@@ -21,6 +21,17 @@ class ViewController: UIViewController {
     let kMainViewMargin: CGFloat = 40.0
     let kCellWidthMargin: CGFloat = 9
     let kCellDepthMargin: CGFloat = 7
+    
+    
+//    
+//    let originX: CGFloat = 825
+//    let originY: CGFloat = 210
+//    let frameWidth: CGFloat = 148
+//    let frameHeight: CGFloat = 360
+//    let cellWidth: CGFloat = 65
+
+    
+    
 
     //
     // the board to solve
@@ -58,6 +69,7 @@ class ViewController: UIViewController {
         case Highlighted = 2
         case Origin = 3
         case Delete = 4
+        case Inactive = 5
     }
     enum imageSet: Int {
         case Default = 0
@@ -118,30 +130,30 @@ class ViewController: UIViewController {
         UIImage(named:"ImageClear_default.png")!
     ]]
     //
-    // when user selects from control panel (imagestate == 1)
+    // images to highlight origin positions that cannot be deleted
     //
-    var imageSelectLibrary: [[UIImage]] = [[
-        UIImage(named:"Image001_select.png")!,
-        UIImage(named:"Image002_select.png")!,
-        UIImage(named:"Image003_select.png")!,
-        UIImage(named:"Image004_select.png")!,
-        UIImage(named:"Image005_select.png")!,
-        UIImage(named:"Image006_select.png")!,
-        UIImage(named:"Image007_select.png")!,
-        UIImage(named:"Image008_select.png")!,
-        UIImage(named:"Image009_select.png")!,
-        UIImage(named:"ImageClear_select.png")!
+    var imageDeleteLibrary: [[UIImage]] = [[
+        UIImage(named:"Image001_delete.png")!,
+        UIImage(named:"Image002_delete.png")!,
+        UIImage(named:"Image003_delete.png")!,
+        UIImage(named:"Image004_delete.png")!,
+        UIImage(named:"Image005_delete.png")!,
+        UIImage(named:"Image006_delete.png")!,
+        UIImage(named:"Image007_delete.png")!,
+        UIImage(named:"Image008_delete.png")!,
+        UIImage(named:"Image009_delete.png")!,
+        UIImage(named:"ImageClear_delete.png")!
     ],[
-        UIImage(named:"Alt001_select.png")!,
-        UIImage(named:"Alt002_select.png")!,
-        UIImage(named:"Alt003_select.png")!,
-        UIImage(named:"Alt004_select.png")!,
-        UIImage(named:"Alt005_select.png")!,
-        UIImage(named:"Alt006_select.png")!,
-        UIImage(named:"Alt007_select.png")!,
-        UIImage(named:"Alt008_select.png")!,
-        UIImage(named:"Alt009_select.png")!,
-        UIImage(named:"ImageClear_select.png")!
+        UIImage(named:"Alt001_delete.png")!,
+        UIImage(named:"Alt002_delete.png")!,
+        UIImage(named:"Alt003_delete.png")!,
+        UIImage(named:"Alt004_delete.png")!,
+        UIImage(named:"Alt005_delete.png")!,
+        UIImage(named:"Alt006_delete.png")!,
+        UIImage(named:"Alt007_delete.png")!,
+        UIImage(named:"Alt008_delete.png")!,
+        UIImage(named:"Alt009_delete.png")!,
+        UIImage(named:"ImageClear_delete.png")!
     ]]
     //
     // highlighted images to use when the user wants to see the puzzle start position
@@ -170,6 +182,32 @@ class ViewController: UIViewController {
         UIImage(named:"ImageClear_highlight.png")!
     ]]
     //
+    // inactivee images for when the user has used a number in all cells
+    //
+    var imageInactiveLibrary: [[UIImage]] = [[
+        UIImage(named:"Image001_inactive.png")!,
+        UIImage(named:"Image002_inactive.png")!,
+        UIImage(named:"Image003_inactive.png")!,
+        UIImage(named:"Image004_inactive.png")!,
+        UIImage(named:"Image005_inactive.png")!,
+        UIImage(named:"Image006_inactive.png")!,
+        UIImage(named:"Image007_inactive.png")!,
+        UIImage(named:"Image008_inactive.png")!,
+        UIImage(named:"Image009_inactive.png")!,
+        UIImage(named:"ImageClear_inactive.png")!
+    ],[
+        UIImage(named:"Alt001_inactive.png")!,
+        UIImage(named:"Alt002_inactive.png")!,
+        UIImage(named:"Alt003_inactive.png")!,
+        UIImage(named:"Alt004_inactive.png")!,
+        UIImage(named:"Alt005_inactive.png")!,
+        UIImage(named:"Alt006_inactive.png")!,
+        UIImage(named:"Alt007_inactive.png")!,
+        UIImage(named:"Alt008_inactive.png")!,
+        UIImage(named:"Alt009_inactive.png")!,
+        UIImage(named:"ImageClear_inactive.png")!
+    ]]
+    //
     // images to highlight origin positions that cannot be deleted
     //
     var imageOriginLibrary: [[UIImage]] = [[
@@ -196,44 +234,47 @@ class ViewController: UIViewController {
         UIImage(named:"ImageClear_origin.png")!
     ]]
     //
-    // images to highlight origin positions that cannot be deleted
+    // when user selects from control panel
     //
-    var imageDeleteLibrary: [[UIImage]] = [[
-        UIImage(named:"Image001_delete.png")!,
-        UIImage(named:"Image002_delete.png")!,
-        UIImage(named:"Image003_delete.png")!,
-        UIImage(named:"Image004_delete.png")!,
-        UIImage(named:"Image005_delete.png")!,
-        UIImage(named:"Image006_delete.png")!,
-        UIImage(named:"Image007_delete.png")!,
-        UIImage(named:"Image008_delete.png")!,
-        UIImage(named:"Image009_delete.png")!,
-        UIImage(named:"ImageClear_delete.png")!
+    var imageSelectLibrary: [[UIImage]] = [[
+        UIImage(named:"Image001_select.png")!,
+        UIImage(named:"Image002_select.png")!,
+        UIImage(named:"Image003_select.png")!,
+        UIImage(named:"Image004_select.png")!,
+        UIImage(named:"Image005_select.png")!,
+        UIImage(named:"Image006_select.png")!,
+        UIImage(named:"Image007_select.png")!,
+        UIImage(named:"Image008_select.png")!,
+        UIImage(named:"Image009_select.png")!,
+        UIImage(named:"ImageClear_select.png")!
     ],[
-        UIImage(named:"Alt001_delete.png")!,
-        UIImage(named:"Alt002_delete.png")!,
-        UIImage(named:"Alt003_delete.png")!,
-        UIImage(named:"Alt004_delete.png")!,
-        UIImage(named:"Alt005_delete.png")!,
-        UIImage(named:"Alt006_delete.png")!,
-        UIImage(named:"Alt007_delete.png")!,
-        UIImage(named:"Alt008_delete.png")!,
-        UIImage(named:"Alt009_delete.png")!,
-        UIImage(named:"ImageClear_delete.png")!
+        UIImage(named:"Alt001_select.png")!,
+        UIImage(named:"Alt002_select.png")!,
+        UIImage(named:"Alt003_select.png")!,
+        UIImage(named:"Alt004_select.png")!,
+        UIImage(named:"Alt005_select.png")!,
+        UIImage(named:"Alt006_select.png")!,
+        UIImage(named:"Alt007_select.png")!,
+        UIImage(named:"Alt008_select.png")!,
+        UIImage(named:"Alt009_select.png")!,
+        UIImage(named:"ImageClear_select.png")!
     ]]
-    
+
     //
     // timer display and storage for counter etc
     //
     @IBOutlet weak var gameTimer: UILabel!
     var timer: NSTimer!
     var timerSeconds: Int!
+    var timerActive: Bool!
+    var timerDisplay: Bool!
     
     //
     // sound handling
     //
     var userPlacementSounds: [AVAudioPlayer!] = []
     var userErrorSound: AVAudioPlayer!
+    var userRuboutSound: AVAudioPlayer!
     
     //----------------------------------------------------------------------------
     // start of the code!!!!
@@ -251,12 +292,9 @@ class ViewController: UIViewController {
         self.setupSudokuBoardDisplay()
         self.setupControlPanelDisplay()
         // set time to start
-        self.timer = NSTimer()
         self.initialiseGameTimer()
         // load sounds
-        userPlacementSounds.append(self.loadSound("Chalk_001.aiff"))
-        userPlacementSounds.append(self.loadSound("Chalk_002.aiff"))
-        userErrorSound = self.loadSound("Mistake_001.aiff")
+        self.initialiseGameSounds()
         return
     }
 
@@ -268,6 +306,14 @@ class ViewController: UIViewController {
     //----------------------------------------------------------------------------
     // load/play sounds
     //----------------------------------------------------------------------------
+    func initialiseGameSounds() {
+        self.userPlacementSounds.append(self.loadSound("Chalk_001.aiff"))
+        self.userPlacementSounds.append(self.loadSound("Chalk_002.aiff"))
+        self.userErrorSound = self.loadSound("Mistake_001.aiff")
+        self.userRuboutSound = self.loadSound("RubOut_001.aiff")
+        return
+    }
+    
     func loadSound(soundName: String) -> AVAudioPlayer! {
         var value: AVAudioPlayer!
         do {
@@ -278,50 +324,74 @@ class ViewController: UIViewController {
         return value
     }
     
-    func playPlacementSound() {
-        let playSound: Int = Int(arc4random_uniform(UInt32(self.userPlacementSounds.count)))
-        if userPlacementSounds.count == 0 {
-            return
-        }
-        if userPlacementSounds[playSound] == nil {
-            return
-        }
-        userPlacementSounds[playSound].play()
-        return
-    }
-
-    func playErrorSound() {
-        if userErrorSound == nil {
-            return
-        }
-        userErrorSound.play()
-        return
-    }
-    
     func playBuildSound() {
         return
     }
+    
+    func playErrorSound() {
+        if self.userErrorSound == nil {
+            return
+        }
+        self.userErrorSound.play()
+        return
+    }
 
+    func playPlacementSound() {
+        let playSound: Int = Int(arc4random_uniform(UInt32(self.userPlacementSounds.count)))
+        if self.userPlacementSounds.count == 0 {
+            return
+        }
+        if self.userPlacementSounds[playSound] == nil {
+            return
+        }
+        self.userPlacementSounds[playSound].play()
+        return
+    }
+    
+    func playRuboutSound() {
+        if self.userRuboutSound == nil {
+            return
+        }
+        self.userRuboutSound.play()
+        return
+    }
+    
     //----------------------------------------------------------------------------
-    // time display handling
+    // timer display handling
     //----------------------------------------------------------------------------
     func initialiseGameTimer() {
-        if self.timer != nil {
-            self.timer.invalidate()
-        }
+        self.timer = NSTimer()
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(1, target:self, selector: #selector(ViewController.updateGameTime), userInfo: nil, repeats: true)
+        self.stopGameTimer()
+        self.resetGameTimer()
+        return
+    }
+    
+    func resetGameTimer() {
         self.timerSeconds = 0
         self.gameTimer.text = ""
         return
     }
     
     func startGameTimer() {
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(1, target:self, selector: #selector(ViewController.updateGameTime), userInfo: nil, repeats: true)
+        self.timerActive = true
+        self.timerDisplay = true
         return
     }
     
+    func stopGameTimer() {
+        self.timerActive = false
+        self.timerDisplay = false
+        return
+    }
+
     func updateGameTime() {
-        self.timerSeconds = self.timerSeconds + 1
-        self.gameTimer.text = String(format: "%02d", self.timerSeconds / 60) + ":" + String(format: "%02d", self.timerSeconds % 60)
+        if self.timerActive == true {
+            self.timerSeconds = self.timerSeconds + 1
+            if self.timerDisplay == true {
+                self.gameTimer.text = String(format: "%02d", self.timerSeconds / 60) + ":" + String(format: "%02d", self.timerSeconds % 60)
+            }
+        }
         return
     }
     
@@ -346,7 +416,7 @@ class ViewController: UIViewController {
             self.controlPanelPosition = (-1, -1)
             self.boardPosition = (-1, -1, -1, -1)
             self.gameBoardInPlay = true
-            self.initialiseGameTimer()
+            self.resetGameTimer()
             self.startGameTimer()
         } else {
             //
@@ -369,7 +439,7 @@ class ViewController: UIViewController {
                 self.controlPanelPosition = (-1, -1)
                 self.boardPosition = (-1, -1, -1, -1)
                 self.gameBoardInPlay = true
-                self.initialiseGameTimer()
+                self.resetGameTimer()
                 self.startGameTimer()
             }
             alertController.addAction(resetAction)
@@ -387,7 +457,7 @@ class ViewController: UIViewController {
                 self.controlPanelPosition = (-1, -1)
                 self.boardPosition = (-1, -1, -1, -1)
                 self.gameBoardInPlay = true
-                self.initialiseGameTimer()
+                self.resetGameTimer()
                 self.startGameTimer()
             }
             alertController.addAction(restartAction)
@@ -568,24 +638,6 @@ class ViewController: UIViewController {
             self.controlPanelImages.setImage(currentPosn.row, column: currentPosn.column, imageToSet: self.imageDeleteLibrary[self.activeImageSet][index], imageState: imgStates.Delete.rawValue)
             self.setDeleteLocationsOnBoard(self.userSolution.getCoordinatesInSolution())
             break
-        case 10:
-            //
-            // restart/reset board
-            //
-            if self.userSolution.countOfUserSolution() == 0 {
-                return(-1, -1)
-            }
-            self.controlPanelImages.setImage(currentPosn.row, column: currentPosn.column, imageToSet: self.imageSelectLibrary[self.activeImageSet][index], imageState: imgStates.Selected.rawValue)
-            break
-        case 11:
-            //
-            // fast forward (if user has rewound solution) to the last user solution, only valid if we have the same condition as above and we've rewound
-            //
-            if self.userSolution.countOfUserSolution() == 0 {
-                return(-1, -1)
-            }
-            self.controlPanelImages.setImage(currentPosn.row, column: currentPosn.column, imageToSet: self.imageSelectLibrary[self.activeImageSet][index], imageState: imgStates.Selected.rawValue)
-            break
         default:
             //
             // should never happen
@@ -621,23 +673,12 @@ class ViewController: UIViewController {
             break;
         case 9:
             if self.sudokuBoard.isGameBoardCellUsed(boardPosn) == true {
+                self.playRuboutSound()
                 self.sudokuBoard.clearNumberOnGameBoard(boardPosn)
                 self.setCellToBlankImage(boardPosn)
                 self.userSolution.removeCoordinate(boardPosn)
                 self.boardPosition = (-1, -1, -1, -1)
             }
-            break
-        case 10:
-            //
-            // rewind up to the first user solution
-            //
-            self.controlPanelImages.setImage(currentPosn.row, column: currentPosn.column, imageToSet: self.imageSelectLibrary[self.activeImageSet][index], imageState: imgStates.Selected.rawValue)
-            break
-        case 11:
-            //
-            // fast forward (if user has rewound solution) to the last user solution
-            //
-            self.controlPanelImages.setImage(currentPosn.row, column: currentPosn.column, imageToSet: self.imageSelectLibrary[self.activeImageSet][index], imageState: imgStates.Selected.rawValue)
             break
         default:
             //
@@ -769,6 +810,7 @@ class ViewController: UIViewController {
             if self.sudokuBoard.isGameBoardCellUsed(posn) == false {
                 return
             }
+            self.playRuboutSound()
             self.sudokuBoard.clearNumberOnGameBoard(posn)
             self.setCellToBlankImage(posn)
             self.userSolution.removeCoordinate(posn)
@@ -830,6 +872,60 @@ class ViewController: UIViewController {
     //----------------------------------------------------------------------------
 
     // traverse game board and 'unset' any 'select' numbers
+    func unsetDeleteNumbersOnBoard() {
+        let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.displayBoard.getLocationsOfImages(imgStates.Delete.rawValue)
+        self.unsetDeleteLocationsOnBoard(locations)
+        return
+    }
+    
+    // traverse game board and 'set' any 'select' numbers to selected
+    func unsetDeleteLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
+        if locations.isEmpty == false {
+            for coord in locations {
+                self.setCoordToOriginImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
+            }
+        }
+        return
+    }
+    
+    // traverse game board and 'set' all numbers to 'delete'
+    func setDeleteLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
+        if locations.isEmpty == false {
+            for coord in locations {
+                self.setCoordToDeleteImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
+            }
+        }
+        return
+    }
+    
+    // traverse game board and 'unset' any 'inactive' numbers
+    func unsetInactiveNumbersOnBoard() {
+        let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.displayBoard.getLocationsOfImages(imgStates.Inactive.rawValue)
+        self.unsetInactiveLocationsOnBoard(locations)
+        return
+    }
+    
+    // traverse game board and 'set' any 'inactive' numbers to selected
+    func unsetInactiveLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
+        if locations.isEmpty == false {
+            for coord in locations {
+                self.setCoordToOriginImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
+            }
+        }
+        return
+    }
+    
+    // traverse game board and 'set' all numbers to 'delete'
+    func setInactiveLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
+        if locations.isEmpty == false {
+            for coord in locations {
+                self.setCoordToInactiveImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
+            }
+        }
+        return
+    }
+    
+    // traverse game board and 'unset' any 'select' numbers
     // ---->>>> (will be allowed by difficulty setting in later version) <<<<------
     func unsetSelectNumbersOnBoard() {
         let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.displayBoard.getLocationsOfImages(imgStates.Selected.rawValue)
@@ -868,36 +964,6 @@ class ViewController: UIViewController {
         return
     }
 
-    // traverse game board and 'unset' any 'select' numbers
-    // ---->>>> (will be allowed by difficulty setting in later version) <<<<------
-    func unsetDeleteNumbersOnBoard() {
-        let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.displayBoard.getLocationsOfImages(imgStates.Delete.rawValue)
-        self.unsetDeleteLocationsOnBoard(locations)
-        return
-    }
-    
-    // traverse game board and 'set' any 'select' numbers to selected
-    // ---->>>> (will be allowed by difficulty setting) <<<<------
-    func unsetDeleteLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
-        if locations.isEmpty == false {
-            for coord in locations {
-                self.setCoordToOriginImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
-            }
-        }
-        return
-    }
-    
-    // traverse game board and 'set' all numbers to 'delete'
-    // ---->>>> (will be allowed by difficulty setting) <<<<------
-    func setDeleteLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
-        if locations.isEmpty == false {
-            for coord in locations {
-                self.setCoordToDeleteImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
-            }
-        }
-        return
-    }
-
     //
     // clear the current image at the coord
     //
@@ -907,7 +973,7 @@ class ViewController: UIViewController {
     }
     
     //
-    // set space on board to 'touched' image
+    // set space on board to cell having been 'touched', we use this when the user selectes the board cell first and not the control panel
     //
     func setCoordToTouchedImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
         self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.userSelectImage, imageState: imgStates.Default.rawValue)
@@ -930,6 +996,14 @@ class ViewController: UIViewController {
         return
     }
 
+    //
+    // set numbers on the 'game' board to inactive when all of that number has been used
+    //
+    func setCoordToInactiveImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
+        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageInactiveLibrary[self.activeImageSet][number - 1], imageState: imgStates.Inactive.rawValue)
+        return
+    }
+    
     //
     // set numbers on the 'game' board to origin if they are also part of the origin board
     //
