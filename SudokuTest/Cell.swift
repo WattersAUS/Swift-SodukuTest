@@ -227,7 +227,7 @@ class Cell: NSObject, NSCopying {
     //
     // public functions - random driven operations
     //
-    func getRandomUnUsedNumber() -> Int {
+    func getRandomFreeNumber() -> Int {
         let numberUsage: [Int] = self.getNumbersArray()
         var numbersToUse: [Int] = []
         for index: Int in 0 ..< numberUsage.count {
@@ -238,7 +238,7 @@ class Cell: NSObject, NSCopying {
         return numbersToUse[Int(arc4random_uniform(UInt32(numbersToUse.count)))]
     }
     
-    func getRandomUnUsedPosition() -> (unUsedRow: Int, unUsedColumn: Int) {
+    func getRandomFreePosition() -> (unUsedRow: Int, unUsedColumn: Int) {
         if self.cellCompleted == true {
             return (-1, -1)
         }

@@ -336,7 +336,7 @@ class ViewController: UIViewController {
             sender.setImage(self.resetImageLibrary[imgStates.Default.rawValue], forState: UIControlState.Normal)
             self.sudokuBoard.clearBoard()
             self.sudokuBoard.buildSolution()
-            if self.debug > 0 {
+            if self.debug == 1 {
                 print(self.sudokuBoard.dumpSolutionBoard())
             }
             self.sudokuBoard.buildOriginBoard()
@@ -377,7 +377,7 @@ class ViewController: UIViewController {
                 self.resetControlPanelSelection()
                 self.sudokuBoard.clearBoard()
                 self.sudokuBoard.buildSolution()
-                if self.debug > 0 {
+                if self.debug == 1 {
                     print(self.sudokuBoard.dumpSolutionBoard())
                 }
                 self.sudokuBoard.buildOriginBoard()
@@ -482,15 +482,11 @@ class ViewController: UIViewController {
         if recognizer.state != UIGestureRecognizerState.Ended {
             return
         }
-        //
         // only worried if a board is in play
-        //
         if self.gameBoardInPlay == false {
             return
         }
-        //
         // has the user tapped in a control panel icon?
-        //
         let posn: (row: Int, column: Int) = self.getPositionOfControlPanelImageTapped(recognizer.locationInView(recognizer.view))
         if posn == (-1, -1) {
             return
@@ -526,9 +522,7 @@ class ViewController: UIViewController {
         }
         switch index {
         case 0..<9:
-            //
             // revert any previously selected positions
-            //
             if pIndex > -1 {
                 switch pIndex {
                 case 0..<9:

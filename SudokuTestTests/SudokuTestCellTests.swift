@@ -242,20 +242,20 @@ class SudokuTestCellTests: XCTestCase {
         XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 1, number: 4), false, "Incorrect Cell incomplete value reported")
         XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 2, number: 9), false, "Incorrect Cell complete value reported")
         // now test last unused number is returned
-        XCTAssertEqual(testCell.getRandomUnUsedNumber(), 6, "Incorrect last unused number reported")
+        XCTAssertEqual(testCell.getRandomFreeNumber(), 6, "Incorrect last unused number reported")
         // and the correct last position
-        var unUsedPosn: (unUsedRow: Int, unUsedColumn: Int) = testCell.getRandomUnUsedPosition()
+        var unUsedPosn: (unUsedRow: Int, unUsedColumn: Int) = testCell.getRandomFreePosition()
         XCTAssertEqual(unUsedPosn.unUsedRow, 2, "Incorrect last unused row position reported")
         XCTAssertEqual(unUsedPosn.unUsedColumn, 0, "Incorrect last unused column position reported")
         // use that position and reset another and test again
         XCTAssertEqual(testCell.setNumberAtCellPosition(2, column: 0, number: 6), true, "Incorrect Cell incomplete value reported")
         testCell.clearNumberAtCellPosition(1, column: 1)
-        unUsedPosn = testCell.getRandomUnUsedPosition()
+        unUsedPosn = testCell.getRandomFreePosition()
         XCTAssertEqual(unUsedPosn.unUsedRow, 1, "Incorrect last unused row position reported")
         XCTAssertEqual(unUsedPosn.unUsedColumn, 1, "Incorrect last unused column position reported")
         // complete cell and test that row = -1, column = -1 returned
         XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 1, number: 3), true, "Incorrect Cell incomplete value reported")
-        unUsedPosn = testCell.getRandomUnUsedPosition()
+        unUsedPosn = testCell.getRandomFreePosition()
         XCTAssertEqual(unUsedPosn.unUsedRow, -1, "Incorrect last unused row position reported")
         XCTAssertEqual(unUsedPosn.unUsedColumn, -1, "Incorrect last unused column position reported")
     }

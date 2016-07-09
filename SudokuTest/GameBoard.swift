@@ -104,8 +104,8 @@ class GameBoard: NSObject, NSCopying {
         var stalled: Int = 0
         while self.solutionBoardCells[row][column].isCellCompleted() == false {
             // get an unused row/cell location and an unused number
-            let unUsedPosition: (unUsedRow: Int, unUsedColumn: Int) = self.solutionBoardCells[row][column].getRandomUnUsedPosition()
-            let unUsedNumber: Int = self.solutionBoardCells[row][column].getRandomUnUsedNumber()
+            let unUsedPosition: (unUsedRow: Int, unUsedColumn: Int) = self.solutionBoardCells[row][column].getRandomFreePosition()
+            let unUsedNumber: Int = self.solutionBoardCells[row][column].getRandomFreeNumber()
             // check if the unused number can exist in that location by checking adjacent solutionBoardCells
             if isNumberLegalInSolution((row, column: column, cellRow: unUsedPosition.unUsedRow, cellColumn: unUsedPosition.unUsedColumn), number: unUsedNumber) == true {
                 self.solutionBoardCells[row][column].setNumberAtCellPosition(unUsedPosition.unUsedRow, column: unUsedPosition.unUsedColumn, number: unUsedNumber)

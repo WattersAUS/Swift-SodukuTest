@@ -136,11 +136,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SudokuTest/ViewController.swift"
-            timestampString = "489498944.615568"
+            timestampString = "489507204.496266"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "759"
-            endingLineNumber = "759"
+            startingLineNumber = "752"
+            endingLineNumber = "752"
             landmarkName = "detectedSudokuBoardUIViewTapped(_:)"
             landmarkType = "5">
          </BreakpointContent>
