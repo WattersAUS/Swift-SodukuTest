@@ -13,28 +13,28 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="Background 003.png" id="4dP-FH-gve">
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="Background 003" id="4dP-FH-gve">
                                 <rect key="frame" x="0.0" y="0.0" width="1028" height="768"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="oiX-5M-d5R">
-                                <rect key="frame" x="856" y="592" width="90" height="38"/>
+                                <rect key="frame" x="858" y="592" width="90" height="38"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="ImageStart_default.png"/>
+                                <state key="normal" image="ImageStart_default"/>
                                 <connections>
                                     <action selector="resetButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6dN-Bs-L4y"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1M2-oX-pdX">
-                                <rect key="frame" x="963" y="708" width="35" height="40"/>
+                                <rect key="frame" x="936" y="690" width="35" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="AltSpanner_default.png"/>
+                                <state key="normal" image="AltSpanner_default"/>
                                 <connections>
                                     <action selector="settingButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="GDG-ge-lZT"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Hx7-8g-Kag">
-                                <rect key="frame" x="826" y="143" width="137" height="61"/>
+                                <rect key="frame" x="832" y="143" width="137" height="61"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Chalkduster" family="Chalkduster" pointSize="36"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -57,9 +57,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="AltSpanner_default.png" width="65" height="65"/>
-        <image name="Background 003.png" width="1024" height="768"/>
-        <image name="ImageStart_default.png" width="130" height="65"/>
+        <image name="AltSpanner_default" width="65" height="65"/>
+        <image name="Background 003" width="1024" height="768"/>
+        <image name="ImageStart_default" width="130" height="65"/>
     </resources>
     <color key="tintColor" red="0.087158940732479095" green="0.11391217261552811" blue="0.66961491107940674" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

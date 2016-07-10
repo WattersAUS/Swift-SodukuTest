@@ -14,6 +14,15 @@ class ViewController: UIViewController {
     var debug: Int = 1
     var boardDimensions: Int = 3
     var gameDifficulty: Int = 6
+    
+    //
+    // enum for subviews
+    //
+    enum subViewTags: Int {
+        case sudokuBoard = 0
+        case controlPanel = 1
+        case settingsPanel = 2
+    }
 
     //
     // defaults for positioning UIImageView components
@@ -22,16 +31,12 @@ class ViewController: UIViewController {
     let kCellWidthMargin: CGFloat = 9
     let kCellDepthMargin: CGFloat = 7
     
-    
-//    
+//
 //    let originX: CGFloat = 825
 //    let originY: CGFloat = 210
 //    let frameWidth: CGFloat = 148
 //    let frameHeight: CGFloat = 360
 //    let cellWidth: CGFloat = 65
-
-    
-    
 
     //
     // the board to solve
@@ -60,6 +65,11 @@ class ViewController: UIViewController {
     // current crtl panel position (if any)
     var controlPanelPosition: (row: Int, column: Int) = (-1, -1)
 
+    //
+    // settings panel
+    //
+    var viewSettings: UIView!
+    
     //
     // image sets and related vars
     //
@@ -266,6 +276,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var gameTimer: UILabel!
     var timer: NSTimer!
     var timerSeconds: Int!
+    var countdownSeconds: Int!
     var timerActive: Bool!
     var timerDisplay: Bool!
     
@@ -275,6 +286,7 @@ class ViewController: UIViewController {
     var userPlacementSounds: [AVAudioPlayer!] = []
     var userErrorSound: AVAudioPlayer!
     var userRuboutSound: AVAudioPlayer!
+    var playSounds: Bool!
     
     //----------------------------------------------------------------------------
     // start of the code!!!!
@@ -287,7 +299,7 @@ class ViewController: UIViewController {
         self.controlPanelImages = CellImages(rows: 5, columns: 2)
         self.userSolution = TrackSolution(row: self.boardDimensions, column: self.boardDimensions, cellRow: self.boardDimensions, cellColumn: self.boardDimensions)
         // use default char set to start with
-        self.activeImageSet = 0
+        self.activeImageSet = imageSet.Greek.rawValue
         // now setup displays
         self.setupSudokuBoardDisplay()
         self.setupControlPanelDisplay()
@@ -311,6 +323,7 @@ class ViewController: UIViewController {
         self.userPlacementSounds.append(self.loadSound("Chalk_002.aiff"))
         self.userErrorSound = self.loadSound("Mistake_001.aiff")
         self.userRuboutSound = self.loadSound("RubOut_001.aiff")
+        self.playSounds = false
         return
     }
     
@@ -324,12 +337,8 @@ class ViewController: UIViewController {
         return value
     }
     
-    func playBuildSound() {
-        return
-    }
-    
     func playErrorSound() {
-        if self.userErrorSound == nil {
+        if self.userErrorSound == nil || self.playSounds == false {
             return
         }
         self.userErrorSound.play()
@@ -337,10 +346,10 @@ class ViewController: UIViewController {
     }
 
     func playPlacementSound() {
-        let playSound: Int = Int(arc4random_uniform(UInt32(self.userPlacementSounds.count)))
-        if self.userPlacementSounds.count == 0 {
+        if self.userPlacementSounds.count == 0 || self.playSounds == false {
             return
         }
+        let playSound: Int = Int(arc4random_uniform(UInt32(self.userPlacementSounds.count)))
         if self.userPlacementSounds[playSound] == nil {
             return
         }
@@ -349,7 +358,7 @@ class ViewController: UIViewController {
     }
     
     func playRuboutSound() {
-        if self.userRuboutSound == nil {
+        if self.userRuboutSound == nil || self.playSounds == false {
             return
         }
         self.userRuboutSound.play()
@@ -505,6 +514,7 @@ class ViewController: UIViewController {
         let frameWidth: CGFloat = 148
         let frameHeight: CGFloat = 360
         self.viewControlPanel = UIView(frame: CGRect(x: originX, y: originY, width: frameWidth, height: frameHeight))
+        self.viewControlPanel.tag = subViewTags.controlPanel.rawValue
         self.view.addSubview(self.viewControlPanel)
         self.addImageViewsToControlPanelView()
         self.initialiseControlPanelUIViewToAcceptTouch(self.viewControlPanel)
@@ -609,9 +619,7 @@ class ViewController: UIViewController {
                     break
                 }
             }
-            //
             // if the posn selected is the same as before then bail, we want the user to select a new one.
-            //
             if currentPosn == previousPosn {
                 return (-1, -1)
             }
@@ -639,9 +647,7 @@ class ViewController: UIViewController {
             self.setDeleteLocationsOnBoard(self.userSolution.getCoordinatesInSolution())
             break
         default:
-            //
-            // should never happen
-            //
+            // this should never happen
             break
         }
         return currentPosn
@@ -654,9 +660,7 @@ class ViewController: UIViewController {
         let index: Int = (currentPosn.row * 2) + currentPosn.column
         switch index {
         case 0..<9:
-            //
             // place the selected number on the board if we can put it there
-            //
             if self.sudokuBoard.isNumberValidOnGameBoard(boardPosn, number: index + 1) == false {
                 self.playErrorSound()
                 return (-1, -1)
@@ -681,9 +685,7 @@ class ViewController: UIViewController {
             }
             break
         default:
-            //
-            // should never happen
-            //
+            // this should never happen
             break
         }
         return currentPosn
@@ -702,6 +704,7 @@ class ViewController: UIViewController {
         let frameWidth: CGFloat = self.view.bounds.height - (2 * self.kMainViewMargin)
         let frameHeight: CGFloat = self.view.bounds.height - (2 * self.kMainViewMargin)
         self.viewSudokuBoard = UIView(frame: CGRect(x: originX, y: originY, width: frameWidth, height: frameHeight))
+        self.viewSudokuBoard.tag = subViewTags.sudokuBoard.rawValue
         self.view.addSubview(self.viewSudokuBoard)
         self.addImagesViewsToSudokuBoard(self.boardDimensions, boardColumns: self.boardDimensions, cellWidthMargin: self.kCellWidthMargin, cellDepthMargin: self.kCellDepthMargin)
         self.initialiseSudokuBoardUIViewToAcceptTouch(self.viewSudokuBoard)
@@ -766,28 +769,20 @@ class ViewController: UIViewController {
         if(recognizer.state != UIGestureRecognizerState.Ended) {
             return
         }
-        //
         // we're only interested if the board is in play
-        //
         if self.gameBoardInPlay == false {
             return
         }
-        //
         // has the user tapped in a cell?
-        //
         let posn: (row: Int, column: Int, cellRow: Int, cellColumn: Int) = self.getPositionOfSudokuBoardImageTapped(recognizer.locationInView(recognizer.view))
         if posn.column == -1 {
             return
         }
-        //
         // ignore those positions that were those at the start of the user solving the board, then reset the control and board positions
-        //
         if self.sudokuBoard.isOriginBoardCellUsed(posn) {
             return
         }
-        //
         // if there's no action to process from the control panel, store the board posn, highlight it and leave
-        //
         if self.controlPanelPosition.row == -1 {
             self.boardPosition = self.userSelectedBoardFirst(posn, previousPosn: self.boardPosition)
             return
@@ -804,9 +799,7 @@ class ViewController: UIViewController {
                 self.playPlacementSound()
             }
         case 9:
-            //
             // when user selects posn on board and it's populated by a user solution, clear it!
-            //
             if self.sudokuBoard.isGameBoardCellUsed(posn) == false {
                 return
             }
@@ -817,9 +810,7 @@ class ViewController: UIViewController {
             self.boardPosition = (-1, -1, -1, -1)
             break
         default:
-            //
-            // should never happen
-            //
+            // this should never happen
             break
         }
         return
@@ -926,7 +917,6 @@ class ViewController: UIViewController {
     }
     
     // traverse game board and 'unset' any 'select' numbers
-    // ---->>>> (will be allowed by difficulty setting in later version) <<<<------
     func unsetSelectNumbersOnBoard() {
         let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.displayBoard.getLocationsOfImages(imgStates.Selected.rawValue)
         self.unsetSelectLocationsOnBoard(locations)
@@ -945,7 +935,6 @@ class ViewController: UIViewController {
     }
     
     // traverse game board and 'set' any 'select' numbers
-    // ---->>>> (will be allowed by difficulty setting) <<<<------
     func setSelectNumbersOnBoard(index: Int) {
         // index will give the 'number' selected from the control panel
         let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.sudokuBoard.getLocationsOfNumberOnBoard(index + 1)
@@ -954,7 +943,6 @@ class ViewController: UIViewController {
     }
 
     // traverse game board and 'set' any selected numbers to selected
-    // ---->>>> (will be allowed by difficulty setting) <<<<------
     func setSelectLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
         if locations.isEmpty == false {
             for coord in locations {
@@ -1044,7 +1032,18 @@ class ViewController: UIViewController {
     // captures user pressing the 'Settings' button
     //----------------------------------------------------------------------------
     @IBAction func settingButtonPressed(sender: UIButton) {
-        // NEEDS WORK HERE TO DISPLAY AND MANAGE THE SETTINGS DIALOG
+        let pViewController: Preferences = Preferences()
+        pViewController.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+
+        
+        self.presentViewController(pViewController, animated: true, completion: nil)
+        
+        
+        
+        
+        
+        
+        return
     }
 
 }
