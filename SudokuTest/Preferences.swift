@@ -9,18 +9,29 @@
 import UIKit
 
 class Preferences: UIViewController {
+    
+    weak var delegate: PreferencesDelegate?
 
+    @IBOutlet weak var characterSet: UISegmentedControl!
+    @IBOutlet weak var setDifficulty: UISegmentedControl!
+    @IBOutlet weak var gameMode: UISegmentedControl!
+    @IBOutlet weak var useSound: UISwitch!
+    @IBOutlet weak var useHighlight: UISwitch!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        // get the current state of the prefs
+        self.characterSet.selectedSegmentIndex = (delegate?.characterSetInUse)!
+        self.setDifficulty.selectedSegmentIndex = (delegate?.difficultySet)!
+        self.gameMode.selectedSegmentIndex = (delegate?.gameModeInUse)!
+        self.useSound.on = (delegate?.soundOn)!
+        self.useHighlight.on = (delegate?.highlightOn)!
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 
     /*
     // MARK: - Navigation
@@ -31,8 +42,14 @@ class Preferences: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
+    
     @IBAction func dismissDialog(sender: UIButton) {
+        // write back the the state of the prefs
+        delegate?.characterSetInUse = self.characterSet.selectedSegmentIndex
+        delegate?.difficultySet = self.setDifficulty.selectedSegmentIndex
+        delegate?.gameModeInUse = self.gameMode.selectedSegmentIndex
+        delegate?.soundOn = self.useSound.on
+        delegate?.highlightOn = self.useHighlight.on
         self.dismissViewControllerAnimated(true, completion: nil)
     }
 

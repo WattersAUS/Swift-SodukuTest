@@ -87,6 +87,7 @@ class ViewController: UIViewController {
         case Images = 2
     }
     var activeImageSet: Int = imageSet.Default.rawValue
+
     //
     // images that will be swapped on starting/reseting board
     //
@@ -288,6 +289,11 @@ class ViewController: UIViewController {
     var userRuboutSound: AVAudioPlayer!
     var playSounds: Bool!
     
+    //
+    // prefs
+    //
+    var userPrefs, savePrefs: PreferencesHandler!
+    
     //----------------------------------------------------------------------------
     // start of the code!!!!
     //----------------------------------------------------------------------------
@@ -307,6 +313,8 @@ class ViewController: UIViewController {
         self.initialiseGameTimer()
         // load sounds
         self.initialiseGameSounds()
+        // prefs
+        self.userPrefs = PreferencesHandler()
         return
     }
 
@@ -1032,17 +1040,12 @@ class ViewController: UIViewController {
     // captures user pressing the 'Settings' button
     //----------------------------------------------------------------------------
     @IBAction func settingButtonPressed(sender: UIButton) {
+        // first save the current preferences
+        self.savePrefs = self.userPrefs.copy() as! PreferencesHandler
         let pViewController: Preferences = Preferences()
         pViewController.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-
-        
+        pViewController.delegate = self.userPrefs
         self.presentViewController(pViewController, animated: true, completion: nil)
-        
-        
-        
-        
-        
-        
         return
     }
 
