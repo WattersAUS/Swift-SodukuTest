@@ -50,6 +50,10 @@ class Preferences: UIViewController {
         delegate?.gameModeInUse = self.gameMode.selectedSegmentIndex
         delegate?.soundOn = self.useSound.on
         delegate?.highlightOn = self.useHighlight.on
+        // now go call the function to redraw the board in the background
+        for redrawFunction: (Void) -> () in (delegate?.drawFunctions)! {
+            redrawFunction()
+        }
         self.dismissViewControllerAnimated(true, completion: nil)
     }
 

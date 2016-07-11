@@ -14,7 +14,9 @@ protocol PreferencesDelegate: class {
     var difficultySet: Int { get set }
     var gameModeInUse: Int { get set }
     var soundOn: Bool { get set }
-    var highlightOn : Bool { get set }
+    var highlightOn: Bool { get set }
+    // if we swap the char set redraw the board
+    var drawFunctions: [(Void) -> ()] { get set }
 
 // game stats
 //    var gamesStarted: Int { get }
@@ -40,25 +42,25 @@ class PreferencesHandler: NSObject, NSCopying, PreferencesDelegate {
     var soundOn: Bool
     var highlightOn : Bool
     
-    override init () {
-        self.characterSetInUse = 0
-        self.difficultySet = 0
+    var drawFunctions: [(Void) -> ()] = []
+
+    init(charSet: Int, difficulty: Int, mode: Int, sound: Bool, highlight: Bool, redrawFunctions: [(Void) -> ()]) {
+        self.characterSetInUse = charSet
+        self.difficultySet = difficulty
         self.gameModeInUse = 0
-        self.soundOn = true
-        self.highlightOn = true
+        self.soundOn = sound
+        self.highlightOn = highlight
+        for functionName: (Void) -> () in redrawFunctions {
+            self.drawFunctions.append(functionName)
+        }
         return
     }
-    
+
     //
     // copy object operation
     //
     func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = PreferencesHandler()
-        copy.characterSetInUse = self.characterSetInUse
-        copy.difficultySet = self.difficultySet
-        copy.gameModeInUse = self.gameModeInUse
-        copy.soundOn = self.soundOn
-        copy.highlightOn = self.highlightOn
+        let copy = PreferencesHandler(charSet: self.characterSetInUse, difficulty: self.difficultySet, mode: self.gameModeInUse, sound: self.soundOn, highlight: self.highlightOn, redrawFunctions: self.drawFunctions)
         return copy
     }
 }

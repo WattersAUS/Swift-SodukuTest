@@ -63,7 +63,7 @@
                 <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zqb-9Z-LbR">
                     <rect key="frame" x="188" y="157" width="227" height="29"/>
                     <segments>
-                        <segment title="None"/>
+                        <segment title="Normal"/>
                         <segment title="Challenge"/>
                         <segment title="Timer"/>
                     </segments>

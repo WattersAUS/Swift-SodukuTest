@@ -11,6 +11,7 @@
 		BF5F88951CE2334C00A53360 /* CellImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5F88941CE2334C00A53360 /* CellImages.swift */; };
 		BF70DE761CB00321006BB30D /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF70DE751CB00321006BB30D /* Cell.swift */; };
 		BF70DE781CB01857006BB30D /* GameBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF70DE771CB01857006BB30D /* GameBoard.swift */; };
+		BF9B3CE51D33C500003DD8A1 /* Enumeration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9B3CE41D33C500003DD8A1 /* Enumeration.swift */; };
 		BF9C0ED91CC919E5004C1ABC /* SudokuTestGameBoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9C0ED81CC919E5004C1ABC /* SudokuTestGameBoardTests.swift */; };
 		BFA3DF541CE393DD007CBC0E /* SudokuTestTrackSolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA3DF531CE393DD007CBC0E /* SudokuTestTrackSolution.swift */; };
 		BFA3DF6F1CE5333B007CBC0E /* GameBoardImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA3DF6E1CE5333B007CBC0E /* GameBoardImages.swift */; };
@@ -53,6 +54,7 @@
 		BF5F88941CE2334C00A53360 /* CellImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellImages.swift; sourceTree = "<group>"; };
 		BF70DE751CB00321006BB30D /* Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		BF70DE771CB01857006BB30D /* GameBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoard.swift; sourceTree = "<group>"; };
+		BF9B3CE41D33C500003DD8A1 /* Enumeration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enumeration.swift; sourceTree = "<group>"; };
 		BF9C0ED81CC919E5004C1ABC /* SudokuTestGameBoardTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SudokuTestGameBoardTests.swift; sourceTree = "<group>"; };
 		BFA3DF531CE393DD007CBC0E /* SudokuTestTrackSolution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SudokuTestTrackSolution.swift; sourceTree = "<group>"; };
 		BFA3DF6E1CE5333B007CBC0E /* GameBoardImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoardImages.swift; sourceTree = "<group>"; };
@@ -141,9 +143,10 @@
 				BF8C65481D30E48A0029B9DC /* Game Sounds */,
 				BFADC0021C8C8CA200F48E54 /* AppDelegate.swift */,
 				BFADC0041C8C8CA200F48E54 /* ViewController.swift */,
+				BF9B3CE41D33C500003DD8A1 /* Enumeration.swift */,
 				BFA68E531D3235B900BED637 /* Preferences.swift */,
-				BFA68E591D32B3F600BED637 /* PreferencesHandler.swift */,
 				BFA68E541D3235B900BED637 /* Preferences.xib */,
+				BFA68E591D32B3F600BED637 /* PreferencesHandler.swift */,
 				BFADC0061C8C8CA200F48E54 /* Main.storyboard */,
 				BFADC0091C8C8CA200F48E54 /* Assets.xcassets */,
 				BFADC00B1C8C8CA200F48E54 /* LaunchScreen.storyboard */,
@@ -317,6 +320,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BFDE91111CBFF4BB007370D0 /* TrackSolution.swift in Sources */,
+				BF9B3CE51D33C500003DD8A1 /* Enumeration.swift in Sources */,
 				BF5F88951CE2334C00A53360 /* CellImages.swift in Sources */,
 				BFADC0051C8C8CA200F48E54 /* ViewController.swift in Sources */,
 				BFA3DF6F1CE5333B007CBC0E /* GameBoardImages.swift in Sources */,

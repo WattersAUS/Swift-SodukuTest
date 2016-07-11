@@ -1,0 +1,49 @@
+//
+//  Enumeration.swift
+//  SudokuTest
+//
+//  Created by Graham Watson on 11/07/2016.
+//  Copyright © 2016 Graham Watson. All rights reserved.
+//
+
+import Foundation
+
+//
+// states we'l use during display/game
+//
+enum imgStates: Int {
+    case Default = 0
+    case Selected = 1
+    case Highlighted = 2
+    case Origin = 3
+    case Delete = 4
+    case Inactive = 5
+}
+
+//
+// images sets we have available
+//
+enum imageSet: Int {
+    case Default = 0
+    case Greek = 1
+    case Images = 2
+}
+
+//
+// difficulty
+//
+enum gameDiff: Int {
+    case Easy = 0
+    case Medium = 1
+    case Hard = 2
+}
+
+//
+// game modes
+//
+enum gameMode: Int {
+    case Normal = 0
+    case Challenge = 1
+    case Timer = 2
+}
+
