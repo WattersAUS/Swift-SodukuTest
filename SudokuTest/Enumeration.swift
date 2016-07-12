@@ -12,12 +12,11 @@ import Foundation
 // states we'l use during display/game
 //
 enum imgStates: Int {
-    case Default = 0
+    case Origin = 0
     case Selected = 1
-    case Highlighted = 2
-    case Origin = 3
-    case Delete = 4
-    case Inactive = 5
+    case Delete = 2
+    case Inactive = 3
+    case Highlight = 4
 }
 
 //

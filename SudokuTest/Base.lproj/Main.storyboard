@@ -20,7 +20,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="oiX-5M-d5R">
                                 <rect key="frame" x="858" y="592" width="90" height="38"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="ImageStart_default"/>
+                                <state key="normal" image="ImageStart"/>
                                 <connections>
                                     <action selector="resetButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6dN-Bs-L4y"/>
                                 </connections>
@@ -28,7 +28,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1M2-oX-pdX">
                                 <rect key="frame" x="936" y="690" width="35" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="AltSpanner_default"/>
+                                <state key="normal" image="ImagePreferences"/>
                                 <connections>
                                     <action selector="settingButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="GDG-ge-lZT"/>
                                 </connections>
@@ -57,9 +57,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="AltSpanner_default" width="65" height="65"/>
         <image name="Background 003" width="1024" height="768"/>
-        <image name="ImageStart_default" width="130" height="65"/>
+        <image name="ImagePreferences" width="65" height="65"/>
+        <image name="ImageStart" width="130" height="65"/>
     </resources>
     <color key="tintColor" red="0.087158940732479095" green="0.11391217261552811" blue="0.66961491107940674" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

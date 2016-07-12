@@ -75,16 +75,8 @@ class ViewController: UIViewController {
     //
     // images that will be swapped on starting/reseting board
     //
-    var startImageLibrary: [UIImage] = [
-        UIImage(named:"ImageStart_default.png")!,
-        UIImage(named:"ImageStart_select.png")!,
-        UIImage(named:"ImageStart_select.png")!
-    ]
-    var resetImageLibrary: [UIImage] = [
-        UIImage(named:"ImageReset_default.png")!,
-        UIImage(named:"ImageReset_select.png")!,
-        UIImage(named:"ImageReset_select.png")!
-    ]
+    var startImage: UIImage = UIImage(named:"ImageStart.png")!
+    var resetImage: UIImage = UIImage(named:"ImageReset.png")!
     //
     // user selects board position
     //
@@ -93,161 +85,146 @@ class ViewController: UIViewController {
     //
     // app settings dialog
     //
-    var settingsImageLibrary: [UIImage] = [
-        UIImage(named:"AltSpanner_default.png")!,
-        UIImage(named:"AltSpanner_select.png")!,
-        UIImage(named:"AltSpanner_select.png")!
-    ]
+    var preferencesImage: UIImage = UIImage(named:"ImagePreferences.png")!
     
     //
     // image library referenced [state][image set][number]
     //
-    // 0 = Default
+    // State:
+    //
+    // 0 = Origin
+    //      used as the default display image
     // 1 = select
-    // 2 = highlight
-    // 3 = origin
-    // 4 = delete
-    // 5 = inactive
+    //      when the user selects via the control panel
+    // 2 = delete
+    //      users chooses the 'bin' to delete so we highlight the images using this set
+    // 3 = inactive
+    //      if the user has completed adding the 'number' to all nine cells
+    // 4 = highlight
+    //      used in conjunction with inactive. for a moment highlight the images
+    //
+    // Image Set:
+    //
+    // 0 = Numbers
+    // 1 = Greek
+    // 2 = Alpha (these are inprogress)
     //
     var imageLibrary: [[[UIImage]]] = [
-    [[
-        UIImage(named:"Image001_default.png")!,
-        UIImage(named:"Image002_default.png")!,
-        UIImage(named:"Image003_default.png")!,
-        UIImage(named:"Image004_default.png")!,
-        UIImage(named:"Image005_default.png")!,
-        UIImage(named:"Image006_default.png")!,
-        UIImage(named:"Image007_default.png")!,
-        UIImage(named:"Image008_default.png")!,
-        UIImage(named:"Image009_default.png")!,
-        UIImage(named:"ImageClear_default.png")!
-    ],[
-        UIImage(named:"Alt001_default.png")!,
-        UIImage(named:"Alt002_default.png")!,
-        UIImage(named:"Alt003_default.png")!,
-        UIImage(named:"Alt004_default.png")!,
-        UIImage(named:"Alt005_default.png")!,
-        UIImage(named:"Alt006_default.png")!,
-        UIImage(named:"Alt007_default.png")!,
-        UIImage(named:"Alt008_default.png")!,
-        UIImage(named:"Alt009_default.png")!,
-        UIImage(named:"ImageClear_default.png")!
-    ]],
-    [[
-        UIImage(named:"Image001_select.png")!,
-        UIImage(named:"Image002_select.png")!,
-        UIImage(named:"Image003_select.png")!,
-        UIImage(named:"Image004_select.png")!,
-        UIImage(named:"Image005_select.png")!,
-        UIImage(named:"Image006_select.png")!,
-        UIImage(named:"Image007_select.png")!,
-        UIImage(named:"Image008_select.png")!,
-        UIImage(named:"Image009_select.png")!,
-        UIImage(named:"ImageClear_select.png")!
-    ],[
-        UIImage(named:"Alt001_select.png")!,
-        UIImage(named:"Alt002_select.png")!,
-        UIImage(named:"Alt003_select.png")!,
-        UIImage(named:"Alt004_select.png")!,
-        UIImage(named:"Alt005_select.png")!,
-        UIImage(named:"Alt006_select.png")!,
-        UIImage(named:"Alt007_select.png")!,
-        UIImage(named:"Alt008_select.png")!,
-        UIImage(named:"Alt009_select.png")!,
-        UIImage(named:"ImageClear_select.png")!
-    ]],
-    [[
-        UIImage(named:"Image001_highlight.png")!,
-        UIImage(named:"Image002_highlight.png")!,
-        UIImage(named:"Image003_highlight.png")!,
-        UIImage(named:"Image004_highlight.png")!,
-        UIImage(named:"Image005_highlight.png")!,
-        UIImage(named:"Image006_highlight.png")!,
-        UIImage(named:"Image007_highlight.png")!,
-        UIImage(named:"Image008_highlight.png")!,
-        UIImage(named:"Image009_highlight.png")!,
-        UIImage(named:"ImageClear_highlight.png")!
-    ],[
-        UIImage(named:"Alt001_highlight.png")!,
-        UIImage(named:"Alt002_highlight.png")!,
-        UIImage(named:"Alt003_highlight.png")!,
-        UIImage(named:"Alt004_highlight.png")!,
-        UIImage(named:"Alt005_highlight.png")!,
-        UIImage(named:"Alt006_highlight.png")!,
-        UIImage(named:"Alt007_highlight.png")!,
-        UIImage(named:"Alt008_highlight.png")!,
-        UIImage(named:"Alt009_highlight.png")!,
-        UIImage(named:"ImageClear_highlight.png")!
-    ]],
-    [[
-        UIImage(named:"Image001_origin.png")!,
-        UIImage(named:"Image002_origin.png")!,
-        UIImage(named:"Image003_origin.png")!,
-        UIImage(named:"Image004_origin.png")!,
-        UIImage(named:"Image005_origin.png")!,
-        UIImage(named:"Image006_origin.png")!,
-        UIImage(named:"Image007_origin.png")!,
-        UIImage(named:"Image008_origin.png")!,
-        UIImage(named:"Image009_origin.png")!,
-        UIImage(named:"ImageClear_origin.png")!
-    ],[
-        UIImage(named:"Alt001_origin.png")!,
-        UIImage(named:"Alt002_origin.png")!,
-        UIImage(named:"Alt003_origin.png")!,
-        UIImage(named:"Alt004_origin.png")!,
-        UIImage(named:"Alt005_origin.png")!,
-        UIImage(named:"Alt006_origin.png")!,
-        UIImage(named:"Alt007_origin.png")!,
-        UIImage(named:"Alt008_origin.png")!,
-        UIImage(named:"Alt009_origin.png")!,
-        UIImage(named:"ImageClear_origin.png")!
-    ]],
-    [[
-        UIImage(named:"Image001_delete.png")!,
-        UIImage(named:"Image002_delete.png")!,
-        UIImage(named:"Image003_delete.png")!,
-        UIImage(named:"Image004_delete.png")!,
-        UIImage(named:"Image005_delete.png")!,
-        UIImage(named:"Image006_delete.png")!,
-        UIImage(named:"Image007_delete.png")!,
-        UIImage(named:"Image008_delete.png")!,
-        UIImage(named:"Image009_delete.png")!,
-        UIImage(named:"ImageClear_delete.png")!
-    ],[
-        UIImage(named:"Alt001_delete.png")!,
-        UIImage(named:"Alt002_delete.png")!,
-        UIImage(named:"Alt003_delete.png")!,
-        UIImage(named:"Alt004_delete.png")!,
-        UIImage(named:"Alt005_delete.png")!,
-        UIImage(named:"Alt006_delete.png")!,
-        UIImage(named:"Alt007_delete.png")!,
-        UIImage(named:"Alt008_delete.png")!,
-        UIImage(named:"Alt009_delete.png")!,
-        UIImage(named:"ImageClear_delete.png")!
-    ]],
-    [[
-        UIImage(named:"Image001_inactive.png")!,
-        UIImage(named:"Image002_inactive.png")!,
-        UIImage(named:"Image003_inactive.png")!,
-        UIImage(named:"Image004_inactive.png")!,
-        UIImage(named:"Image005_inactive.png")!,
-        UIImage(named:"Image006_inactive.png")!,
-        UIImage(named:"Image007_inactive.png")!,
-        UIImage(named:"Image008_inactive.png")!,
-        UIImage(named:"Image009_inactive.png")!,
-        UIImage(named:"ImageClear_inactive.png")!
-    ],[
-        UIImage(named:"Alt001_inactive.png")!,
-        UIImage(named:"Alt002_inactive.png")!,
-        UIImage(named:"Alt003_inactive.png")!,
-        UIImage(named:"Alt004_inactive.png")!,
-        UIImage(named:"Alt005_inactive.png")!,
-        UIImage(named:"Alt006_inactive.png")!,
-        UIImage(named:"Alt007_inactive.png")!,
-        UIImage(named:"Alt008_inactive.png")!,
-        UIImage(named:"Alt009_inactive.png")!,
-        UIImage(named:"ImageClear_inactive.png")!
-    ]]
+        [[
+            UIImage(named:"Image001_origin.png")!,
+            UIImage(named:"Image002_origin.png")!,
+            UIImage(named:"Image003_origin.png")!,
+            UIImage(named:"Image004_origin.png")!,
+            UIImage(named:"Image005_origin.png")!,
+            UIImage(named:"Image006_origin.png")!,
+            UIImage(named:"Image007_origin.png")!,
+            UIImage(named:"Image008_origin.png")!,
+            UIImage(named:"Image009_origin.png")!,
+            UIImage(named:"ImageClear_origin.png")!
+        ],[
+            UIImage(named:"Alt001_origin.png")!,
+            UIImage(named:"Alt002_origin.png")!,
+            UIImage(named:"Alt003_origin.png")!,
+            UIImage(named:"Alt004_origin.png")!,
+            UIImage(named:"Alt005_origin.png")!,
+            UIImage(named:"Alt006_origin.png")!,
+            UIImage(named:"Alt007_origin.png")!,
+            UIImage(named:"Alt008_origin.png")!,
+            UIImage(named:"Alt009_origin.png")!,
+            UIImage(named:"ImageClear_origin.png")!
+        ]],
+        [[
+            UIImage(named:"Image001_select.png")!,
+            UIImage(named:"Image002_select.png")!,
+            UIImage(named:"Image003_select.png")!,
+            UIImage(named:"Image004_select.png")!,
+            UIImage(named:"Image005_select.png")!,
+            UIImage(named:"Image006_select.png")!,
+            UIImage(named:"Image007_select.png")!,
+            UIImage(named:"Image008_select.png")!,
+            UIImage(named:"Image009_select.png")!,
+            UIImage(named:"ImageClear_origin.png")!
+        ],[
+            UIImage(named:"Alt001_select.png")!,
+            UIImage(named:"Alt002_select.png")!,
+            UIImage(named:"Alt003_select.png")!,
+            UIImage(named:"Alt004_select.png")!,
+            UIImage(named:"Alt005_select.png")!,
+            UIImage(named:"Alt006_select.png")!,
+            UIImage(named:"Alt007_select.png")!,
+            UIImage(named:"Alt008_select.png")!,
+            UIImage(named:"Alt009_select.png")!,
+            UIImage(named:"ImageClear_origin.png")!
+        ]],
+        [[
+            UIImage(named:"Image001_delete.png")!,
+            UIImage(named:"Image002_delete.png")!,
+            UIImage(named:"Image003_delete.png")!,
+            UIImage(named:"Image004_delete.png")!,
+            UIImage(named:"Image005_delete.png")!,
+            UIImage(named:"Image006_delete.png")!,
+            UIImage(named:"Image007_delete.png")!,
+            UIImage(named:"Image008_delete.png")!,
+            UIImage(named:"Image009_delete.png")!,
+            UIImage(named:"ImageClear_delete.png")!
+        ],[
+            UIImage(named:"Alt001_delete.png")!,
+            UIImage(named:"Alt002_delete.png")!,
+            UIImage(named:"Alt003_delete.png")!,
+            UIImage(named:"Alt004_delete.png")!,
+            UIImage(named:"Alt005_delete.png")!,
+            UIImage(named:"Alt006_delete.png")!,
+            UIImage(named:"Alt007_delete.png")!,
+            UIImage(named:"Alt008_delete.png")!,
+            UIImage(named:"Alt009_delete.png")!,
+            UIImage(named:"ImageClear_delete.png")!
+        ]],
+        [[
+            UIImage(named:"Image001_inactive.png")!,
+            UIImage(named:"Image002_inactive.png")!,
+            UIImage(named:"Image003_inactive.png")!,
+            UIImage(named:"Image004_inactive.png")!,
+            UIImage(named:"Image005_inactive.png")!,
+            UIImage(named:"Image006_inactive.png")!,
+            UIImage(named:"Image007_inactive.png")!,
+            UIImage(named:"Image008_inactive.png")!,
+            UIImage(named:"Image009_inactive.png")!,
+            UIImage(named:"ImageClear_inactive.png")!
+        ],[
+            UIImage(named:"Alt001_inactive.png")!,
+            UIImage(named:"Alt002_inactive.png")!,
+            UIImage(named:"Alt003_inactive.png")!,
+            UIImage(named:"Alt004_inactive.png")!,
+            UIImage(named:"Alt005_inactive.png")!,
+            UIImage(named:"Alt006_inactive.png")!,
+            UIImage(named:"Alt007_inactive.png")!,
+            UIImage(named:"Alt008_inactive.png")!,
+            UIImage(named:"Alt009_inactive.png")!,
+            UIImage(named:"ImageClear_inactive.png")!
+        ]],
+        [[
+            UIImage(named:"Image001_highlight.png")!,
+            UIImage(named:"Image002_highlight.png")!,
+            UIImage(named:"Image003_highlight.png")!,
+            UIImage(named:"Image004_highlight.png")!,
+            UIImage(named:"Image005_highlight.png")!,
+            UIImage(named:"Image006_highlight.png")!,
+            UIImage(named:"Image007_highlight.png")!,
+            UIImage(named:"Image008_highlight.png")!,
+            UIImage(named:"Image009_highlight.png")!,
+            UIImage(named:"ImageClear_delete.png")!
+        ],[
+            UIImage(named:"Alt001_highlight.png")!,
+            UIImage(named:"Alt002_highlight.png")!,
+            UIImage(named:"Alt003_highlight.png")!,
+            UIImage(named:"Alt004_highlight.png")!,
+            UIImage(named:"Alt005_highlight.png")!,
+            UIImage(named:"Alt006_highlight.png")!,
+            UIImage(named:"Alt007_highlight.png")!,
+            UIImage(named:"Alt008_highlight.png")!,
+            UIImage(named:"Alt009_highlight.png")!,
+            UIImage(named:"ImageClear_delete.png")!
+        ]]
     ]
 
     //
@@ -397,8 +374,8 @@ class ViewController: UIViewController {
         //
         // if we have 'Start' button, build the board
         //
-        if UIImagePNGRepresentation((sender.imageView?.image)!)!.isEqual(UIImagePNGRepresentation(self.startImageLibrary[imgStates.Default.rawValue])) == true {
-            sender.setImage(self.resetImageLibrary[imgStates.Default.rawValue], forState: UIControlState.Normal)
+        if UIImagePNGRepresentation((sender.imageView?.image)!)!.isEqual(UIImagePNGRepresentation(self.startImage)) == true {
+            sender.setImage(self.resetImage, forState: UIControlState.Normal)
             self.sudokuBoard.clearBoard()
             self.sudokuBoard.buildSolution()
             if self.debug == 1 {
@@ -962,25 +939,25 @@ class ViewController: UIViewController {
     // set space on board to cell having been 'touched', we use this when the user selectes the board cell first and not the control panel
     //
     func setCoordToTouchedImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
-        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.userSelectImage, imageState: imgStates.Default.rawValue)
+        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.userSelectImage, imageState: imgStates.Origin.rawValue)
         return
     }
     
-    //
-    // set numbers on the 'game' board to default if the user selects the 'number' from the control panel
-    //
-    func setCoordToDefaultImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
-        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageLibrary[imgStates.Default.rawValue][self.userPrefs.characterSetInUse][number - 1], imageState: imgStates.Default.rawValue)
-        return
-    }
+//    //
+//    // set numbers on the 'game' board to default if the user selects the 'number' from the control panel
+//    //
+//    func setCoordToDefaultImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
+//        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageLibrary[imgStates.Default.rawValue][self.userPrefs.characterSetInUse][number - 1], imageState: imgStates.Default.rawValue)
+//        return
+//    }
 
-    //
-    // set numbers on the 'game' board to highlight if the user selects the number from the control panel
-    //
-    func setCoordToHighlightImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
-        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageLibrary[imgStates.Highlighted.rawValue][self.userPrefs.characterSetInUse][number - 1], imageState: imgStates.Highlighted.rawValue)
-        return
-    }
+//    //
+//    // set numbers on the 'game' board to highlight if the user selects the number from the control panel
+//    //
+//    func setCoordToHighlightImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
+//        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageLibrary[imgStates.Highlighted.rawValue][self.userPrefs.characterSetInUse][number - 1], imageState: imgStates.Highlighted.rawValue)
+//        return
+//    }
 
     //
     // set numbers on the 'game' board to inactive when all of that number has been used
