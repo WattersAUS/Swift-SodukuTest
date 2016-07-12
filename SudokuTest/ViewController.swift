@@ -132,6 +132,17 @@ class ViewController: UIViewController {
             UIImage(named:"Alt008_origin.png")!,
             UIImage(named:"Alt009_origin.png")!,
             UIImage(named:"ImageClear_origin.png")!
+        ],[
+            UIImage(named:"Alpha001_origin.png")!,
+            UIImage(named:"Alpha002_origin.png")!,
+            UIImage(named:"Alpha003_origin.png")!,
+            UIImage(named:"Alpha004_origin.png")!,
+            UIImage(named:"Alpha005_origin.png")!,
+            UIImage(named:"Alpha006_origin.png")!,
+            UIImage(named:"Alpha007_origin.png")!,
+            UIImage(named:"Alpha008_origin.png")!,
+            UIImage(named:"Alpha009_origin.png")!,
+            UIImage(named:"ImageClear_origin.png")!
         ]],
         [[
             UIImage(named:"Image001_select.png")!,
@@ -154,6 +165,17 @@ class ViewController: UIViewController {
             UIImage(named:"Alt007_select.png")!,
             UIImage(named:"Alt008_select.png")!,
             UIImage(named:"Alt009_select.png")!,
+            UIImage(named:"ImageClear_origin.png")!
+        ],[
+            UIImage(named:"Alpha001_select.png")!,
+            UIImage(named:"Alpha002_select.png")!,
+            UIImage(named:"Alpha003_select.png")!,
+            UIImage(named:"Alpha004_select.png")!,
+            UIImage(named:"Alpha005_select.png")!,
+            UIImage(named:"Alpha006_select.png")!,
+            UIImage(named:"Alpha007_select.png")!,
+            UIImage(named:"Alpha008_select.png")!,
+            UIImage(named:"Alpha009_select.png")!,
             UIImage(named:"ImageClear_origin.png")!
         ]],
         [[
@@ -178,6 +200,17 @@ class ViewController: UIViewController {
             UIImage(named:"Alt008_delete.png")!,
             UIImage(named:"Alt009_delete.png")!,
             UIImage(named:"ImageClear_delete.png")!
+        ],[
+            UIImage(named:"Alpha001_delete.png")!,
+            UIImage(named:"Alpha002_delete.png")!,
+            UIImage(named:"Alpha003_delete.png")!,
+            UIImage(named:"Alpha004_delete.png")!,
+            UIImage(named:"Alpha005_delete.png")!,
+            UIImage(named:"Alpha006_delete.png")!,
+            UIImage(named:"Alpha007_delete.png")!,
+            UIImage(named:"Alpha008_delete.png")!,
+            UIImage(named:"Alpha009_delete.png")!,
+            UIImage(named:"ImageClear_delete.png")!
         ]],
         [[
             UIImage(named:"Image001_inactive.png")!,
@@ -201,6 +234,17 @@ class ViewController: UIViewController {
             UIImage(named:"Alt008_inactive.png")!,
             UIImage(named:"Alt009_inactive.png")!,
             UIImage(named:"ImageClear_inactive.png")!
+        ],[
+            UIImage(named:"Alpha001_inactive.png")!,
+            UIImage(named:"Alpha002_inactive.png")!,
+            UIImage(named:"Alpha003_inactive.png")!,
+            UIImage(named:"Alpha004_inactive.png")!,
+            UIImage(named:"Alpha005_inactive.png")!,
+            UIImage(named:"Alpha006_inactive.png")!,
+            UIImage(named:"Alpha007_inactive.png")!,
+            UIImage(named:"Alpha008_inactive.png")!,
+            UIImage(named:"Alpha009_inactive.png")!,
+            UIImage(named:"ImageClear_inactive.png")!
         ]],
         [[
             UIImage(named:"Image001_highlight.png")!,
@@ -223,6 +267,17 @@ class ViewController: UIViewController {
             UIImage(named:"Alt007_highlight.png")!,
             UIImage(named:"Alt008_highlight.png")!,
             UIImage(named:"Alt009_highlight.png")!,
+            UIImage(named:"ImageClear_delete.png")!
+        ],[
+            UIImage(named:"Alpha001_highlight.png")!,
+            UIImage(named:"Alpha002_highlight.png")!,
+            UIImage(named:"Alpha003_highlight.png")!,
+            UIImage(named:"Alpha004_highlight.png")!,
+            UIImage(named:"Alpha005_highlight.png")!,
+            UIImage(named:"Alpha006_highlight.png")!,
+            UIImage(named:"Alpha007_highlight.png")!,
+            UIImage(named:"Alpha008_highlight.png")!,
+            UIImage(named:"Alpha009_highlight.png")!,
             UIImage(named:"ImageClear_delete.png")!
         ]]
     ]
@@ -454,7 +509,7 @@ class ViewController: UIViewController {
     func updateControlPanelDisplay() {
         for y: Int in 0 ..< self.controlPanelImages.cellRows {
             for x: Int in 0 ..< self.controlPanelImages.cellColumns {
-                self.setControlPanelToImage((y, column: x))
+                self.setControlPanelToCurrentImageValue((y, column: x))
             }
         }
         return
@@ -468,11 +523,7 @@ class ViewController: UIViewController {
             for x: Int in 0 ..< self.displayBoard.boardColumns {
                 for j: Int in 0 ..< self.displayBoard.gameImages[y][x].cellRows {
                     for k: Int in 0 ..< self.displayBoard.gameImages[y][x].cellColumns {
-                        self.setCellToBlankImage((y, column: x, cellRow: j, cellColumn: k))
-                        let number: Int = self.sudokuBoard.getNumberFromGameBoard((y, column: x, cellRow: j, cellColumn: k))
-                        if (number > 0) {
-                            self.setCoordToOriginImage((y, column: x, cellRow: j, cellColumn: k), number: number)
-                        }
+                        self.setCoordToCurrentImageValue((y, column: x, cellRow: j, cellColumn: k))
                     }
                 }
             }
@@ -992,9 +1043,26 @@ class ViewController: UIViewController {
     }
     
     //
+    // set numbers on the 'game' board to highlighted if the user selects the 'number' from the control panel
+    //
+    func setCoordToCurrentImageValue(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
+        let number: Int = self.sudokuBoard.getNumberFromGameBoard(coord)
+        if number == 0 {
+            self.setCellToBlankImage(coord)
+        } else {
+            var imgState: Int = self.displayBoard.gameImages[coord.row][coord.column].getImageState(coord.cellRow, column: coord.cellColumn)
+            if imgState == -1 {
+                imgState = imgStates.Origin.rawValue
+            }
+            self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageLibrary[imgState][self.userPrefs.characterSetInUse][number - 1], imageState: imgState)
+        }
+        return
+    }
+
+    //
     // set numbers on the control panel to whatever 'state' is stored (used when we swap char sets)
     //
-    func setControlPanelToImage(coord: (row: Int, column: Int)) {
+    func setControlPanelToCurrentImageValue(coord: (row: Int, column: Int)) {
         let imgState: Int = self.controlPanelImages.getImageState(coord.row, column: coord.column)
         self.controlPanelImages.setImage(coord.row, column: coord.column, imageToSet: self.imageLibrary[imgState][self.userPrefs.characterSetInUse][(coord.row * 2) + coord.column], imageState: imgState)
         return
