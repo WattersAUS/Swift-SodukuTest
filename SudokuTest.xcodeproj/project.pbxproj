@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BF2BF03F1CE28DFF00DFB59D /* Ideas.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */; };
+		BF562ED61D37C2E400DB31E9 /* Notes.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BF562ED51D37C2E400DB31E9 /* Notes.rtf */; };
 		BF5F88951CE2334C00A53360 /* CellImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5F88941CE2334C00A53360 /* CellImages.swift */; };
 		BF70DE761CB00321006BB30D /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF70DE751CB00321006BB30D /* Cell.swift */; };
 		BF70DE781CB01857006BB30D /* GameBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF70DE771CB01857006BB30D /* GameBoard.swift */; };
@@ -51,6 +52,7 @@
 
 /* Begin PBXFileReference section */
 		BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Ideas.rtf; sourceTree = "<group>"; };
+		BF562ED51D37C2E400DB31E9 /* Notes.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Notes.rtf; sourceTree = "<group>"; };
 		BF5F88941CE2334C00A53360 /* CellImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellImages.swift; sourceTree = "<group>"; };
 		BF70DE751CB00321006BB30D /* Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		BF70DE771CB01857006BB30D /* GameBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoard.swift; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 				BFA3DF6E1CE5333B007CBC0E /* GameBoardImages.swift */,
 				BFDE91101CBFF4BB007370D0 /* TrackSolution.swift */,
 				BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */,
+				BF562ED51D37C2E400DB31E9 /* Notes.rtf */,
 			);
 			path = SudokuTest;
 			sourceTree = "<group>";
@@ -290,6 +293,7 @@
 				BFD9216C1D311F4C004E699B /* RubOut_001.aiff in Resources */,
 				BF2BF03F1CE28DFF00DFB59D /* Ideas.rtf in Resources */,
 				BFD9216A1D30E86F004E699B /* Mistake_001.aiff in Resources */,
+				BF562ED61D37C2E400DB31E9 /* Notes.rtf in Resources */,
 				BFADC00A1C8C8CA200F48E54 /* Assets.xcassets in Resources */,
 				BFADC0081C8C8CA200F48E54 /* Main.storyboard in Resources */,
 				BFD921691D30E86F004E699B /* Chalk_002.aiff in Resources */,

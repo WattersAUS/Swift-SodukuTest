@@ -32,9 +32,9 @@ enum imageSet: Int {
 // difficulty
 //
 enum gameDiff: Int {
-    case Easy = 0
-    case Medium = 1
-    case Hard = 2
+    case Easy = 5
+    case Medium = 6
+    case Hard = 7
 }
 
 //

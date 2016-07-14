@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     
     var debug: Int = 1
     var boardDimensions: Int = 3
-    var gameDifficulty: Int = 6
+    var gameDifficulty: Int = gameDiff.Easy.rawValue
     
     //
     // enum for subviews
@@ -523,7 +523,7 @@ class ViewController: UIViewController {
             for x: Int in 0 ..< self.displayBoard.boardColumns {
                 for j: Int in 0 ..< self.displayBoard.gameImages[y][x].cellRows {
                     for k: Int in 0 ..< self.displayBoard.gameImages[y][x].cellColumns {
-                        self.setCoordToCurrentImageValue((y, column: x, cellRow: j, cellColumn: k))
+                        self.redrawCurrentCoordImage((y, column: x, cellRow: j, cellColumn: k))
                     }
                 }
             }
@@ -1045,7 +1045,7 @@ class ViewController: UIViewController {
     //
     // set numbers on the 'game' board to highlighted if the user selects the 'number' from the control panel
     //
-    func setCoordToCurrentImageValue(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
+    func redrawCurrentCoordImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
         let number: Int = self.sudokuBoard.getNumberFromGameBoard(coord)
         if number == 0 {
             self.setCellToBlankImage(coord)

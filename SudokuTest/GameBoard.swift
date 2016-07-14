@@ -111,7 +111,7 @@ class GameBoard: NSObject, NSCopying {
                 self.solutionBoardCells[row][column].setNumberAtCellPosition(unUsedPosition.unUsedRow, column: unUsedPosition.unUsedColumn, number: unUsedNumber)
                 stalled = 0
             } else {
-                stalled += 1
+                stalled = stalled + 1
                 if stalled > 100 {
                     return false
                 }
@@ -174,6 +174,11 @@ class GameBoard: NSObject, NSCopying {
     //
     // public functions
     //
+    func changeDifficulty(newDifficulty: Int) {
+        self.difficulty = newDifficulty
+        return
+    }
+    
     func clearBoard() {
         self.clearSolutionBoard()
         self.clearOriginBoard()
@@ -195,40 +200,79 @@ class GameBoard: NSObject, NSCopying {
         self.stalls = 0
         while (self.isBoardCompleted() == false) {
             if buildCell(self.boardCoordinates[index].row, column: self.boardCoordinates[index].column) == true {
-                index += 1
+                index = index + 1
             } else {
-                self.stalls += 1
+                self.stalls = self.stalls + 1
                 var i: Int = index
                 while i > 0 {
                     self.solutionBoardCells[self.boardCoordinates[i].row][self.boardCoordinates[i].column].clearCell()
-                    i -= 1
+                    i = i - 1
                 }
                 index = 0
             }
         }
         return
     }
-
+    
+    //
+    // from the prebuilt solution board, we need to remove random numbers (depending on the set difficulty)
+    //
+//    func buildOriginBoard() {
+//        self.originBoardCells.removeAll()
+//        self.copySolutionCellsToOriginCells()
+//        for cellRowOfObj in self.originBoardCells {
+//            for cellObj in cellRowOfObj {
+//                // using the difficulty determine how many numbers to clear from each cell
+//                var cellsToClear: Int = self.getCellsToClear()
+//                while cellsToClear > 0 {
+//                    let usedPosition: (usedRow: Int, usedColumn: Int) = cellObj.getRandomUsedPosition()
+//                    if usedPosition.usedRow > -1 && usedPosition.usedColumn > -1 {
+//                        cellObj.clearNumberAtCellPosition(usedPosition.usedRow, column: usedPosition.usedColumn)
+//                    }
+//                    cellsToClear -= 1
+//                }
+//            }
+//        }
+//        return
+//    }
+    
     //
     // from the prebuilt solution board, we need to remove random numbers (depending on the set difficulty)
     //
     func buildOriginBoard() {
+        var maxNumbersToClearFromBoard: [Int] = []
+        for _: Int in 0 ..< (self.boardColumns * self.boardRows) {
+            maxNumbersToClearFromBoard.append((self.boardColumns * self.boardRows) - self.getCellsToClear())
+        }
         self.originBoardCells.removeAll()
         self.copySolutionCellsToOriginCells()
         for cellRowOfObj in self.originBoardCells {
             for cellObj in cellRowOfObj {
                 // using the difficulty determine how many numbers to clear from each cell
-                var cellsToClear: Int = self.difficulty - Int(arc4random_uniform(UInt32(3))) + 1
-                while cellsToClear > 0 {
+                var numbersToClear: Int = self.getCellsToClear()
+                while numbersToClear > 0 {
+
                     let usedPosition: (usedRow: Int, usedColumn: Int) = cellObj.getRandomUsedPosition()
-                    if usedPosition.usedRow > -1 && usedPosition.usedColumn > -1 {
-                        cellObj.clearNumberAtCellPosition(usedPosition.usedRow, column: usedPosition.usedColumn)
+                    if usedPosition.usedRow == -1 {
+                        numbersToClear = 0
+                    } else {
+                        let number: Int = cellObj.getNumberAtCellPosition(usedPosition.usedRow, column: usedPosition.usedColumn) - 1
+                        if maxNumbersToClearFromBoard[number] > 0 {
+                            cellObj.clearNumberAtCellPosition(usedPosition.usedRow, column: usedPosition.usedColumn)
+                        }
+                        numbersToClear = numbersToClear - 1
                     }
-                    cellsToClear -= 1
                 }
             }
         }
         return
+    }
+    
+    //
+    // get a random number of numbers to remove from a cell depending on difficulty
+    //
+    func getCellsToClear() -> Int {
+        return self.difficulty - Int(arc4random_uniform(UInt32(3))) + 1
     }
     
     //

@@ -44,15 +44,16 @@ class Preferences: UIViewController {
     */
     
     @IBAction func dismissDialog(sender: UIButton) {
-        // write back the the state of the prefs
-        delegate?.characterSetInUse = self.characterSet.selectedSegmentIndex
+        // now go call the function to redraw the board in the background if needed
         delegate?.difficultySet = self.setDifficulty.selectedSegmentIndex
         delegate?.gameModeInUse = self.gameMode.selectedSegmentIndex
         delegate?.soundOn = self.useSound.on
         delegate?.highlightOn = self.useHighlight.on
-        // now go call the function to redraw the board in the background
-        for redrawFunction: (Void) -> () in (delegate?.drawFunctions)! {
-            redrawFunction()
+        if delegate?.characterSetInUse != self.characterSet.selectedSegmentIndex {
+            delegate?.characterSetInUse = self.characterSet.selectedSegmentIndex
+            for redrawFunction: (Void) -> () in (delegate?.drawFunctions)! {
+                redrawFunction()
+            }
         }
         self.dismissViewControllerAnimated(true, completion: nil)
     }
