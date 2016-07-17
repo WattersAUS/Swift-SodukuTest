@@ -217,7 +217,7 @@ class GameBoard: NSObject, NSCopying {
         return
     }
     
-    func isBoardCompleted() -> Bool {
+    func isSolutionCompleted() -> Bool {
         for index: Int in 0 ..< self.boardCoordinates.count {
             if self.solutionBoardCells[self.boardCoordinates[index].row][self.boardCoordinates[index].column].isCellCompleted() == false {
                 return false
@@ -226,6 +226,15 @@ class GameBoard: NSObject, NSCopying {
         return true
     }
 
+    func isGameCompleted() -> Bool {
+        for index: Int in 0 ..< self.boardCoordinates.count {
+            if self.gameBoardCells[self.boardCoordinates[index].row][self.boardCoordinates[index].column].isCellCompleted() == false {
+                return false
+            }
+        }
+        return true
+    }
+    
     func isNumberFullyUsedOnGameBoard(number: Int) -> Bool {
         for index: Int in 0 ..< self.boardCoordinates.count {
             if self.gameBoardCells[self.boardCoordinates[index].row][self.boardCoordinates[index].column].isCellCompleted() == false {
@@ -240,7 +249,7 @@ class GameBoard: NSObject, NSCopying {
     func buildSolution() {
         var index: Int = 0
         self.stalls = 0
-        while (self.isBoardCompleted() == false) {
+        while (self.isSolutionCompleted() == false) {
             if buildCell(self.boardCoordinates[index].row, column: self.boardCoordinates[index].column) == true {
                 index = index + 1
             } else {
@@ -304,7 +313,7 @@ class GameBoard: NSObject, NSCopying {
     }
     
     func dumpSolutionBoard() -> String {
-        if self.isBoardCompleted() == false {
+        if self.isSolutionCompleted() == false {
             return "Board is not completed"
         }
         var dumpOfBoard: String = ""
