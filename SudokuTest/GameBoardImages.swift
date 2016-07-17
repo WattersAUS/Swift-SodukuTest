@@ -39,6 +39,20 @@ class GameBoardImages {
         }
         return
     }
+
+    //
+    // on a board reset we need to 'clear' states of all images
+    //
+    func setImageStates(toImageState: Int) {
+        for boardRow: Int in 0 ..< self.boardRows {
+            for boardColumn: Int in 0 ..< self.boardColumns {
+                for location: (cellRow:Int, cellColumn: Int) in self.gameImages[boardRow][boardColumn].getLocationsOfCellsStateNotEqualTo(toImageState) {
+                    self.gameImages[boardRow][boardColumn].setImageState(location.cellRow, column: location.cellColumn, imageState: toImageState)
+                }
+            }
+        }
+        return
+    }
     
     //
     // we use this to pass back to the ViewController an array of images selected by the user when selecting a control panel 'number'

@@ -165,13 +165,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SudokuTest/GameBoard.swift"
-            timestampString = "490201036.250513"
+            filePath = "SudokuTest/GameTimer.swift"
+            timestampString = "490293216.860286"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "257"
-            endingLineNumber = "257"
-            landmarkName = "buildOriginBoard()"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "updateGameTime()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SudokuTest/GameTimer.swift"
+            timestampString = "490293267.11689"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
+            landmarkName = "setupGameTimer()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

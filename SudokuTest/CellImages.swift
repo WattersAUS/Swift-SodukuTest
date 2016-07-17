@@ -87,11 +87,31 @@ class CellImages {
         return self.cellContents[row][column].state
     }
     
+    func setImageState(row: Int, column: Int, imageState: Int) {
+        if (row < 0) || (row > self.cellRows) || (column < 0 ) || (column > self.cellColumns) {
+            return
+        }
+        self.cellContents[row][column].state = imageState
+        return
+    }
+    
     func getLocationsOfCellsStateEqualTo(state: Int) -> [(cellRow: Int, cellColumn: Int)] {
         var returnCoords: [(cellRow: Int, cellColumn: Int)] = []
         for row: Int in 0 ..< self.cellRows {
             for column: Int in 0 ..< self.cellColumns {
                 if self.cellContents[row][column].state == state {
+                    returnCoords.append((row, column))
+                }
+            }
+        }
+        return (returnCoords)
+    }
+    
+    func getLocationsOfCellsStateNotEqualTo(state: Int) -> [(cellRow: Int, cellColumn: Int)] {
+        var returnCoords: [(cellRow: Int, cellColumn: Int)] = []
+        for row: Int in 0 ..< self.cellRows {
+            for column: Int in 0 ..< self.cellColumns {
+                if self.cellContents[row][column].state != state {
                     returnCoords.append((row, column))
                 }
             }

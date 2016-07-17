@@ -30,10 +30,8 @@ class GameBoard: NSObject, NSCopying {
             self.boardColumns = 3
         }
         self.boardRows = self.boardColumns
-        self.difficulty = setDifficulty
-        if self.difficulty < 0 || self.difficulty > 9 {
-            self.difficulty = 7
-        }
+        // need to remap diff level passed to internal useful value
+        self.setGameDifficulty(setDifficulty)
         // init the all copiees of the board ie solution/game and origin
         for row: Int in 0 ..< self.boardRows {
             var rowOfCells: [Cell] = [Cell(size: self.boardColumns)]
@@ -172,10 +170,43 @@ class GameBoard: NSObject, NSCopying {
     }
     
     //
-    // public functions
+    // public functions - remap game difficulty to useful internal value
     //
-    func changeDifficulty(newDifficulty: Int) {
-        self.difficulty = newDifficulty
+    
+    func getGameDifficulty() -> Int {
+        // remap the diff level to ui control mapping
+        var difficulty: Int = 0
+        switch self.difficulty {
+            case gameDiff.Easy.rawValue:
+                difficulty = 0
+                break
+            case gameDiff.Medium.rawValue:
+                difficulty = 1
+                break
+            case gameDiff.Hard.rawValue:
+                difficulty = 2
+                break
+            default:
+                break
+        }
+        return difficulty
+    }
+    
+    func setGameDifficulty(newDifficulty: Int) {
+        switch newDifficulty {
+        case 0:
+            self.difficulty = gameDiff.Easy.rawValue
+            break
+        case 1:
+            self.difficulty = gameDiff.Medium.rawValue
+            break
+        case 2:
+            self.difficulty = gameDiff.Hard.rawValue
+            break
+        default:
+            self.difficulty = gameDiff.Easy.rawValue
+            break
+        }
         return
     }
     
@@ -195,6 +226,17 @@ class GameBoard: NSObject, NSCopying {
         return true
     }
 
+    func isNumberFullyUsedOnGameBoard(number: Int) -> Bool {
+        for index: Int in 0 ..< self.boardCoordinates.count {
+            if self.gameBoardCells[self.boardCoordinates[index].row][self.boardCoordinates[index].column].isCellCompleted() == false {
+                if self.gameBoardCells[self.boardCoordinates[index].row][self.boardCoordinates[index].column].isNumberUsedInCell(number) == false {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    
     func buildSolution() {
         var index: Int = 0
         self.stalls = 0
@@ -217,28 +259,6 @@ class GameBoard: NSObject, NSCopying {
     //
     // from the prebuilt solution board, we need to remove random numbers (depending on the set difficulty)
     //
-//    func buildOriginBoard() {
-//        self.originBoardCells.removeAll()
-//        self.copySolutionCellsToOriginCells()
-//        for cellRowOfObj in self.originBoardCells {
-//            for cellObj in cellRowOfObj {
-//                // using the difficulty determine how many numbers to clear from each cell
-//                var cellsToClear: Int = self.getCellsToClear()
-//                while cellsToClear > 0 {
-//                    let usedPosition: (usedRow: Int, usedColumn: Int) = cellObj.getRandomUsedPosition()
-//                    if usedPosition.usedRow > -1 && usedPosition.usedColumn > -1 {
-//                        cellObj.clearNumberAtCellPosition(usedPosition.usedRow, column: usedPosition.usedColumn)
-//                    }
-//                    cellsToClear -= 1
-//                }
-//            }
-//        }
-//        return
-//    }
-    
-    //
-    // from the prebuilt solution board, we need to remove random numbers (depending on the set difficulty)
-    //
     func buildOriginBoard() {
         var maxNumbersToClearFromBoard: [Int] = []
         for _: Int in 0 ..< (self.boardColumns * self.boardRows) {
@@ -251,7 +271,6 @@ class GameBoard: NSObject, NSCopying {
                 // using the difficulty determine how many numbers to clear from each cell
                 var numbersToClear: Int = self.getCellsToClear()
                 while numbersToClear > 0 {
-
                     let usedPosition: (usedRow: Int, usedColumn: Int) = cellObj.getRandomUsedPosition()
                     if usedPosition.usedRow == -1 {
                         numbersToClear = 0
@@ -272,7 +291,7 @@ class GameBoard: NSObject, NSCopying {
     // get a random number of numbers to remove from a cell depending on difficulty
     //
     func getCellsToClear() -> Int {
-        return self.difficulty - Int(arc4random_uniform(UInt32(3))) + 1
+        return self.difficulty + 1 - Int(arc4random_uniform(UInt32(2)))
     }
     
     //
@@ -422,11 +441,7 @@ class GameBoard: NSObject, NSCopying {
         }
         return self.boardColumns * self.solutionBoardCells[0][0].cellWidth()
     }
-    
-    func getGameDifficulty() -> Int {
-        return self.difficulty
-    }
-    
+
     func getBoardRows() -> Int {
         return self.boardRows
     }
