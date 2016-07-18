@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Preferences" customModule="SudokuTest" customModuleProvider="target">
             <connections>
+                <outlet property="allowHints" destination="IdH-rm-Hw9" id="Isj-mI-O66"/>
                 <outlet property="characterSet" destination="5ij-Q0-x1d" id="ePD-NL-YSv"/>
                 <outlet property="gameMode" destination="zqb-9Z-LbR" id="bGq-yz-jYc"/>
                 <outlet property="setDifficulty" destination="zyp-YS-ftl" id="kiT-Lc-sew"/>
@@ -100,13 +101,13 @@
                     <rect key="frame" x="262" y="203" width="155" height="31"/>
                 </slider>
                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="b8P-hk-OOU">
-                    <rect key="frame" x="188" y="255" width="51" height="31"/>
+                    <rect key="frame" x="188" y="313" width="51" height="31"/>
                     <variation key="widthClass=compact" fixedFrame="YES">
                         <rect key="frame" x="142" y="266" width="51" height="31"/>
                     </variation>
                 </switch>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Highlighting" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V9s-Nd-0h9">
-                    <rect key="frame" x="52" y="255" width="93" height="21"/>
+                    <rect key="frame" x="52" y="313" width="93" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
@@ -115,16 +116,25 @@
                     </variation>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2NM-jg-3J9">
-                    <rect key="frame" x="197" y="316" width="30" height="30"/>
+                    <rect key="frame" x="197" y="369" width="30" height="30"/>
                     <state key="normal" title="Ok"/>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Mg-j8-i1P">
-                    <rect key="frame" x="197" y="316" width="30" height="30"/>
+                    <rect key="frame" x="197" y="369" width="30" height="30"/>
                     <state key="normal" title="Ok"/>
                     <connections>
                         <action selector="dismissDialog:" destination="-1" eventType="touchUpInside" id="jlH-Di-f7s"/>
                     </connections>
                 </button>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IdH-rm-Hw9">
+                    <rect key="frame" x="188" y="260" width="51" height="31"/>
+                </switch>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Allow Hints" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iqz-u7-Gdo">
+                    <rect key="frame" x="52" y="260" width="86" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

@@ -269,31 +269,41 @@ class GameBoard: NSObject, NSCopying {
     // from the prebuilt solution board, we need to remove random numbers (depending on the set difficulty)
     //
     func buildOriginBoard() {
-        var maxNumbersToClearFromBoard: [Int] = []
+        // get the no. of each number we will remove from board
+        var clearFromBoard: [Int] = []
         for _: Int in 0 ..< (self.boardColumns * self.boardRows) {
-            maxNumbersToClearFromBoard.append((self.boardColumns * self.boardRows) - self.getCellsToClear())
+            clearFromBoard.append((self.boardColumns * self.boardRows) - self.getCellsToClear())
         }
+        // setup the origin board that we're going to remove the numbers from
         self.originBoardCells.removeAll()
         self.copySolutionCellsToOriginCells()
-        for cellRowOfObj in self.originBoardCells {
-            for cellObj in cellRowOfObj {
-                // using the difficulty determine how many numbers to clear from each cell
-                var numbersToClear: Int = self.getCellsToClear()
-                while numbersToClear > 0 {
-                    let usedPosition: (usedRow: Int, usedColumn: Int) = cellObj.getRandomUsedPosition()
-                    if usedPosition.usedRow == -1 {
-                        numbersToClear = 0
-                    } else {
-                        let number: Int = cellObj.getNumberAtCellPosition(usedPosition.usedRow, column: usedPosition.usedColumn) - 1
-                        if maxNumbersToClearFromBoard[number] > 0 {
-                            cellObj.clearNumberAtCellPosition(usedPosition.usedRow, column: usedPosition.usedColumn)
-                        }
-                        numbersToClear = numbersToClear - 1
-                    }
-                }
-            }
+        // from the board build up the array of locations we're going to remove, number by number
+        var remove: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = []
+        var number: Int = 1
+        for clear: Int in clearFromBoard {
+            // get positions of the number on the board
+            let locationsSelection: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.getLocationsOfNumberOnOriginBoard(number)
+            remove.appendContentsOf(self.getLocationsToRemove(clear, locations: locationsSelection))
+            number = number + 1
+        }
+        for location in remove {
+            self.originBoardCells[location.row][location.column].clearNumberAtCellPosition(location.cellRow, column: location.cellColumn)
         }
         return
+    }
+    
+    func getLocationsToRemove(clear: Int, locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) -> [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] {
+        var numberToRemove: Int = clear
+        var chooseFrom: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = []
+        chooseFrom.appendContentsOf(locations)
+        var locationsToRemove: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = []
+        while numberToRemove > 0 {
+            let posn: Int = Int(arc4random_uniform(UInt32(chooseFrom.count)))
+            locationsToRemove.append(chooseFrom[posn])
+            chooseFrom.removeAtIndex(posn)
+            numberToRemove = numberToRemove - 1
+        }
+        return locationsToRemove
     }
     
     //
@@ -459,7 +469,7 @@ class GameBoard: NSObject, NSCopying {
         return self.boardColumns
     }
     
-    func getLocationsOfNumberOnBoard(number: Int) -> [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] {
+    func getLocationsOfNumberOnGameBoard(number: Int) -> [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] {
         var returnCoords: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = []
         for boardRow: Int in 0 ..< self.boardRows {
             for boardColumn: Int in 0 ..< self.boardColumns {
@@ -470,6 +480,41 @@ class GameBoard: NSObject, NSCopying {
             }
         }
         return(returnCoords)
+    }
+    
+    func getLocationsOfNumberOnOriginBoard(number: Int) -> [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] {
+        var returnCoords: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = []
+        for boardRow: Int in 0 ..< self.boardRows {
+            for boardColumn: Int in 0 ..< self.boardColumns {
+                let cellCoords: (cellRow: Int, cellColumn: Int) = self.originBoardCells[boardRow][boardColumn].getLocationOfNumberInCell(number)
+                if (cellCoords != (-1,-1)) {
+                    returnCoords.append((boardRow, boardColumn, cellCoords.cellRow, cellCoords.cellColumn))
+                }
+            }
+        }
+        return(returnCoords)
+    }
+    
+    func getHintAndLocation() -> (number: Int, coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
+        var returnHint: Int = 0
+        var returnCoord: (row: Int, column: Int, cellRow: Int, cellColumn: Int) = (-1, -1, -1, -1)
+        var emptyCoords: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = []
+        for boardRow: Int in 0 ..< self.boardRows {
+            for boardColumn: Int in 0 ..< self.boardColumns {
+                if self.gameBoardCells[boardRow][boardColumn].isCellCompleted() == false {
+                    let emptyCellPosns: [(cellRow: Int, cellColumn: Int)] = []
+                    // ** ROUTINE HERE IN Class Cell to return unused coords ** //
+                    for posns in emptyCellPosns {
+                        emptyCoords.append((boardRow, boardColumn, posns.cellRow, posns.cellColumn))
+                    }
+                }
+            }
+        }
+        if emptyCoords.count > 0 {
+            returnCoord = emptyCoords[Int(arc4random_uniform(UInt32(emptyCoords.count))) + 1]
+            returnHint = self.gameBoardCells[returnCoord.row][returnCoord.column].getNumberAtCellPosition(returnCoord.cellRow, column: returnCoord.cellColumn)
+        }
+        return (returnHint, returnCoord)
     }
     
     func copyWithZone(zone: NSZone) -> AnyObject {

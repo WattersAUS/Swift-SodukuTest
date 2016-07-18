@@ -41,6 +41,14 @@
                                 <nil key="highlightedColor"/>
                                 <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="q3e-J2-Upp">
+                                <rect key="frame" x="844" y="692" width="37" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="ImageHint"/>
+                                <connections>
+                                    <action selector="hintsButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iZF-3V-48K"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -58,6 +66,7 @@
     </scenes>
     <resources>
         <image name="Background 003" width="1024" height="768"/>
+        <image name="ImageHint" width="65" height="65"/>
         <image name="ImagePreferences" width="65" height="65"/>
         <image name="ImageStart" width="130" height="65"/>
     </resources>

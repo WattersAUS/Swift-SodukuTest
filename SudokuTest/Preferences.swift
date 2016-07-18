@@ -17,6 +17,7 @@ class Preferences: UIViewController {
     @IBOutlet weak var gameMode: UISegmentedControl!
     @IBOutlet weak var useSound: UISwitch!
     @IBOutlet weak var soundLevel: UISlider!
+    @IBOutlet weak var allowHints: UISwitch!
     @IBOutlet weak var useHighlight: UISwitch!
     
     override func viewDidLoad() {
@@ -28,6 +29,7 @@ class Preferences: UIViewController {
         self.useSound.on = (delegate?.soundOn)!
         self.soundLevel.enabled = self.useSound.on
         self.soundLevel.setValue((delegate?.soundLevel)!, animated: false)
+        self.allowHints.on = (delegate?.hintsOn)!
         self.useHighlight.on = (delegate?.highlightOn)!
     }
 
@@ -52,6 +54,7 @@ class Preferences: UIViewController {
         delegate?.gameModeInUse = self.gameMode.selectedSegmentIndex
         delegate?.soundOn = self.useSound.on
         delegate?.soundLevel = self.soundLevel.value
+        delegate?.hintsOn = self.allowHints.on
         delegate?.highlightOn = self.useHighlight.on
         if delegate?.characterSetInUse != self.characterSet.selectedSegmentIndex {
             delegate?.characterSetInUse = self.characterSet.selectedSegmentIndex

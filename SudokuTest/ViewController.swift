@@ -294,7 +294,7 @@ class ViewController: UIViewController {
     //
     // prefs
     //
-    var userPrefs, savePrefs: PreferencesHandler!
+    var userPrefs: PreferencesHandler!
     
     //----------------------------------------------------------------------------
     // start of the code!!!!
@@ -307,7 +307,7 @@ class ViewController: UIViewController {
         self.controlPanelImages = CellImages(rows: 5, columns: 2)
         self.userSolution = TrackSolution(row: self.boardDimensions, column: self.boardDimensions, cellRow: self.boardDimensions, cellColumn: self.boardDimensions)
         // prefs (save copy of prefs to use later, in case we need to refresh the screen etc)
-        self.userPrefs = PreferencesHandler(charSet: imageSet.Default.rawValue, difficulty: gameDiff.Easy.rawValue, mode: gameMode.Normal.rawValue, sound: true, level: 0, highlight: true, redrawFunctions: [])
+        self.userPrefs = PreferencesHandler(charSet: imageSet.Default.rawValue, difficulty: gameDiff.Easy.rawValue, mode: gameMode.Normal.rawValue, sound: true, level: 0, hints: true, highlight: true, redrawFunctions: [])
         // now setup displays
         self.setupSudokuBoardDisplay()
         self.setupControlPanelDisplay()
@@ -319,7 +319,6 @@ class ViewController: UIViewController {
         self.initialiseGameSounds()
         // can only add the function call backs here for redraws used within pref panel
         self.userPrefs.drawFunctions = [self.updateControlPanelDisplay, self.updateSudokuBoardDisplay]
-        self.savePrefs = self.userPrefs.copy() as! PreferencesHandler
         return
     }
 
@@ -423,6 +422,12 @@ class ViewController: UIViewController {
                 self.gameTimer.text = String(format: "%02d", self.timerSeconds / 60) + ":" + String(format: "%02d", self.timerSeconds % 60)
             }
         }
+        return
+    }
+    
+    func addPenaltyToGameTime(timePenalty: Int) {
+        self.totalSeconds = self.totalSeconds + timePenalty
+        self.timerSeconds = self.timerSeconds + timePenalty
         return
     }
     
@@ -1006,7 +1011,7 @@ class ViewController: UIViewController {
     
     func setSelectNumbersOnBoard(index: Int) {
         // index will give the 'number' selected from the control panel
-        let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.sudokuBoard.getLocationsOfNumberOnBoard(index + 1)
+        let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.sudokuBoard.getLocationsOfNumberOnGameBoard(index + 1)
         self.setSelectLocationsOnBoard(locations)
         return
     }
@@ -1140,11 +1145,36 @@ class ViewController: UIViewController {
     }
 
     //----------------------------------------------------------------------------
+    // captures user pressing the 'Hints' button / if it is active
+    //----------------------------------------------------------------------------
+    @IBAction func hintsButtonPressed(sender: UIButton) {
+        if self.userPrefs.hintsOn == false {
+            self.playErrorSound()
+        } else {
+            let alertController = UIAlertController(title: "Hint Options", message: "So you want to use a hint, this will add some time to your game clock. Ok?", preferredStyle: .Alert)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action:UIAlertAction!) in //action -> Void in
+                // nothing to do here, user bailed on using a hint
+            }
+            alertController.addAction(cancelAction)
+            let useHintAction = UIAlertAction(title: "Give me a hint!", style: .Default) { (action:UIAlertAction!) in
+                // code to add a hint result here
+                self.addPenaltyToGameTime(20)
+            }
+            alertController.addAction(useHintAction)
+            self.presentViewController(alertController, animated: true, completion:nil)
+        }
+        return
+    }
+    
+    func addHintToSolution() {
+        return
+    }
+    
+    //----------------------------------------------------------------------------
     // captures user pressing the 'Settings' button
     //----------------------------------------------------------------------------
     @IBAction func settingButtonPressed(sender: UIButton) {
         // first save the current preferences
-        self.savePrefs = self.userPrefs.copy() as! PreferencesHandler
         let pViewController: Preferences = Preferences()
         pViewController.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         pViewController.delegate = self.userPrefs
