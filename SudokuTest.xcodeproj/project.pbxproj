@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BF0D9BF01D3E30C300470BEF /* TimerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0D9BEF1D3E30C300470BEF /* TimerHandler.swift */; };
 		BF2BF03F1CE28DFF00DFB59D /* Ideas.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */; };
 		BF562ED61D37C2E400DB31E9 /* Notes.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BF562ED51D37C2E400DB31E9 /* Notes.rtf */; };
 		BF5F88951CE2334C00A53360 /* CellImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5F88941CE2334C00A53360 /* CellImages.swift */; };
@@ -52,6 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BF0D9BEF1D3E30C300470BEF /* TimerHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerHandler.swift; sourceTree = "<group>"; };
 		BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Ideas.rtf; sourceTree = "<group>"; };
 		BF562ED51D37C2E400DB31E9 /* Notes.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Notes.rtf; sourceTree = "<group>"; };
 		BF5F88941CE2334C00A53360 /* CellImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellImages.swift; sourceTree = "<group>"; };
@@ -110,6 +112,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BF0D9BF11D3E311700470BEF /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				BFA68E591D32B3F600BED637 /* PreferencesHandler.swift */,
+				BF0D9BEF1D3E30C300470BEF /* TimerHandler.swift */,
+			);
+			name = Protocols;
+			sourceTree = "<group>";
+		};
+		BF0D9BF21D3E314500470BEF /* Board */ = {
+			isa = PBXGroup;
+			children = (
+				BF70DE751CB00321006BB30D /* Cell.swift */,
+				BF70DE771CB01857006BB30D /* GameBoard.swift */,
+				BF5F88941CE2334C00A53360 /* CellImages.swift */,
+				BFA3DF6E1CE5333B007CBC0E /* GameBoardImages.swift */,
+			);
+			name = Board;
+			sourceTree = "<group>";
+		};
+		BF0D9BF31D3E316C00470BEF /* Support Docs */ = {
+			isa = PBXGroup;
+			children = (
+				BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */,
+				BF562ED51D37C2E400DB31E9 /* Notes.rtf */,
+			);
+			name = "Support Docs";
+			sourceTree = "<group>";
+		};
 		BF8C65481D30E48A0029B9DC /* Game Sounds */ = {
 			isa = PBXGroup;
 			children = (
@@ -147,22 +178,18 @@
 			children = (
 				BF8C65481D30E48A0029B9DC /* Game Sounds */,
 				BFADC0021C8C8CA200F48E54 /* AppDelegate.swift */,
-				BFADC0041C8C8CA200F48E54 /* ViewController.swift */,
 				BF9B3CE41D33C500003DD8A1 /* Enumeration.swift */,
 				BFA68E531D3235B900BED637 /* Preferences.swift */,
 				BFA68E541D3235B900BED637 /* Preferences.xib */,
-				BFA68E591D32B3F600BED637 /* PreferencesHandler.swift */,
+				BFADC0041C8C8CA200F48E54 /* ViewController.swift */,
 				BFADC0061C8C8CA200F48E54 /* Main.storyboard */,
 				BFADC0091C8C8CA200F48E54 /* Assets.xcassets */,
 				BFADC00B1C8C8CA200F48E54 /* LaunchScreen.storyboard */,
 				BFADC00E1C8C8CA200F48E54 /* Info.plist */,
-				BF70DE751CB00321006BB30D /* Cell.swift */,
-				BF5F88941CE2334C00A53360 /* CellImages.swift */,
-				BF70DE771CB01857006BB30D /* GameBoard.swift */,
-				BFA3DF6E1CE5333B007CBC0E /* GameBoardImages.swift */,
 				BFDE91101CBFF4BB007370D0 /* TrackSolution.swift */,
-				BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */,
-				BF562ED51D37C2E400DB31E9 /* Notes.rtf */,
+				BF0D9BF21D3E314500470BEF /* Board */,
+				BF0D9BF11D3E311700470BEF /* Protocols */,
+				BF0D9BF31D3E316C00470BEF /* Support Docs */,
 			);
 			path = SudokuTest;
 			sourceTree = "<group>";
@@ -334,6 +361,7 @@
 				BFA3DF6F1CE5333B007CBC0E /* GameBoardImages.swift in Sources */,
 				BF70DE761CB00321006BB30D /* Cell.swift in Sources */,
 				BFADC0031C8C8CA200F48E54 /* AppDelegate.swift in Sources */,
+				BF0D9BF01D3E30C300470BEF /* TimerHandler.swift in Sources */,
 				BFA68E5A1D32B3F600BED637 /* PreferencesHandler.swift in Sources */,
 				BFA68E551D3235B900BED637 /* Preferences.swift in Sources */,
 				BF70DE781CB01857006BB30D /* GameBoard.swift in Sources */,

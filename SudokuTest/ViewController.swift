@@ -278,7 +278,6 @@ class ViewController: UIViewController {
     var timer: NSTimer!
     var timerSeconds: Int!
     var totalSeconds: Int!
-    var countdownSeconds: Int!
     var timerActive: Bool!
     var timerDisplay: Bool!
     
@@ -295,6 +294,11 @@ class ViewController: UIViewController {
     // prefs
     //
     var userPrefs: PreferencesHandler!
+    
+    //
+    // set in the Hint option dialog, allow the user a one off cell uncover
+    //
+    var giveHint: Bool!
     
     //
     // time added to timer on using hint during game
@@ -324,14 +328,43 @@ class ViewController: UIViewController {
         self.totalSeconds = 0
         // load sounds
         self.initialiseGameSounds()
+        // set Hint override to off
+        self.giveHint = false
         // can only add the function call backs here for redraws used within pref panel
         self.userPrefs.drawFunctions = [self.updateControlPanelDisplay, self.updateSudokuBoardDisplay]
+        // register routine for app transiting to b/g
+        self.setupApplicationNotifications()
         return
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    //----------------------------------------------------------------------------
+    // app transition events
+    //----------------------------------------------------------------------------
+    func setupApplicationNotifications() {
+        let notificationCenter = NSNotificationCenter.defaultCenter()
+        notificationCenter.addObserver(self, selector: #selector(applicationMovingToBackground), name: UIApplicationWillResignActiveNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(applicationMovingToForeground), name: UIApplicationDidBecomeActiveNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(applicationToClose), name: UIApplicationWillTerminateNotification, object: nil)
+        return
+    }
+    
+    func applicationToClose() {
+        return
+    }
+    
+    func applicationMovingToForeground() {
+        self.startGameTimer()
+        return
+    }
+
+    func applicationMovingToBackground() {
+        self.stopGameTimer()
+        return
     }
 
     //----------------------------------------------------------------------------
@@ -867,6 +900,33 @@ class ViewController: UIViewController {
         if self.sudokuBoard.isOriginBoardCellUsed(posn) {
             return
         }
+        // if we have an acive Hint see if the board cell is clear and fill it!
+        if self.giveHint == true {
+            if self.sudokuBoard.isGameBoardCellUsed(posn) == false {
+                let number: Int = self.sudokuBoard.getNumberFromSolutionBoard(posn)
+                if self.sudokuBoard.setNumberOnGameBoard(posn, number: number) {
+                    self.userSolution.addCoordinate(posn)
+                    // do we need to make number 'inactive'?
+                    if self.sudokuBoard.isNumberFullyUsedOnGameBoard(number) == false {
+                        self.setCoordToSelectImage(posn, number: number)
+                        self.playPlacementSound()
+                    } else {
+                        self.setCoordToOriginImage(posn, number: number)
+                        self.setControlPanelToInactiveImageValue(((number - 1) / 2, column: (number - 1) % 2))
+                        self.unsetSelectNumbersOnBoard()
+                        self.controlPanelPosition = (-1, -1)
+                        self.playPlacementSound()
+                        // have we completed the game
+                        if self.sudokuBoard.isGameCompleted() {
+                            // AND OTHER STUFF NEEDS TO HAPPEN OFC!!!!!
+                            self.stopGameTimer()
+                            self.playVictorySound()
+                        }
+                    }
+                }
+            }
+            return
+        }
         // if there's no action to process from the control panel, store the board posn, highlight it and leave
         if self.controlPanelPosition.row == -1 {
             self.boardPosition = self.userSelectedBoardFirst(posn, previousPosn: self.boardPosition)
@@ -1173,25 +1233,40 @@ class ViewController: UIViewController {
     //----------------------------------------------------------------------------
     @IBAction func hintsButtonPressed(sender: UIButton) {
         var alertController: UIAlertController!
-        if self.userPrefs.hintsOn == false {
+        if self.gameBoardInPlay == false {
             self.playErrorSound()
-            alertController = UIAlertController(title: "Hint Options", message: "Hints have been turned off! You can turn them back on in the prefs panel.", preferredStyle: .Alert)
+            alertController = UIAlertController(title: "Hint Options", message: "Hints are only useful when you have a game in progress!", preferredStyle: .Alert)
             let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action:UIAlertAction!) in //action -> Void in
                 // nothing to do here, user bailed on using a hint
             }
             alertController.addAction(cancelAction)
         } else {
-            alertController = UIAlertController(title: "Hint Options", message: "So you want to use a hint, this will add some time to your game clock. Ok?", preferredStyle: .Alert)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action:UIAlertAction!) in //action -> Void in
-                // nothing to do here, user bailed on using a hint
-            }
-            alertController.addAction(cancelAction)
-            let useHintAction = UIAlertAction(title: "Give me a hint!", style: .Default) { (action:UIAlertAction!) in
-                if self.addHintToBoard() {
-                    self.addPenaltyToGameTime()
+            if self.userPrefs.hintsOn == false {
+                self.playErrorSound()
+                alertController = UIAlertController(title: "Hint Options", message: "Hints have been turned off! You can turn them back on in the prefs panel.", preferredStyle: .Alert)
+                let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action:UIAlertAction!) in //action -> Void in
+                    // nothing to do here, user bailed on using a hint
                 }
+                alertController.addAction(cancelAction)
+            } else {
+                alertController = UIAlertController(title: "Hint Options", message: "So you want to use a hint, this will add some time to your game clock. Ok?", preferredStyle: .Alert)
+                let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action:UIAlertAction!) in //action -> Void in
+                    // nothing to do here, user bailed on using a hint
+                }
+                alertController.addAction(cancelAction)
+                let useHintAction = UIAlertAction(title: "Give me a hint!", style: .Default) { (action:UIAlertAction!) in
+                    if self.addHintToBoard() {
+                        self.addPenaltyToGameTime()
+                    }
+                }
+                alertController.addAction(useHintAction)
+                let userSelectAction = UIAlertAction(title: "Let me select a cell to uncover!", style: .Default) { (action:UIAlertAction!) in
+                    self.giveHint = true
+                    self.boardPosition = (-1, -1, -1, -1)
+                    self.controlPanelPosition = (-1, -1)
+                }
+                alertController.addAction(userSelectAction)
             }
-            alertController.addAction(useHintAction)
         }
         self.presentViewController(alertController, animated: true, completion:nil)
         return
@@ -1216,6 +1291,7 @@ class ViewController: UIViewController {
         if optionsToRemove.count == 0 {
             return false
         }
+        // choose a random hint
         let posnToRemove: Int = Int(arc4random_uniform(UInt32(optionsToRemove.count)))
         let number: Int = self.sudokuBoard.getNumberFromSolutionBoard(optionsToRemove[posnToRemove])
         if self.sudokuBoard.setNumberOnGameBoard(optionsToRemove[posnToRemove], number: number) {
@@ -1239,14 +1315,6 @@ class ViewController: UIViewController {
             }
         }
         return true
-    }
-    
-    func getHintFromSelectedNumber() -> (row: Int, column: Int, cellRow: Int, cellColumn: Int) {
-        return (-1,-1,-1,-1)
-    }
-
-    func addHintFromRandomNumber()  -> (row: Int, column: Int, cellRow: Int, cellColumn: Int) {
-        return (-1,-1,-1,-1)
     }
     
     //----------------------------------------------------------------------------
