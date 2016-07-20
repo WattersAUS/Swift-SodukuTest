@@ -924,6 +924,7 @@ class ViewController: UIViewController {
                         }
                     }
                 }
+                self.giveHint = false
             }
             return
         }
