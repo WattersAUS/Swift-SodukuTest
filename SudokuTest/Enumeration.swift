@@ -25,7 +25,7 @@ enum imgStates: Int {
 enum imageSet: Int {
     case Default = 0
     case Greek = 1
-    case Images = 2
+    case Alpha = 2
 }
 
 //

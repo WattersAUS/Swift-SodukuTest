@@ -22,7 +22,21 @@ class Preferences: UIViewController {
         super.viewDidLoad()
         // get the current state of the prefs
         self.characterSet.selectedSegmentIndex = (delegate?.characterSetInUse)!
-        self.setDifficulty.selectedSegmentIndex = (delegate?.difficultySet)!
+        // remember the difficulty is offset from '3'
+        switch (delegate?.difficultySet)! {
+            case 7:
+                self.setDifficulty.selectedSegmentIndex = 2
+                break
+            case 5:
+                self.setDifficulty.selectedSegmentIndex = 1
+                break
+            case 3:
+                self.setDifficulty.selectedSegmentIndex = 0
+                break
+            default:
+                self.setDifficulty.selectedSegmentIndex = 0
+                break
+        }
         self.gameMode.selectedSegmentIndex = (delegate?.gameModeInUse)!
         self.useSound.on = (delegate?.soundOn)!
         self.allowHints.on = (delegate?.hintsOn)!
@@ -45,7 +59,22 @@ class Preferences: UIViewController {
     
     @IBAction func dismissDialog(sender: UIButton) {
         // now go call the function to redraw the board in the background if needed
-        delegate?.difficultySet = self.setDifficulty.selectedSegmentIndex
+        // remember the difficulty is offset from '3'
+        switch (self.setDifficulty.selectedSegmentIndex) {
+        case 2:
+            delegate?.difficultySet = 7
+            break
+        case 1:
+            delegate?.difficultySet = 5
+            break
+        case 0:
+            delegate?.difficultySet = 3
+            break
+        default:
+            delegate?.difficultySet = 3
+            break
+        }
+        delegate?.difficultySet = self.setDifficulty.selectedSegmentIndex + gameDiff.Easy.rawValue
         delegate?.gameModeInUse = self.gameMode.selectedSegmentIndex
         delegate?.soundOn = self.useSound.on
         delegate?.hintsOn = self.allowHints.on
@@ -54,6 +83,9 @@ class Preferences: UIViewController {
             for redrawFunction: (Void) -> () in (delegate?.drawFunctions)! {
                 redrawFunction()
             }
+        }
+        for saveFunction: (Void) -> () in (delegate?.saveFunctions)! {
+            saveFunction()
         }
         self.dismissViewControllerAnimated(true, completion: nil)
     }

@@ -7,7 +7,11 @@
 \f0\b\fs24 \cf0 To be Committed:
 \b0 \
 \
-\
+1. Added new func userCompletesGame() to finish off the game state when user successfully finishes puzzle\
+2. Change Class PreferencesHandler init(charSet: Int, difficulty: Int, mode: Int, sound: Bool, hints: Bool, redrawFunctions: [(Void) -> ()])  to init(redrawFunctions: [(Void) -> ()])\
+	- as defaults now loaded from NSUserDdefaults and not from the init of the class instance\
+3. Change imageSet value 3 = Alpha in Enumeration.swift\
+4. Add new member 'var saveFunctions: [(Void) -> ()] \{ get set \}' to class PreferencesHandler to allow save of prefs (and possibly board)\
 \
 
 \b In progress:

@@ -17,6 +17,7 @@ protocol PreferencesDelegate: class {
     var hintsOn: Bool { get set }
     // if we swap the char set redraw the board
     var drawFunctions: [(Void) -> ()] { get set }
+    var saveFunctions: [(Void) -> ()] { get set }
 
 // game stats
 //    var gamesStarted: Int { get }
@@ -36,27 +37,52 @@ protocol PreferencesDelegate: class {
 }
 
 class PreferencesHandler: NSObject, PreferencesDelegate {
-    var characterSetInUse: Int
-    var difficultySet: Int
-    var gameModeInUse: Int
-    var soundOn: Bool
-    var hintsOn: Bool
-    
+    var characterSetInUse: Int = 0
+    var difficultySet: Int = 0
+    var gameModeInUse: Int = 0
+    var soundOn: Bool = true
+    var hintsOn: Bool = false
     var drawFunctions: [(Void) -> ()] = []
+    var saveFunctions: [(Void) -> ()] = []
+    
+    let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
 
     //init(charSet: Int, difficulty: Int, mode: Int, sound: Bool, hints: Bool, redrawFunctions: [(Void) -> ()]) {
     init(redrawFunctions: [(Void) -> ()]) {
-        let userDefaults = NSUserDefaults.standardUserDefaults()
-        self.characterSetInUse = userDefaults.integerForKey("charset") ?? 0
-        self.difficultySet = userDefaults.integerForKey("difficulty") ?? 5
-        self.gameModeInUse = userDefaults.integerForKey("gamemode") ?? 0
-        self.soundOn = userDefaults.boolForKey("sound") ?? true
-        self.hintsOn = userDefaults.boolForKey("hint") ?? false
+        super.init()
+        //let self.userDefaults = NSUserDefaults.standardUserDefaults()
+        // get the difficulty first, if we get 0 then the prefs have never been saved. so save them
+        self.difficultySet = self.userDefaults.integerForKey("difficulty")
+        if self.difficultySet != 0 {
+            self.characterSetInUse = self.userDefaults.integerForKey("charset")
+            self.gameModeInUse = self.userDefaults.integerForKey("gamemode")
+            self.soundOn = self.userDefaults.boolForKey("sound")
+            self.hintsOn = self.userDefaults.boolForKey("hint")
+        } else {
+            self.characterSetInUse = imageSet.Default.rawValue
+            self.difficultySet = gameDiff.Medium.rawValue
+            self.gameModeInUse = gameMode.Normal.rawValue
+            self.soundOn = true
+            self.hintsOn = false
+            // store for the first time
+            self.savePreferences()
+        }
         for functionName: (Void) -> () in redrawFunctions {
             self.drawFunctions.append(functionName)
         }
+        self.saveFunctions = [ self.savePreferences ]
         return
     }
+
+    func savePreferences() -> (Void) {
+        self.userDefaults.setInteger(self.characterSetInUse, forKey: "charset")
+        self.userDefaults.setInteger(self.difficultySet, forKey: "difficulty")
+        self.userDefaults.setInteger(self.gameModeInUse, forKey: "gamemode")
+        self.userDefaults.setBool(self.soundOn, forKey: "sound")
+        self.userDefaults.setBool(self.hintsOn, forKey: "hint")
+        return
+    }
+    
 }
 
 

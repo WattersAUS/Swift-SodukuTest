@@ -363,7 +363,9 @@ class ViewController: UIViewController {
     }
     
     func applicationMovingToForeground() {
-        self.startGameTimer()
+        if self.gameBoardInPlay {
+            self.startGameTimer()
+        }
         return
     }
 
@@ -785,9 +787,7 @@ class ViewController: UIViewController {
                 if self.sudokuBoard.isNumberFullyUsedOnGameBoard(index + 1) == true {
                     self.setControlPanelToInactiveImageValue((index / 2, column: index % 2))
                     if self.sudokuBoard.isGameCompleted() {
-                        // AND OTHER STUFF NEEDS TO HAPPEN OFC!!!!!
-                        self.stopGameTimer()
-                        self.playVictorySound()
+                        self.userCompletesGame()
                     }
                     return (-1, -1)
                 }
@@ -921,9 +921,7 @@ class ViewController: UIViewController {
                         self.playPlacementSound()
                         // have we completed the game
                         if self.sudokuBoard.isGameCompleted() {
-                            // AND OTHER STUFF NEEDS TO HAPPEN OFC!!!!!
-                            self.stopGameTimer()
-                            self.playVictorySound()
+                            self.userCompletesGame()
                         }
                     }
                 }
@@ -965,9 +963,7 @@ class ViewController: UIViewController {
                     self.playPlacementSound()
                     // have we completed the game
                     if self.sudokuBoard.isGameCompleted() {
-                        // AND OTHER STUFF NEEDS TO HAPPEN OFC!!!!!
-                        self.stopGameTimer()
-                        self.playVictorySound()
+                        self.userCompletesGame()
                     }
                 }
             }
@@ -1312,13 +1308,22 @@ class ViewController: UIViewController {
                 self.playPlacementSound()
                 // have we completed the game
                 if self.sudokuBoard.isGameCompleted() {
-                    // AND OTHER STUFF NEEDS TO HAPPEN OFC!!!!!
-                    self.stopGameTimer()
-                    self.playVictorySound()
+                    self.userCompletesGame()
                 }
             }
         }
         return true
+    }
+    
+    //----------------------------------------------------------------------------
+    // things to do when the user completes the game
+    //----------------------------------------------------------------------------
+    func userCompletesGame() {
+        // AND OTHER STUFF NEEDS TO HAPPEN OFC!!!!!
+        self.stopGameTimer()
+        self.playVictorySound()
+        self.gameBoardInPlay = false
+        return
     }
     
     //----------------------------------------------------------------------------
