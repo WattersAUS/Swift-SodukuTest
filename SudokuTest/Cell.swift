@@ -15,7 +15,7 @@ class Cell: NSObject, NSCopying {
     private var cellColumns: Int = 0
     private var cellRows: Int = 0
     
-    private var numbersUsed: [Int] = []
+    private var numbersUsed: [Bool] = []
     private var cellCompleted: Bool = false
 
     init (size: Int = 3) {
@@ -36,7 +36,7 @@ class Cell: NSObject, NSCopying {
             self.cellNumbers.append(rowOfNumbers)
         }
         for _: Int in 0 ..< (self.cellRows * self.cellColumns) {
-            self.numbersUsed.append(0)
+            self.numbersUsed.append(false)
         }
         return
     }
@@ -46,13 +46,13 @@ class Cell: NSObject, NSCopying {
     //
     private func resetCellUsage() {
         for index: Int in 0 ..< self.numbersUsed.count {
-            self.numbersUsed[index] = 0
+            self.numbersUsed[index] = false
         }
         return
     }
     
-    private func getNumbersArray() -> [Int] {
-        var values: [Int] = []
+    private func getNumbersArray() -> [Bool] {
+        var values: [Bool] = []
         for index: Int in 0 ..< self.numbersUsed.count {
             values.append(self.numbersUsed[index])
         }
@@ -63,7 +63,7 @@ class Cell: NSObject, NSCopying {
         if numberUsed < 1 || numberUsed > self.numbersUsed.count {
             return 0
         }
-        self.numbersUsed[numberUsed - 1] = 1
+        self.numbersUsed[numberUsed - 1] = true
         return numberUsed
     }
     
@@ -71,14 +71,14 @@ class Cell: NSObject, NSCopying {
         if numberUsed < 1 || numberUsed > self.numbersUsed.count {
             return
         }
-        self.numbersUsed[numberUsed - 1] = 0
+        self.numbersUsed[numberUsed - 1] = false
         return
     }
 
     private func checkForCellCompleted() -> Bool {
         var completed = true
         for index: Int in 0 ..< self.numbersUsed.count {
-            if self.numbersUsed[index] == 0 {
+            if self.numbersUsed[index] == false {
                 completed = false
             }
         }
@@ -105,7 +105,7 @@ class Cell: NSObject, NSCopying {
     // public functions - number level operations
     //
     func clearNumberAtCellPosition(row: Int, column: Int) {
-        if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns {
+        guard (0..<self.cellRows) ~= row && (0..<self.cellColumns) ~= column else {
             return
         }
         self.setNumberAsUnUsed(self.cellNumbers[row][column])
@@ -115,17 +115,14 @@ class Cell: NSObject, NSCopying {
     }
 
     func getNumberAtCellPosition(row: Int, column: Int) -> Int {
-        if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns {
+        guard (0..<self.cellRows) ~= row && (0..<self.cellColumns) ~= column else {
             return 0
         }
         return self.cellNumbers[row][column]
     }
     
     func setNumberAtCellPosition(row: Int, column: Int, number: Int) -> Bool {
-        if row < 0 || row >= self.cellRows || column < 0 || column >= self.cellColumns || number < 1 || number > self.numbersUsed.count {
-            return false
-        }
-        if self.cellNumbers[row][column] > 0 {
+        guard (0..<self.cellRows) ~= row && (0..<self.cellColumns) ~= column && (1..<(self.numbersUsed.count + 1)) ~= number && self.cellNumbers[row][column] == 0 else {
             return false
         }
         self.cellNumbers[row][column] = number
@@ -137,10 +134,10 @@ class Cell: NSObject, NSCopying {
     // public functions - row/column level operations
     //
     func getValuesFromRow(row: Int) -> [Int] {
-        var values: [Int] = []
-        if row < 0 || row >= self.cellRows {
-            return values
+        guard (0..<self.cellRows) ~= row else {
+            return []
         }
+        var values: [Int] = []
         for column: Int in 0 ..< self.cellColumns {
             values.append(self.cellNumbers[row][column])
         }
@@ -148,10 +145,10 @@ class Cell: NSObject, NSCopying {
     }
     
     func getValuesFromColumn(column: Int) -> [Int] {
-        var values: [Int] = []
-        if column < 0 || column >= self.cellColumns {
-            return values
+        guard (0..<self.cellColumns) ~= column else {
+            return []
         }
+        var values: [Int] = []
         for row: Int in 0 ..< self.cellRows {
             values.append(self.cellNumbers[row][column])
         }
@@ -159,10 +156,7 @@ class Cell: NSObject, NSCopying {
     }
     
     func isNumberUsedInRow(number: Int, row: Int) -> Bool {
-        if row < 0 || row >= self.cellRows {
-            return false
-        }
-        if numbersUsed[number - 1] == 0 {
+        guard (0..<self.cellRows) ~= row && (1..<(self.numbersUsed.count + 1)) ~= number && numbersUsed[number - 1] else {
             return false
         }
         for column: Int in 0 ..< self.cellColumns {
@@ -174,10 +168,7 @@ class Cell: NSObject, NSCopying {
     }
     
     func isNumberUsedInColumn(number: Int, column: Int) -> Bool {
-        if column < 0 || column >= self.cellColumns {
-            return false
-        }
-        if numbersUsed[number - 1] == 0 {
+        guard (0..<self.cellColumns) ~= column && (1..<(self.numbersUsed.count + 1)) ~= number && numbersUsed[number - 1] else {
             return false
         }
         for row: Int in 0 ..< self.cellRows {
@@ -201,17 +192,14 @@ class Cell: NSObject, NSCopying {
     }
     
     func isNumberUsedInCell(number: Int) -> Bool {
-        if numbersUsed[number - 1] == 1 {
-            return true
+        guard (1..<(self.numbersUsed.count + 1)) ~= number else {
+            return false
         }
-        return false
+        return numbersUsed[number - 1]
     }
     
     func getLocationOfNumberInCell(number: Int) -> (Int, Int) {
-        if number < 1 || number > self.numbersUsed.count {
-            return (-1, -1)
-        }
-        if self.isNumberUsedInCell(number) == false {
+        guard (1..<(self.numbersUsed.count + 1)) ~= number && numbersUsed[number - 1] else {
             return (-1, -1)
         }
         for row: Int in 0 ..< self.cellRows {
@@ -228,10 +216,10 @@ class Cell: NSObject, NSCopying {
     // public functions - random driven operations
     //
     func getRandomFreeNumber() -> Int {
-        let numberUsage: [Int] = self.getNumbersArray()
+        let numberUsage: [Bool] = self.getNumbersArray()
         var numbersToUse: [Int] = []
         for index: Int in 0 ..< numberUsage.count {
-            if numberUsage[index] == 0 {
+            if numberUsage[index] == false {
                 numbersToUse.append(index + 1)
             }
         }
@@ -239,7 +227,7 @@ class Cell: NSObject, NSCopying {
     }
     
     func getRandomFreePosition() -> (unUsedRow: Int, unUsedColumn: Int) {
-        if self.cellCompleted == true {
+        guard self.cellCompleted == false else {
             return (-1, -1)
         }
         var row: Int = Int(arc4random_uniform(UInt32(self.cellRows)))
@@ -258,7 +246,7 @@ class Cell: NSObject, NSCopying {
                 used = 1
             }
         }
-        if used == 0 {
+        guard used == 1 else {
             return(-1 , -1)
         }
         var index: Int = Int(arc4random_uniform(UInt32(self.cellCoordinates.count)))

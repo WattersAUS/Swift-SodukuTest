@@ -56,7 +56,9 @@ class SudokuTestCellTests: XCTestCase {
         // test for setting to an row/column illegal position
         XCTAssertEqual(testCell.setNumberAtCellPosition(3, column: 0, number: 5), false, "Allowed to update outside of bounds of array")
         XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 3, number: 5), false, "Allowed to update outside of bounds of array")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(5, column: 5, number: 5), false, "Allowed to update outside of bounds of array")
         XCTAssertEqual(testCell.setNumberAtCellPosition(0, column: 0, number: 10), false, "Update value beyond allowed maximum")
+        XCTAssertEqual(testCell.setNumberAtCellPosition(5, column: 5, number: -1), false, "Allowed to update outside of bounds of array with out of bounds value")
         // row 0
         // coord 0,0
         XCTAssertEqual(testCell.getNumberAtCellPosition(0, column: 0), 0, "Incorrect Cell value reported")
@@ -105,6 +107,15 @@ class SudokuTestCellTests: XCTestCase {
         // reset and complete the cell
         XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 1, number: 3), true, "Incorrect Cell complete value reported")
         XCTAssertEqual(testCell.isCellCompleted(), true, "Incorrect Cell complete value reported")
+        // try to overwrite a used position in the cell
+        XCTAssertEqual(testCell.setNumberAtCellPosition(1, column: 1, number: 3), false, "Overwritten a cell value")
+        // try to get a number from outside the cell
+        XCTAssertEqual(testCell.getNumberAtCellPosition(-1, column: 2), 0, "Incorrect Cell value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(1, column: -1), 0, "Incorrect Cell value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(-1, column: -1), 0, "Incorrect Cell value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(1, column: 3), 0, "Incorrect Cell value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(3, column: 1), 0, "Incorrect Cell value reported")
+        XCTAssertEqual(testCell.getNumberAtCellPosition(3, column: 3), 0, "Incorrect Cell value reported")
     }
     
     func testCellClearWorksAsExpected() {
@@ -150,6 +161,9 @@ class SudokuTestCellTests: XCTestCase {
         // test row limits work
         XCTAssertEqual(testCell.isNumberUsedInRow(5, row: -1), false, "Not detected incorrect row")
         XCTAssertEqual(testCell.isNumberUsedInRow(5, row: 3), false, "Not detected incorrect row")
+        // test number limits work
+        XCTAssertEqual(testCell.isNumberUsedInRow(-1, row: 0), false, "Row limit exceeded")
+        XCTAssertEqual(testCell.isNumberUsedInRow(10, row: 0), false, "Row limit exceeded")
     }
     
     func testCellNumberUsedInColumn() {
@@ -409,6 +423,9 @@ class SudokuTestCellTests: XCTestCase {
         location = testCell.getLocationOfNumberInCell(6)
         XCTAssertEqual(location == (-1, -1), true, "Incorrect Coordinate reported")
         location = testCell.getLocationOfNumberInCell(7)
+        XCTAssertEqual(location == (-1, -1), true, "Incorrect Coordinate reported")
+        // out of range values
+        location = testCell.getLocationOfNumberInCell(10)
         XCTAssertEqual(location == (-1, -1), true, "Incorrect Coordinate reported")
     }
     

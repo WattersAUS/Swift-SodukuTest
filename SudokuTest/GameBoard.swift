@@ -149,26 +149,32 @@ class GameBoard: NSObject, NSCopying {
     }
     
     private func clearSolutionBoard() {
-        for index: Int in 0 ..< self.boardCoordinates.count {
-            self.solutionBoardCells[self.boardCoordinates[index].row][self.boardCoordinates[index].column].clearCell()
+        for cellRow: [Cell] in self.solutionBoardCells {
+            for cellColumn: Cell in cellRow {
+                cellColumn.clearCell()
+            }
         }
         return
     }
     
     private func clearGameBoard() {
-        for index: Int in 0 ..< self.boardCoordinates.count {
-            self.gameBoardCells[self.boardCoordinates[index].row][self.boardCoordinates[index].column].clearCell()
+        for cellRow: [Cell] in self.gameBoardCells {
+            for cellColumn: Cell in cellRow {
+                cellColumn.clearCell()
+            }
         }
         return
     }
     
     private func clearOriginBoard() {
-        for index: Int in 0 ..< self.boardCoordinates.count {
-            self.solutionBoardCells[self.boardCoordinates[index].row][self.boardCoordinates[index].column].clearCell()
+        for cellRow: [Cell] in self.originBoardCells {
+            for cellColumn: Cell in cellRow {
+                cellColumn.clearCell()
+            }
         }
         return
     }
-    
+
     //
     // public functions - remap game difficulty to useful internal value
     //

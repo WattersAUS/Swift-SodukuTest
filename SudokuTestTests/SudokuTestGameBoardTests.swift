@@ -55,7 +55,7 @@ class SudokuTestGameBoardTests: XCTestCase {
         var testBoard: GameBoard!
         testBoard = GameBoard(size: 3)
         // and board should be set to incomplete
-        XCTAssertNotEqual(testBoard.isBoardCompleted(), true, "Incorrect initial Cell state reported")
+        XCTAssertNotEqual(testBoard.isSolutionCompleted(), true, "Incorrect initial Cell state reported")
     }
     
     func testGameBoardInitialisedToZero() {

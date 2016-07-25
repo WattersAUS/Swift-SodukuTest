@@ -11,6 +11,7 @@
 		BF2BF03F1CE28DFF00DFB59D /* Ideas.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */; };
 		BF562ED61D37C2E400DB31E9 /* Notes.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BF562ED51D37C2E400DB31E9 /* Notes.rtf */; };
 		BF5F88951CE2334C00A53360 /* CellImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5F88941CE2334C00A53360 /* CellImages.swift */; };
+		BF6124831D426EA600F7E59D /* chalkboardsudoku.json in Resources */ = {isa = PBXBuildFile; fileRef = BF6124821D426EA600F7E59D /* chalkboardsudoku.json */; };
 		BF70DE761CB00321006BB30D /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF70DE751CB00321006BB30D /* Cell.swift */; };
 		BF70DE781CB01857006BB30D /* GameBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF70DE771CB01857006BB30D /* GameBoard.swift */; };
 		BF91663A1D3BE8C900C444BE /* Triumph_001.aiff in Resources */ = {isa = PBXBuildFile; fileRef = BF9166391D3BE8C900C444BE /* Triumph_001.aiff */; };
@@ -57,6 +58,7 @@
 		BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Ideas.rtf; sourceTree = "<group>"; };
 		BF562ED51D37C2E400DB31E9 /* Notes.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Notes.rtf; sourceTree = "<group>"; };
 		BF5F88941CE2334C00A53360 /* CellImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellImages.swift; sourceTree = "<group>"; };
+		BF6124821D426EA600F7E59D /* chalkboardsudoku.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = chalkboardsudoku.json; sourceTree = "<group>"; };
 		BF70DE751CB00321006BB30D /* Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		BF70DE771CB01857006BB30D /* GameBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoard.swift; sourceTree = "<group>"; };
 		BF9166391D3BE8C900C444BE /* Triumph_001.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Triumph_001.aiff; sourceTree = "<group>"; };
@@ -141,6 +143,14 @@
 			name = "Support Docs";
 			sourceTree = "<group>";
 		};
+		BF6124811D426BE000F7E59D /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				BF6124821D426EA600F7E59D /* chalkboardsudoku.json */,
+			);
+			name = Config;
+			sourceTree = "<group>";
+		};
 		BF8C65481D30E48A0029B9DC /* Game Sounds */ = {
 			isa = PBXGroup;
 			children = (
@@ -176,6 +186,7 @@
 		BFADC0011C8C8CA200F48E54 /* SudokuTest */ = {
 			isa = PBXGroup;
 			children = (
+				BF6124811D426BE000F7E59D /* Config */,
 				BF8C65481D30E48A0029B9DC /* Game Sounds */,
 				BFADC0021C8C8CA200F48E54 /* AppDelegate.swift */,
 				BF9B3CE41D33C500003DD8A1 /* Enumeration.swift */,
@@ -326,6 +337,7 @@
 				BF562ED61D37C2E400DB31E9 /* Notes.rtf in Resources */,
 				BFADC00A1C8C8CA200F48E54 /* Assets.xcassets in Resources */,
 				BFADC0081C8C8CA200F48E54 /* Main.storyboard in Resources */,
+				BF6124831D426EA600F7E59D /* chalkboardsudoku.json in Resources */,
 				BF91663A1D3BE8C900C444BE /* Triumph_001.aiff in Resources */,
 				BFD921691D30E86F004E699B /* Chalk_002.aiff in Resources */,
 				BFA68E561D3235B900BED637 /* Preferences.xib in Resources */,

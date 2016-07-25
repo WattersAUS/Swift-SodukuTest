@@ -1324,9 +1324,15 @@ class ViewController: UIViewController {
     @IBAction func settingButtonPressed(sender: UIButton) {
         // first save the current preferences
         let pViewController: Preferences = Preferences()
+//        pViewController.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+//        pViewController.delegate = self.userPrefs
+//        self.presentViewController(pViewController, animated: true, completion: nil)
         pViewController.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+        pViewController.modalPresentationStyle = UIModalPresentationStyle.Popover
         pViewController.delegate = self.userPrefs
         self.presentViewController(pViewController, animated: true, completion: nil)
+        let popoverController = pViewController.popoverPresentationController
+        popoverController?.sourceView = sender
         return
     }
 
