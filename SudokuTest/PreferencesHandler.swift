@@ -14,9 +14,7 @@ protocol PreferencesDelegate: class {
     var difficultySet: Int { get set }
     var gameModeInUse: Int { get set }
     var soundOn: Bool { get set }
-    var soundLevel: Float { get set}
     var hintsOn: Bool { get set }
-    var highlightOn: Bool { get set }
     // if we swap the char set redraw the board
     var drawFunctions: [(Void) -> ()] { get set }
 
@@ -37,37 +35,27 @@ protocol PreferencesDelegate: class {
 //    func setHighlight(highlightOn: Bool)
 }
 
-class PreferencesHandler: NSObject, NSCopying, PreferencesDelegate {
+class PreferencesHandler: NSObject, PreferencesDelegate {
     var characterSetInUse: Int
     var difficultySet: Int
     var gameModeInUse: Int
     var soundOn: Bool
-    var soundLevel: Float
     var hintsOn: Bool
-    var highlightOn : Bool
     
     var drawFunctions: [(Void) -> ()] = []
 
-    init(charSet: Int, difficulty: Int, mode: Int, sound: Bool, level: Float, hints: Bool, highlight: Bool, redrawFunctions: [(Void) -> ()]) {
-        self.characterSetInUse = charSet
-        self.difficultySet = difficulty
-        self.gameModeInUse = 0
-        self.soundOn = sound
-        self.soundLevel = level
-        self.hintsOn = hints
-        self.highlightOn = highlight
+    //init(charSet: Int, difficulty: Int, mode: Int, sound: Bool, hints: Bool, redrawFunctions: [(Void) -> ()]) {
+    init(redrawFunctions: [(Void) -> ()]) {
+        let userDefaults = NSUserDefaults.standardUserDefaults()
+        self.characterSetInUse = userDefaults.integerForKey("charset") ?? 0
+        self.difficultySet = userDefaults.integerForKey("difficulty") ?? 5
+        self.gameModeInUse = userDefaults.integerForKey("gamemode") ?? 0
+        self.soundOn = userDefaults.boolForKey("sound") ?? true
+        self.hintsOn = userDefaults.boolForKey("hint") ?? false
         for functionName: (Void) -> () in redrawFunctions {
             self.drawFunctions.append(functionName)
         }
         return
-    }
-    
-    //
-    // copy object operation
-    //
-    func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = PreferencesHandler(charSet: self.characterSetInUse, difficulty: self.difficultySet, mode: self.gameModeInUse, sound: self.soundOn, level: self.soundLevel, hints: self.hintsOn, highlight: self.highlightOn, redrawFunctions: self.drawFunctions)
-        return copy
     }
 }
 

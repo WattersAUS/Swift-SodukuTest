@@ -317,15 +317,20 @@ class ViewController: UIViewController {
         self.displayBoard = GameBoardImages(size: self.boardDimensions)
         self.controlPanelImages = CellImages(rows: 5, columns: 2)
         self.userSolution = TrackSolution(row: self.boardDimensions, column: self.boardDimensions, cellRow: self.boardDimensions, cellColumn: self.boardDimensions)
-        // prefs (save copy of prefs to use later, in case we need to refresh the screen etc)
-        self.userPrefs = PreferencesHandler(charSet: imageSet.Default.rawValue, difficulty: gameDiff.Easy.rawValue, mode: gameMode.Normal.rawValue, sound: true, level: 0, hints: true, highlight: true, redrawFunctions: [])
+        // load prefs
+        self.userPrefs = PreferencesHandler(redrawFunctions: [])
         // now setup displays
         self.setupSudokuBoardDisplay()
         self.setupControlPanelDisplay()
         // set time to start
         self.initialiseGameTimer()
+        self.stopGameTimer()
+
         //** NEEDS TO BE LOADED FROM CORE DATA**//
         self.totalSeconds = 0
+        self.timerSeconds = 0
+        //** NEEDS TO BE LOADED FROM CORE DATA**//
+
         // load sounds
         self.initialiseGameSounds()
         // set Hint override to off
@@ -431,8 +436,6 @@ class ViewController: UIViewController {
     func initialiseGameTimer() {
         self.timer = NSTimer()
         self.timer = NSTimer.scheduledTimerWithTimeInterval(1, target:self, selector: #selector(ViewController.updateGameTime), userInfo: nil, repeats: true)
-        self.stopGameTimer()
-        self.resetGameTimer()
         return
     }
     
@@ -1324,10 +1327,6 @@ class ViewController: UIViewController {
     @IBAction func settingButtonPressed(sender: UIButton) {
         // first save the current preferences
         let pViewController: Preferences = Preferences()
-//        pViewController.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-//        pViewController.delegate = self.userPrefs
-//        self.presentViewController(pViewController, animated: true, completion: nil)
-        pViewController.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         pViewController.modalPresentationStyle = UIModalPresentationStyle.Popover
         pViewController.delegate = self.userPrefs
         self.presentViewController(pViewController, animated: true, completion: nil)

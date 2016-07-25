@@ -1,12 +1,6 @@
 {
 	"chalkboardsudoku": {
 		"appid": "GJW001",
-		"charset": 0,
-		"difficulty": 5,
-		"mode": 0,
-		"sound": 1,
-		"hints": 1,
-		"highlight": 1,
 		"fastestgametime": 0,
 		"totalgames": 0,
 		"totalfinished": 0,

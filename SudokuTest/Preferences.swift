@@ -17,7 +17,6 @@ class Preferences: UIViewController {
     @IBOutlet weak var gameMode: UISegmentedControl!
     @IBOutlet weak var useSound: UISwitch!
     @IBOutlet weak var allowHints: UISwitch!
-    @IBOutlet weak var useHighlight: UISwitch!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +26,6 @@ class Preferences: UIViewController {
         self.gameMode.selectedSegmentIndex = (delegate?.gameModeInUse)!
         self.useSound.on = (delegate?.soundOn)!
         self.allowHints.on = (delegate?.hintsOn)!
-        self.useHighlight.on = (delegate?.highlightOn)!
     }
 
     override func didReceiveMemoryWarning() {
@@ -51,7 +49,6 @@ class Preferences: UIViewController {
         delegate?.gameModeInUse = self.gameMode.selectedSegmentIndex
         delegate?.soundOn = self.useSound.on
         delegate?.hintsOn = self.allowHints.on
-        delegate?.highlightOn = self.useHighlight.on
         if delegate?.characterSetInUse != self.characterSet.selectedSegmentIndex {
             delegate?.characterSetInUse = self.characterSet.selectedSegmentIndex
             for redrawFunction: (Void) -> () in (delegate?.drawFunctions)! {
