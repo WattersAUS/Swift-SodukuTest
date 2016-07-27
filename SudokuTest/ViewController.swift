@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     
     var debug: Int = 1
     var boardDimensions: Int = 3
-    var gameDifficulty: Int = gameDiff.Easy.rawValue
+    //var gameDifficulty: Int = gameDiff.Medium.rawValue
     
     //
     // enum for subviews
@@ -313,16 +313,15 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.sudokuBoard = GameBoard(size: self.boardDimensions, setDifficulty: self.gameDifficulty)
+        self.userPrefs = PreferencesHandler(redrawFunctions: [])
+        self.sudokuBoard = GameBoard(size: self.boardDimensions, setDifficulty: self.userPrefs.difficultySet)
         self.displayBoard = GameBoardImages(size: self.boardDimensions)
         self.controlPanelImages = CellImages(rows: 5, columns: 2)
         self.userSolution = TrackSolution(row: self.boardDimensions, column: self.boardDimensions, cellRow: self.boardDimensions, cellColumn: self.boardDimensions)
-        // load prefs
-        self.userPrefs = PreferencesHandler(redrawFunctions: [])
         // now setup displays
         self.setupSudokuBoardDisplay()
         self.setupControlPanelDisplay()
-        // set time to start
+        // setup the timer but dont let game time start yet
         self.initialiseGameTimer()
         self.stopGameTimer()
 
@@ -335,7 +334,7 @@ class ViewController: UIViewController {
         self.initialiseGameSounds()
         // set Hint override to off
         self.giveHint = false
-        // can only add the function call backs here for redraws used within pref panel
+        // add the function call backs for redraws used exiting pref panel
         self.userPrefs.drawFunctions = [self.updateControlPanelDisplay, self.updateSudokuBoardDisplay]
         // register routine for app transiting to b/g
         self.setupApplicationNotifications()
@@ -505,15 +504,7 @@ class ViewController: UIViewController {
                 print(self.sudokuBoard.dumpSolutionBoard())
             }
             self.sudokuBoard.buildOriginBoard()
-            self.sudokuBoard.initialiseGameBoard()
-            self.userSolution.clearCoordinates()
-            self.updateSudokuBoardDisplay()
-            self.controlPanelPosition = (-1, -1)
-            self.boardPosition = (-1, -1, -1, -1)
-            self.gameBoardInPlay = true
-            self.resetGameTimer()
-            self.startGameTimer()
-            self.setPenaltyStart()
+            self.finalPreparationForGameStart()
         } else {
             //
             // then we can:
@@ -529,16 +520,7 @@ class ViewController: UIViewController {
             alertController.addAction(cancelAction)
             let resetAction = UIAlertAction(title: "Restart this puzzle!", style: .Default) { (action:UIAlertAction!) in
                 self.resetControlPanelSelection()
-                self.sudokuBoard.initialiseGameBoard()
-                self.userSolution.clearCoordinates()
-                self.displayBoard.setImageStates(imgStates.Origin.rawValue)
-                self.updateSudokuBoardDisplay()
-                self.controlPanelPosition = (-1, -1)
-                self.boardPosition = (-1, -1, -1, -1)
-                self.gameBoardInPlay = true
-                self.resetGameTimer()
-                self.startGameTimer()
-                self.setPenaltyStart()
+                self.finalPreparationForGameStart()
             }
             alertController.addAction(resetAction)
             let restartAction = UIAlertAction(title: "New Puzzle!", style: .Default) { (action:UIAlertAction!) in
@@ -550,20 +532,28 @@ class ViewController: UIViewController {
                     print(self.sudokuBoard.dumpSolutionBoard())
                 }
                 self.sudokuBoard.buildOriginBoard()
-                self.sudokuBoard.initialiseGameBoard()
-                self.userSolution.clearCoordinates()
-                self.displayBoard.setImageStates(imgStates.Origin.rawValue)
-                self.updateSudokuBoardDisplay()
-                self.controlPanelPosition = (-1, -1)
-                self.boardPosition = (-1, -1, -1, -1)
-                self.gameBoardInPlay = true
-                self.resetGameTimer()
-                self.startGameTimer()
-                self.setPenaltyStart()
+                self.finalPreparationForGameStart()
             }
             alertController.addAction(restartAction)
             self.presentViewController(alertController, animated: true, completion:nil)
         }
+    }
+    
+    //
+    // standard prep and setup for game start/re-start
+    //
+    func finalPreparationForGameStart() {
+        self.sudokuBoard.initialiseGameBoard()
+        self.userSolution.clearCoordinates()
+        self.displayBoard.setImageStates(imgStates.Origin.rawValue)
+        self.updateSudokuBoardDisplay()
+        self.controlPanelPosition = (-1, -1)
+        self.boardPosition = (-1, -1, -1, -1)
+        self.gameBoardInPlay = true
+        self.resetGameTimer()
+        self.startGameTimer()
+        self.setPenaltyStart()
+        return
     }
     
     //

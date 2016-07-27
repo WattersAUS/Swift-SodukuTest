@@ -7,23 +7,13 @@
 \f0\b\fs24 \cf0 To be Committed:
 \b0 \
 \
-1. Added new func userCompletesGame() to finish off the game state when user successfully finishes puzzle\
-2. Change Class PreferencesHandler init(charSet: Int, difficulty: Int, mode: Int, sound: Bool, hints: Bool, redrawFunctions: [(Void) -> ()])  to init(redrawFunctions: [(Void) -> ()])\
-	- as defaults now loaded from NSUserDdefaults and not from the init of the class instance\
-3. Change imageSet value 3 = Alpha in Enumeration.swift\
-4. Add new member 'var saveFunctions: [(Void) -> ()] \{ get set \}' to class PreferencesHandler to allow save of prefs (and possibly board)\
+\
 \
 
 \b In progress:
 \b0 \
 \
-Introduce Board yet to be started flag?\
 \
-Settings Panel:\
-	Loaded on 'cog' click\
-	Set Character set\
-	Difficulty\
-	Set Self timer\
 \
 Auto mode....countdown to game filling in number...loses player points/time?\
 \
@@ -31,11 +21,6 @@ Difficulty affects a number of settings\
 	a) deduct time from clock when undo used (if time mode selected)\
 	b) Remove more numbers on puzzle creation\
 	c) Enable number highlight in solution from select of number in control panel\
-\
-Control Panel for Settings\
-	a) Difficulty Select\
-	b) Timer Active\
-	c) Character Set to use (normal, greek, images)\
 \
 
 \b BackLog:
@@ -80,4 +65,16 @@ Resize Background Image\
 Create Static images for Puzzle background (leave spaces for grid/control panel/status panels)\
 	a) see https://graphic.com/tutorials/create-a-weather-app-interface\
 \
+Introduce Board yet to be started flag?\
+\
+Settings Panel:\
+	Loaded on 'cog' click\
+	Set Character set\
+	Difficulty\
+	Set Self timer\
+\
+Control Panel for Settings\
+	a) Difficulty Select\
+	b) Timer Active\
+	c) Character Set to use (normal, greek, images)\
 }

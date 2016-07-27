@@ -74,7 +74,6 @@ class Preferences: UIViewController {
             delegate?.difficultySet = 3
             break
         }
-        delegate?.difficultySet = self.setDifficulty.selectedSegmentIndex + gameDiff.Easy.rawValue
         delegate?.gameModeInUse = self.gameMode.selectedSegmentIndex
         delegate?.soundOn = self.useSound.on
         delegate?.hintsOn = self.allowHints.on
