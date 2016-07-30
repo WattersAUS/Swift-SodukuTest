@@ -10,7 +10,8 @@ import UIKit
 
 class Preferences: UIViewController {
     
-    weak var delegate: PreferencesDelegate?
+    weak var prefs: PreferencesDelegate?
+    weak var state: GameStateDelegate?
 
     @IBOutlet weak var characterSet: UISegmentedControl!
     @IBOutlet weak var setDifficulty: UISegmentedControl!
@@ -21,9 +22,9 @@ class Preferences: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // get the current state of the prefs
-        self.characterSet.selectedSegmentIndex = (delegate?.characterSetInUse)!
+        self.characterSet.selectedSegmentIndex = (prefs?.characterSetInUse)!
         // remember the difficulty is offset from '3'
-        switch (delegate?.difficultySet)! {
+        switch (prefs?.difficultySet)! {
             case 7:
                 self.setDifficulty.selectedSegmentIndex = 2
                 break
@@ -37,9 +38,9 @@ class Preferences: UIViewController {
                 self.setDifficulty.selectedSegmentIndex = 0
                 break
         }
-        self.gameMode.selectedSegmentIndex = (delegate?.gameModeInUse)!
-        self.useSound.on = (delegate?.soundOn)!
-        self.allowHints.on = (delegate?.hintsOn)!
+        self.gameMode.selectedSegmentIndex = (prefs?.gameModeInUse)!
+        self.useSound.on = (prefs?.soundOn)!
+        self.allowHints.on = (prefs?.hintsOn)!
     }
 
     override func didReceiveMemoryWarning() {
@@ -62,28 +63,28 @@ class Preferences: UIViewController {
         // remember the difficulty is offset from '3'
         switch (self.setDifficulty.selectedSegmentIndex) {
         case 2:
-            delegate?.difficultySet = 7
+            prefs?.difficultySet = 7
             break
         case 1:
-            delegate?.difficultySet = 5
+            prefs?.difficultySet = 5
             break
         case 0:
-            delegate?.difficultySet = 3
+            prefs?.difficultySet = 3
             break
         default:
-            delegate?.difficultySet = 3
+            prefs?.difficultySet = 3
             break
         }
-        delegate?.gameModeInUse = self.gameMode.selectedSegmentIndex
-        delegate?.soundOn = self.useSound.on
-        delegate?.hintsOn = self.allowHints.on
-        if delegate?.characterSetInUse != self.characterSet.selectedSegmentIndex {
-            delegate?.characterSetInUse = self.characterSet.selectedSegmentIndex
-            for redrawFunction: (Void) -> () in (delegate?.drawFunctions)! {
+        prefs?.gameModeInUse = self.gameMode.selectedSegmentIndex
+        prefs?.soundOn = self.useSound.on
+        prefs?.hintsOn = self.allowHints.on
+        if prefs?.characterSetInUse != self.characterSet.selectedSegmentIndex {
+            prefs?.characterSetInUse = self.characterSet.selectedSegmentIndex
+            for redrawFunction: (Void) -> () in (prefs?.drawFunctions)! {
                 redrawFunction()
             }
         }
-        for saveFunction: (Void) -> () in (delegate?.saveFunctions)! {
+        for saveFunction: (Void) -> () in (prefs?.saveFunctions)! {
             saveFunction()
         }
         self.dismissViewControllerAnimated(true, completion: nil)

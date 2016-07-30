@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     //var gameDifficulty: Int = gameDiff.Medium.rawValue
     
     //
-    // enum for subviews
+    // enum for subviews (internal to this ViewController only)
     //
     enum subViewTags: Int {
         case sudokuBoard = 0
@@ -40,7 +40,7 @@ class ViewController: UIViewController {
     // current selected board position (if any, -1 if none)
     var boardPosition: (row: Int, column: Int, cellRow: Int, cellColumn: Int) = (-1, -1, -1, -1)
     // has user started playing?
-    var gameBoardInPlay: Bool = false
+    //var gameBoardInPlay: Bool = false
     
     //
     // user progress through puzzle
@@ -272,17 +272,6 @@ class ViewController: UIViewController {
     ]
 
     //
-    // timer display and storage for counter etc
-    //
-    @IBOutlet weak var gameTimer: UILabel!
-    var timer: NSTimer!
-    var timerSeconds: Int!
-    var totalSeconds: Int!
-    var timerActive: Bool!
-    var timerDisplay: Bool!
-    
-    
-    //
     // sound handling
     //
     var userPlacementSounds: [AVAudioPlayer!] = []
@@ -301,11 +290,24 @@ class ViewController: UIViewController {
     var giveHint: Bool!
     
     //
+    // timer display and storage for counter etc
+    //
+    @IBOutlet weak var gameTimer: UILabel!
+    var timer: NSTimer!
+    var timerActive: Bool!
+    var timerDisplay: Bool!
+
+    //
     // time added to timer on using hint during game
     //
     var penaltyStart: Int = 10
-    var penaltyIncrement: Int = 1
-    var penaltyToAdd: Int!
+    //var penaltyIncrement: Int = 1
+    //var penaltyToAdd: Int!
+    
+    //
+    // state of game (so we can save if we get told the app is to close)
+    //
+    var userGame: GameStateHandler!
     
     //----------------------------------------------------------------------------
     // start of the code!!!!
@@ -314,6 +316,10 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.userPrefs = PreferencesHandler(redrawFunctions: [])
+        //** NEEDS TO BE LOADED FROM SAVE GAME**//
+        //self.totalSeconds = 0
+        //self.timerSeconds = 0
+        self.userGame = GameStateHandler()
         self.sudokuBoard = GameBoard(size: self.boardDimensions, setDifficulty: self.userPrefs.difficultySet)
         self.displayBoard = GameBoardImages(size: self.boardDimensions)
         self.controlPanelImages = CellImages(rows: 5, columns: 2)
@@ -325,10 +331,9 @@ class ViewController: UIViewController {
         self.initialiseGameTimer()
         self.stopGameTimer()
 
-        //** NEEDS TO BE LOADED FROM CORE DATA**//
-        self.totalSeconds = 0
-        self.timerSeconds = 0
-        //** NEEDS TO BE LOADED FROM CORE DATA**//
+        //** NEEDS TO BE LOADED FROM SAVE GAME**//
+        //self.totalSeconds = 0
+        //self.timerSeconds = 0
 
         // load sounds
         self.initialiseGameSounds()
@@ -362,7 +367,7 @@ class ViewController: UIViewController {
     }
     
     func applicationMovingToForeground() {
-        if self.gameBoardInPlay {
+        if self.userGame.getGameInPlay() {
             self.startGameTimer()
         }
         return
@@ -441,7 +446,7 @@ class ViewController: UIViewController {
     }
     
     func resetGameTimer() {
-        self.timerSeconds = 0
+        self.userGame.setCurrentGameTimePlayed(0)
         self.gameTimer.text = ""
         return
     }
@@ -460,10 +465,10 @@ class ViewController: UIViewController {
 
     func updateGameTime() {
         if self.timerActive == true {
-            self.totalSeconds = self.totalSeconds + 1
+            self.userGame.incrementTotalGameTimePlayed(1)
             if self.timerDisplay == true {
-                self.timerSeconds = self.timerSeconds + 1
-                self.gameTimer.text = String(format: "%02d", self.timerSeconds / 60) + ":" + String(format: "%02d", self.timerSeconds % 60)
+                let time: Int = self.userGame.incrementCurrentGameTimePlayed(1)
+                self.gameTimer.text = String(format: "%02d", time / 60) + ":" + String(format: "%02d", time % 60)
             }
         }
         return
@@ -472,22 +477,22 @@ class ViewController: UIViewController {
     //----------------------------------------------------------------------------
     // penalty timer additions
     //----------------------------------------------------------------------------
-    func setPenaltyStart() {
-        self.penaltyToAdd = self.penaltyStart
-        return
-    }
-    
-    func incrementPenaltyTime() {
-        self.penaltyToAdd = self.penaltyToAdd + self.penaltyIncrement
+    func setPenaltyStartValue() {
+        self.userGame.setGamePenaltyTime(self.penaltyStart)
         return
     }
     
     func addPenaltyToGameTime() {
-        self.totalSeconds = self.totalSeconds + self.penaltyToAdd
-        self.timerSeconds = self.timerSeconds + self.penaltyToAdd
-        self.incrementPenaltyTime()
+        self.userGame.incrementTotalGameTimePlayed(self.userGame.getGamePenaltyTime())
+        self.userGame.incrementCurrentGameTimePlayed(self.userGame.getGamePenaltyTime())
+        self.userGame.incrementGamePenaltyTime(self.userGame.incrementGamePenaltyIncrementTime(1))
         return
     }
+    
+    //----------------------------------------------------------------------------
+    // load/save game state
+    //----------------------------------------------------------------------------
+    
     
     //----------------------------------------------------------------------------
     // user presses the 'Start' or 'Reset' button
@@ -549,10 +554,10 @@ class ViewController: UIViewController {
         self.updateSudokuBoardDisplay()
         self.controlPanelPosition = (-1, -1)
         self.boardPosition = (-1, -1, -1, -1)
-        self.gameBoardInPlay = true
+        self.userGame.setGameInPlay(true)
         self.resetGameTimer()
         self.startGameTimer()
-        self.setPenaltyStart()
+        self.setPenaltyStartValue()
         return
     }
     
@@ -653,7 +658,7 @@ class ViewController: UIViewController {
             return
         }
         // only worried if a board is in play
-        if self.gameBoardInPlay == false {
+        if self.userGame.getGameInPlay() == false {
             return
         }
         // has the user tapped in a control panel icon?
@@ -772,6 +777,7 @@ class ViewController: UIViewController {
             if self.sudokuBoard.setNumberOnGameBoard(boardPosn, number: index + 1) {
                 self.setCoordToOriginImage(boardPosn, number: index + 1)
                 self.userSolution.addCoordinate(boardPosn)
+                self.userGame.incrementTotalPlayerMovesMade()
                 self.playPlacementSound()
                 self.boardPosition = (-1, -1, -1, -1)
                 if self.sudokuBoard.isNumberFullyUsedOnGameBoard(index + 1) == true {
@@ -790,6 +796,7 @@ class ViewController: UIViewController {
                 self.sudokuBoard.clearNumberOnGameBoard(boardPosn)
                 self.setCellToBlankImage(boardPosn)
                 self.userSolution.removeCoordinate(boardPosn)
+                self.userGame.incrementTotalPlayerMovesRemoved()
                 self.boardPosition = (-1, -1, -1, -1)
                 // may need to reactivate 'inactive' control panel posn
                 self.resetInactiveNumberOnBoard(number)
@@ -881,7 +888,7 @@ class ViewController: UIViewController {
             return
         }
         // we're only interested if the board is in play
-        if self.gameBoardInPlay == false {
+        if self.userGame.getGameInPlay() == false {
             return
         }
         // has the user tapped in a cell?
@@ -899,6 +906,7 @@ class ViewController: UIViewController {
                 let number: Int = self.sudokuBoard.getNumberFromSolutionBoard(posn)
                 if self.sudokuBoard.setNumberOnGameBoard(posn, number: number) {
                     self.userSolution.addCoordinate(posn)
+                    self.userGame.incrementTotalPlayerMovesMade()
                     // do we need to make number 'inactive'?
                     if self.sudokuBoard.isNumberFullyUsedOnGameBoard(number) == false {
                         self.setCoordToSelectImage(posn, number: number)
@@ -936,11 +944,13 @@ class ViewController: UIViewController {
                 self.sudokuBoard.clearNumberOnGameBoard(posn)
                 self.setCellToBlankImage(posn)
                 self.userSolution.removeCoordinate(posn)
+                self.userGame.incrementTotalPlayerMovesRemoved()
                 self.boardPosition = (-1, -1, -1, -1)
                 return
             }
             if self.sudokuBoard.setNumberOnGameBoard(posn, number: index + 1) {
                 self.userSolution.addCoordinate(posn)
+                self.userGame.incrementTotalPlayerMovesMade()
                 // do we need to make number 'inactive'?
                 if self.sudokuBoard.isNumberFullyUsedOnGameBoard(index + 1) == false {
                     self.setCoordToSelectImage(posn, number: index + 1)
@@ -966,6 +976,7 @@ class ViewController: UIViewController {
             self.sudokuBoard.clearNumberOnGameBoard(posn)
             self.setCellToBlankImage(posn)
             self.userSolution.removeCoordinate(posn)
+            self.userGame.incrementTotalPlayerMovesRemoved()
             self.boardPosition = (-1, -1, -1, -1)
             // may need to reactivate 'inactive' control panel posn
             self.resetInactiveNumberOnBoard(number)
@@ -1020,15 +1031,6 @@ class ViewController: UIViewController {
         return currentPosn
     }
 
-    //----------------------------------------------------------------------------
-    // check if the user has complete the game!
-    //----------------------------------------------------------------------------
-    
-    func isTheGameCompleted() -> Bool {
-        
-        return true
-    }
-    
     //----------------------------------------------------------------------------
     // routines to make numbers inactive/active if all are completed on board
     //----------------------------------------------------------------------------
@@ -1223,7 +1225,7 @@ class ViewController: UIViewController {
     //----------------------------------------------------------------------------
     @IBAction func hintsButtonPressed(sender: UIButton) {
         var alertController: UIAlertController!
-        if self.gameBoardInPlay == false {
+        if self.userGame.getGameInPlay() == false {
             self.playErrorSound()
             alertController = UIAlertController(title: "Hint Options", message: "Hints are only useful when you have a game in progress!", preferredStyle: .Alert)
             let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action:UIAlertAction!) in //action -> Void in
@@ -1286,6 +1288,7 @@ class ViewController: UIViewController {
         let number: Int = self.sudokuBoard.getNumberFromSolutionBoard(optionsToRemove[posnToRemove])
         if self.sudokuBoard.setNumberOnGameBoard(optionsToRemove[posnToRemove], number: number) {
             self.userSolution.addCoordinate(optionsToRemove[posnToRemove])
+            self.userGame.incrementTotalPlayerMovesMade()
             // do we need to make number 'inactive'?
             if self.sudokuBoard.isNumberFullyUsedOnGameBoard(number) == false {
                 self.setCoordToSelectImage(optionsToRemove[posnToRemove], number: number)
@@ -1312,7 +1315,7 @@ class ViewController: UIViewController {
         // AND OTHER STUFF NEEDS TO HAPPEN OFC!!!!!
         self.stopGameTimer()
         self.playVictorySound()
-        self.gameBoardInPlay = false
+        self.userGame.setGameInPlay(false)
         return
     }
     
@@ -1323,7 +1326,7 @@ class ViewController: UIViewController {
         // first save the current preferences
         let pViewController: Preferences = Preferences()
         pViewController.modalPresentationStyle = UIModalPresentationStyle.Popover
-        pViewController.delegate = self.userPrefs
+        pViewController.prefs = self.userPrefs
         self.presentViewController(pViewController, animated: true, completion: nil)
         let popoverController = pViewController.popoverPresentationController
         popoverController?.sourceView = sender

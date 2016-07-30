@@ -7,13 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BF0D9BF01D3E30C300470BEF /* TimerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0D9BEF1D3E30C300470BEF /* TimerHandler.swift */; };
 		BF2BF03F1CE28DFF00DFB59D /* Ideas.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */; };
 		BF562ED61D37C2E400DB31E9 /* Notes.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BF562ED51D37C2E400DB31E9 /* Notes.rtf */; };
 		BF5F88951CE2334C00A53360 /* CellImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5F88941CE2334C00A53360 /* CellImages.swift */; };
 		BF6124831D426EA600F7E59D /* chalkboardsudoku.json in Resources */ = {isa = PBXBuildFile; fileRef = BF6124821D426EA600F7E59D /* chalkboardsudoku.json */; };
+		BF691FBD1D48F23500ACD6A3 /* GameStateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF691FBC1D48F23500ACD6A3 /* GameStateHandler.swift */; };
 		BF70DE761CB00321006BB30D /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF70DE751CB00321006BB30D /* Cell.swift */; };
 		BF70DE781CB01857006BB30D /* GameBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF70DE771CB01857006BB30D /* GameBoard.swift */; };
+		BF8DC8691D4A56B20079F67E /* Struct.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8DC8681D4A56B20079F67E /* Struct.swift */; };
 		BF91663A1D3BE8C900C444BE /* Triumph_001.aiff in Resources */ = {isa = PBXBuildFile; fileRef = BF9166391D3BE8C900C444BE /* Triumph_001.aiff */; };
 		BF9B3CE51D33C500003DD8A1 /* Enumeration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9B3CE41D33C500003DD8A1 /* Enumeration.swift */; };
 		BF9C0ED91CC919E5004C1ABC /* SudokuTestGameBoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9C0ED81CC919E5004C1ABC /* SudokuTestGameBoardTests.swift */; };
@@ -54,13 +55,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		BF0D9BEF1D3E30C300470BEF /* TimerHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerHandler.swift; sourceTree = "<group>"; };
 		BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Ideas.rtf; sourceTree = "<group>"; };
 		BF562ED51D37C2E400DB31E9 /* Notes.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Notes.rtf; sourceTree = "<group>"; };
 		BF5F88941CE2334C00A53360 /* CellImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellImages.swift; sourceTree = "<group>"; };
 		BF6124821D426EA600F7E59D /* chalkboardsudoku.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = chalkboardsudoku.json; sourceTree = "<group>"; };
+		BF691FBC1D48F23500ACD6A3 /* GameStateHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStateHandler.swift; sourceTree = "<group>"; };
 		BF70DE751CB00321006BB30D /* Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		BF70DE771CB01857006BB30D /* GameBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoard.swift; sourceTree = "<group>"; };
+		BF8DC8681D4A56B20079F67E /* Struct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Struct.swift; sourceTree = "<group>"; };
 		BF9166391D3BE8C900C444BE /* Triumph_001.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Triumph_001.aiff; sourceTree = "<group>"; };
 		BF9B3CE41D33C500003DD8A1 /* Enumeration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enumeration.swift; sourceTree = "<group>"; };
 		BF9C0ED81CC919E5004C1ABC /* SudokuTestGameBoardTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SudokuTestGameBoardTests.swift; sourceTree = "<group>"; };
@@ -118,7 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				BFA68E591D32B3F600BED637 /* PreferencesHandler.swift */,
-				BF0D9BEF1D3E30C300470BEF /* TimerHandler.swift */,
+				BF691FBC1D48F23500ACD6A3 /* GameStateHandler.swift */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";
@@ -163,6 +165,15 @@
 			name = "Game Sounds";
 			sourceTree = "<group>";
 		};
+		BF8DC8671D492D3A0079F67E /* Defaults */ = {
+			isa = PBXGroup;
+			children = (
+				BF9B3CE41D33C500003DD8A1 /* Enumeration.swift */,
+				BF8DC8681D4A56B20079F67E /* Struct.swift */,
+			);
+			name = Defaults;
+			sourceTree = "<group>";
+		};
 		BFADBFF61C8C8CA200F48E54 = {
 			isa = PBXGroup;
 			children = (
@@ -188,8 +199,8 @@
 			children = (
 				BF6124811D426BE000F7E59D /* Config */,
 				BF8C65481D30E48A0029B9DC /* Game Sounds */,
+				BF8DC8671D492D3A0079F67E /* Defaults */,
 				BFADC0021C8C8CA200F48E54 /* AppDelegate.swift */,
-				BF9B3CE41D33C500003DD8A1 /* Enumeration.swift */,
 				BFA68E531D3235B900BED637 /* Preferences.swift */,
 				BFA68E541D3235B900BED637 /* Preferences.xib */,
 				BFADC0041C8C8CA200F48E54 /* ViewController.swift */,
@@ -366,14 +377,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF691FBD1D48F23500ACD6A3 /* GameStateHandler.swift in Sources */,
 				BFDE91111CBFF4BB007370D0 /* TrackSolution.swift in Sources */,
 				BF9B3CE51D33C500003DD8A1 /* Enumeration.swift in Sources */,
 				BF5F88951CE2334C00A53360 /* CellImages.swift in Sources */,
+				BF8DC8691D4A56B20079F67E /* Struct.swift in Sources */,
 				BFADC0051C8C8CA200F48E54 /* ViewController.swift in Sources */,
 				BFA3DF6F1CE5333B007CBC0E /* GameBoardImages.swift in Sources */,
 				BF70DE761CB00321006BB30D /* Cell.swift in Sources */,
 				BFADC0031C8C8CA200F48E54 /* AppDelegate.swift in Sources */,
-				BF0D9BF01D3E30C300470BEF /* TimerHandler.swift in Sources */,
 				BFA68E5A1D32B3F600BED637 /* PreferencesHandler.swift in Sources */,
 				BFA68E551D3235B900BED637 /* Preferences.swift in Sources */,
 				BF70DE781CB01857006BB30D /* GameBoard.swift in Sources */,
