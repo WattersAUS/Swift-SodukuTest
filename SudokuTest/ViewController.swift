@@ -39,9 +39,7 @@ class ViewController: UIViewController {
     var displayBoard: GameBoardImages!
     // current selected board position (if any, -1 if none)
     var boardPosition: (row: Int, column: Int, cellRow: Int, cellColumn: Int) = (-1, -1, -1, -1)
-    // has user started playing?
-    //var gameBoardInPlay: Bool = false
-    
+
     //
     // user progress through puzzle
     //
@@ -96,7 +94,7 @@ class ViewController: UIViewController {
     //
     // 0 = Numbers
     // 1 = Greek
-    // 2 = Alpha (these are inprogress)
+    // 2 = Alpha
     //
     var imageLibrary: [[[UIImage]]] = [
         [[
@@ -300,9 +298,7 @@ class ViewController: UIViewController {
     //
     // time added to timer on using hint during game
     //
-    var penaltyStart: Int = 10
-    //var penaltyIncrement: Int = 1
-    //var penaltyToAdd: Int!
+    //var penaltyStart: Int = 10
     
     //
     // state of game (so we can save if we get told the app is to close)
@@ -477,11 +473,6 @@ class ViewController: UIViewController {
     //----------------------------------------------------------------------------
     // penalty timer additions
     //----------------------------------------------------------------------------
-    func setPenaltyStartValue() {
-        self.userGame.setGamePenaltyTime(self.penaltyStart)
-        return
-    }
-    
     func addPenaltyToGameTime() {
         self.userGame.incrementTotalGameTimePlayed(self.userGame.getGamePenaltyTime())
         self.userGame.incrementCurrentGameTimePlayed(self.userGame.getGamePenaltyTime())
@@ -493,6 +484,7 @@ class ViewController: UIViewController {
     // load/save game state
     //----------------------------------------------------------------------------
     
+    // TO GO HERE!!!!!!!!!
     
     //----------------------------------------------------------------------------
     // user presses the 'Start' or 'Reset' button
@@ -545,7 +537,7 @@ class ViewController: UIViewController {
     }
     
     //
-    // standard prep and setup for game start/re-start
+    // standard prep and setup for final game start/re-start
     //
     func finalPreparationForGameStart() {
         self.sudokuBoard.initialiseGameBoard()
@@ -557,10 +549,43 @@ class ViewController: UIViewController {
         self.userGame.setGameInPlay(true)
         self.resetGameTimer()
         self.startGameTimer()
-        self.setPenaltyStartValue()
+        self.userGame.setGamePenaltyTime(self.setInitialPenalty())
+        self.userGame.resetGamePenaltyIncrementTime(self.setInitialPenaltyIncrement())
+        self.userGame.resetGamePenaltyIncrementTime(1)
+        self.userGame.resetGamePlayerMovesMade()
+        self.userGame.resetGamePlayerMovesRemoved()
+        self.userGame.incrementStartedGames()
         return
     }
+
+    func setInitialPenalty() -> Int {
+        switch self.userPrefs.difficultySet {
+        case gameDiff.Easy.rawValue:
+            return(10)
+        case gameDiff.Medium.rawValue:
+            return(20)
+        case gameDiff.Hard.rawValue:
+            return(30)
+        default:
+            break
+        }
+        return(20)
+    }
     
+    func setInitialPenaltyIncrement() -> Int {
+        switch self.userPrefs.difficultySet {
+        case gameDiff.Easy.rawValue:
+            return (1)
+        case gameDiff.Medium.rawValue:
+            return(3)
+        case gameDiff.Hard.rawValue:
+            return(5)
+        default:
+            break
+        }
+        return(3)
+    }
+
     //
     // clear any selection the user might have left in the control panel
     //
@@ -777,7 +802,7 @@ class ViewController: UIViewController {
             if self.sudokuBoard.setNumberOnGameBoard(boardPosn, number: index + 1) {
                 self.setCoordToOriginImage(boardPosn, number: index + 1)
                 self.userSolution.addCoordinate(boardPosn)
-                self.userGame.incrementTotalPlayerMovesMade()
+                self.userGame.incrementGamePlayerMovesMade()
                 self.playPlacementSound()
                 self.boardPosition = (-1, -1, -1, -1)
                 if self.sudokuBoard.isNumberFullyUsedOnGameBoard(index + 1) == true {
@@ -796,7 +821,7 @@ class ViewController: UIViewController {
                 self.sudokuBoard.clearNumberOnGameBoard(boardPosn)
                 self.setCellToBlankImage(boardPosn)
                 self.userSolution.removeCoordinate(boardPosn)
-                self.userGame.incrementTotalPlayerMovesRemoved()
+                self.userGame.incrementGamePlayerMovesRemoved()
                 self.boardPosition = (-1, -1, -1, -1)
                 // may need to reactivate 'inactive' control panel posn
                 self.resetInactiveNumberOnBoard(number)
@@ -906,7 +931,7 @@ class ViewController: UIViewController {
                 let number: Int = self.sudokuBoard.getNumberFromSolutionBoard(posn)
                 if self.sudokuBoard.setNumberOnGameBoard(posn, number: number) {
                     self.userSolution.addCoordinate(posn)
-                    self.userGame.incrementTotalPlayerMovesMade()
+                    self.userGame.incrementGamePlayerMovesMade()
                     // do we need to make number 'inactive'?
                     if self.sudokuBoard.isNumberFullyUsedOnGameBoard(number) == false {
                         self.setCoordToSelectImage(posn, number: number)
@@ -944,13 +969,13 @@ class ViewController: UIViewController {
                 self.sudokuBoard.clearNumberOnGameBoard(posn)
                 self.setCellToBlankImage(posn)
                 self.userSolution.removeCoordinate(posn)
-                self.userGame.incrementTotalPlayerMovesRemoved()
+                self.userGame.incrementGamePlayerMovesRemoved()
                 self.boardPosition = (-1, -1, -1, -1)
                 return
             }
             if self.sudokuBoard.setNumberOnGameBoard(posn, number: index + 1) {
                 self.userSolution.addCoordinate(posn)
-                self.userGame.incrementTotalPlayerMovesMade()
+                self.userGame.incrementGamePlayerMovesMade()
                 // do we need to make number 'inactive'?
                 if self.sudokuBoard.isNumberFullyUsedOnGameBoard(index + 1) == false {
                     self.setCoordToSelectImage(posn, number: index + 1)
@@ -976,7 +1001,7 @@ class ViewController: UIViewController {
             self.sudokuBoard.clearNumberOnGameBoard(posn)
             self.setCellToBlankImage(posn)
             self.userSolution.removeCoordinate(posn)
-            self.userGame.incrementTotalPlayerMovesRemoved()
+            self.userGame.incrementGamePlayerMovesRemoved()
             self.boardPosition = (-1, -1, -1, -1)
             // may need to reactivate 'inactive' control panel posn
             self.resetInactiveNumberOnBoard(number)
@@ -1288,7 +1313,7 @@ class ViewController: UIViewController {
         let number: Int = self.sudokuBoard.getNumberFromSolutionBoard(optionsToRemove[posnToRemove])
         if self.sudokuBoard.setNumberOnGameBoard(optionsToRemove[posnToRemove], number: number) {
             self.userSolution.addCoordinate(optionsToRemove[posnToRemove])
-            self.userGame.incrementTotalPlayerMovesMade()
+            self.userGame.incrementGamePlayerMovesMade()
             // do we need to make number 'inactive'?
             if self.sudokuBoard.isNumberFullyUsedOnGameBoard(number) == false {
                 self.setCoordToSelectImage(optionsToRemove[posnToRemove], number: number)
@@ -1316,8 +1341,40 @@ class ViewController: UIViewController {
         self.stopGameTimer()
         self.playVictorySound()
         self.userGame.setGameInPlay(false)
+        self.userGame.incrementTotalPlayerMovesMade(self.userGame.getGamePlayerMovesMade())
+        self.userGame.incrementTotalPlayerMovesRemoved(self.userGame.getGamePlayerMovesRemoved())
+        self.userGame.incrementCompletedGames()
         return
     }
+    
+//    func userDialogOnCompletion() {
+//        
+//        
+//        let alertController = UIAlertController(title: "Congratulations", message: "So you want to reset the puzzle?", preferredStyle: .Alert)
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action:UIAlertAction!) in //action -> Void in
+//            // nothing to do here, user bailed on reseting the game
+//        }
+//        alertController.addAction(cancelAction)
+//        let resetAction = UIAlertAction(title: "Restart this puzzle!", style: .Default) { (action:UIAlertAction!) in
+//            self.resetControlPanelSelection()
+//            self.finalPreparationForGameStart()
+//        }
+//        alertController.addAction(resetAction)
+//        let restartAction = UIAlertAction(title: "New Puzzle!", style: .Default) { (action:UIAlertAction!) in
+//            self.resetControlPanelSelection()
+//            self.sudokuBoard.clearBoard()
+//            self.sudokuBoard.setGameDifficulty(self.userPrefs.difficultySet)
+//            self.sudokuBoard.buildSolution()
+//            if self.debug == 1 {
+//                print(self.sudokuBoard.dumpSolutionBoard())
+//            }
+//            self.sudokuBoard.buildOriginBoard()
+//            self.finalPreparationForGameStart()
+//        }
+//        alertController.addAction(restartAction)
+//        self.presentViewController(alertController, animated: true, completion:nil)
+//
+//    }
     
     //----------------------------------------------------------------------------
     // captures user pressing the 'Settings' button

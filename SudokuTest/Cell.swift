@@ -60,7 +60,7 @@ class Cell: NSObject, NSCopying {
     }
     
     private func setNumberAsUsed(numberUsed: Int) -> Int {
-        if numberUsed < 1 || numberUsed > self.numbersUsed.count {
+        guard (1..<(self.numbersUsed.count + 1)) ~= numberUsed else {
             return 0
         }
         self.numbersUsed[numberUsed - 1] = true
@@ -68,7 +68,7 @@ class Cell: NSObject, NSCopying {
     }
     
     private func setNumberAsUnUsed(numberUsed: Int) {
-        if numberUsed < 1 || numberUsed > self.numbersUsed.count {
+        guard (1..<(self.numbersUsed.count + 1)) ~= numberUsed else {
             return
         }
         self.numbersUsed[numberUsed - 1] = false

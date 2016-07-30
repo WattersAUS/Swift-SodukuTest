@@ -37,6 +37,8 @@ class GameStateHandler: NSObject, GameStateDelegate {
         self.currentGame.penaltyValue          = 0
         self.currentGame.penaltyIncrementValue = 0
         self.currentGame.currentGameTime       = 0
+        self.currentGame.gameMovesMade         = 0
+        self.currentGame.gameMovesDeleted      = 0
         self.currentGame.cells                 = []
         self.gameSave                          = [:]
         // build initial save dictionary
@@ -56,7 +58,7 @@ class GameStateHandler: NSObject, GameStateDelegate {
         self.updateGameSaveValue(saveGameDictionary.GamesStarted.rawValue,      value: self.currentGame.startedGames)
         self.updateGameSaveValue(saveGameDictionary.GamesCompleted.rawValue,    value: self.currentGame.completedGames)
         self.updateGameSaveValue(saveGameDictionary.TotalTimePlayed.rawValue,   value: self.currentGame.totalTimePlayed)
-        self.updateGameSaveValue(saveGameDictionary.TotaMovesMade.rawValue,     value: self.currentGame.totalMovesMade)
+        self.updateGameSaveValue(saveGameDictionary.TotalMovesMade.rawValue,    value: self.currentGame.totalMovesMade)
         self.updateGameSaveValue(saveGameDictionary.TotalMovesDeleted.rawValue, value: self.currentGame.totalMovesDeleted)
         self.updateGameSaveValue(saveGameDictionary.HighScore.rawValue,         value: self.currentGame.highScore)
         self.updateGameSaveValue(saveGameDictionary.LowScore.rawValue,          value: self.currentGame.lowScore)
@@ -65,6 +67,8 @@ class GameStateHandler: NSObject, GameStateDelegate {
         self.updateGameSaveValue(saveGameDictionary.GameInPlay.rawValue,        value: self.currentGame.gameInPlay)
         self.updateGameSaveValue(saveGameDictionary.PenaltyValue.rawValue,      value: self.currentGame.penaltyValue)
         self.updateGameSaveValue(saveGameDictionary.CurrentGameTime.rawValue,   value: self.currentGame.currentGameTime)
+        self.updateGameSaveValue(saveGameDictionary.GameMovesMade.rawValue,     value: self.currentGame.gameMovesMade)
+        self.updateGameSaveValue(saveGameDictionary.GameMovesDeleted.rawValue,  value: self.currentGame.gameMovesDeleted)
         var cellArray: [AnyObject] = []
         for cell: BoardCell in self.currentGame.cells {
             cellArray.append(["row": cell.row, "col": cell.col, "crow": cell.crow, "ccol": cell.ccol, "value": cell.value, "state": cell.state])
@@ -81,7 +85,7 @@ class GameStateHandler: NSObject, GameStateDelegate {
         self.currentGame.startedGames          = self.getGameStateValue(saveGameDictionary.GamesStarted.rawValue) as! Int
         self.currentGame.completedGames        = self.getGameStateValue(saveGameDictionary.GamesCompleted.rawValue) as! Int
         self.currentGame.totalTimePlayed       = self.getGameStateValue(saveGameDictionary.TotalTimePlayed.rawValue) as! Int
-        self.currentGame.totalMovesMade        = self.getGameStateValue(saveGameDictionary.TotaMovesMade.rawValue) as! Int
+        self.currentGame.totalMovesMade        = self.getGameStateValue(saveGameDictionary.TotalMovesMade.rawValue) as! Int
         self.currentGame.totalMovesDeleted     = self.getGameStateValue(saveGameDictionary.TotalMovesDeleted.rawValue) as! Int
         self.currentGame.highScore             = self.getGameStateValue(saveGameDictionary.HighScore.rawValue) as! Int
         self.currentGame.lowScore              = self.getGameStateValue(saveGameDictionary.LowScore.rawValue) as! Int
@@ -91,6 +95,8 @@ class GameStateHandler: NSObject, GameStateDelegate {
         self.currentGame.penaltyValue          = self.getGameStateValue(saveGameDictionary.PenaltyValue.rawValue) as! Int
         self.currentGame.penaltyIncrementValue = self.getGameStateValue(saveGameDictionary.PenaltyIncrementValue.rawValue) as! Int
         self.currentGame.currentGameTime       = self.getGameStateValue(saveGameDictionary.CurrentGameTime.rawValue)  as! Int
+        self.currentGame.gameMovesMade         = self.getGameStateValue(saveGameDictionary.GameMovesMade.rawValue) as! Int
+        self.currentGame.gameMovesDeleted      = self.getGameStateValue(saveGameDictionary.GameMovesDeleted.rawValue) as! Int
         for cell: [String: Int] in self.getGameStateValue(saveGameDictionary.GameBoard.rawValue) as! [[String: Int]] {
             for (key, value) in cell {
                 var bCell: BoardCell = BoardCell()
@@ -159,6 +165,14 @@ class GameStateHandler: NSObject, GameStateDelegate {
         return self.currentGame.currentGameTime
     }
     
+    func getGamePlayerMovesMade() -> Int {
+        return self.currentGame.gameMovesMade
+    }
+    
+    func getGamePlayerMovesRemoved() -> Int {
+        return self.currentGame.gameMovesDeleted
+    }
+    
     //
     // sets if needed
     //
@@ -175,6 +189,21 @@ class GameStateHandler: NSObject, GameStateDelegate {
     func setGamePenaltyTime(value: Int) -> Int {
         self.currentGame.penaltyValue = value
         return self.currentGame.penaltyValue
+    }
+
+    func resetGamePenaltyIncrementTime(value: Int) {
+        self.currentGame.penaltyIncrementValue = value
+        return
+    }
+    
+    func resetGamePlayerMovesMade() {
+        self.currentGame.gameMovesMade = 0
+        return
+    }
+    
+    func resetGamePlayerMovesRemoved() {
+        self.currentGame.gameMovesDeleted = 0
+        return
     }
     
     //
@@ -195,13 +224,13 @@ class GameStateHandler: NSObject, GameStateDelegate {
         return self.currentGame.totalTimePlayed
     }
     
-    func incrementTotalPlayerMovesMade() -> Int {
-        self.currentGame.totalMovesMade = self.currentGame.totalMovesMade + 1
+    func incrementTotalPlayerMovesMade(increment: Int) -> Int {
+        self.currentGame.totalMovesMade = self.currentGame.totalMovesMade + increment
         return self.currentGame.totalMovesMade
     }
     
-    func incrementTotalPlayerMovesRemoved() -> Int {
-        self.currentGame.totalMovesDeleted = self.currentGame.totalMovesDeleted + 1
+    func incrementTotalPlayerMovesRemoved(increment: Int) -> Int {
+        self.currentGame.totalMovesDeleted = self.currentGame.totalMovesDeleted + increment
         return self.currentGame.totalMovesDeleted
     }
     
@@ -218,6 +247,16 @@ class GameStateHandler: NSObject, GameStateDelegate {
     func incrementCurrentGameTimePlayed(increment: Int) -> Int {
         self.currentGame.currentGameTime = self.currentGame.currentGameTime + increment
         return self.currentGame.currentGameTime
+    }
+    
+    func incrementGamePlayerMovesMade() -> Int {
+        self.currentGame.gameMovesMade = self.currentGame.gameMovesMade + 1
+        return self.currentGame.gameMovesMade
+    }
+    
+    func incrementGamePlayerMovesRemoved() -> Int {
+        self.currentGame.gameMovesDeleted = self.currentGame.gameMovesDeleted + 1
+        return self.currentGame.gameMovesDeleted
     }
     
 }

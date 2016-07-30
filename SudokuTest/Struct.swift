@@ -33,6 +33,8 @@ struct GameState {
     var penaltyValue: Int          = 0
     var penaltyIncrementValue: Int = 0
     var currentGameTime: Int       = 0
+    var gameMovesMade: Int         = 0
+    var gameMovesDeleted: Int      = 0
     var cells: [ BoardCell ] = []
 }
 

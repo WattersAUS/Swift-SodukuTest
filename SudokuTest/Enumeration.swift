@@ -53,7 +53,7 @@ enum saveGameDictionary: String {
     case GamesStarted          = "GAMESSTARTED"
     case GamesCompleted        = "GAMESCOMPLETED"
     case TotalTimePlayed       = "TOTALTIMEPLAYED"
-    case TotaMovesMade         = "TOTALMOVESMADE"
+    case TotalMovesMade        = "TOTALMOVESMADE"
     case TotalMovesDeleted     = "TOTALMOVESDELETED"
     case HighScore             = "HIGHSCORE"
     case LowScore              = "LOWSCORE"
@@ -63,6 +63,8 @@ enum saveGameDictionary: String {
     case PenaltyValue          = "PENALTYVALUE"
     case PenaltyIncrementValue = "PENALTYINCREMENTVALUE"
     case CurrentGameTime       = "CURRENTGAMETIME"
+    case GameMovesMade         = "GAMEMOVESMADE"
+    case GameMovesDeleted      = "GAMEMOVESDELETED"
     case GameBoard             = "GAMEBOARD"
 }
 

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		BF2BF03F1CE28DFF00DFB59D /* Ideas.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */; };
 		BF562ED61D37C2E400DB31E9 /* Notes.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BF562ED51D37C2E400DB31E9 /* Notes.rtf */; };
+		BF5714A91D4CC3760077A165 /* SudokuTestGameStateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5714A81D4CC3760077A165 /* SudokuTestGameStateHandler.swift */; };
 		BF5F88951CE2334C00A53360 /* CellImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5F88941CE2334C00A53360 /* CellImages.swift */; };
 		BF6124831D426EA600F7E59D /* chalkboardsudoku.json in Resources */ = {isa = PBXBuildFile; fileRef = BF6124821D426EA600F7E59D /* chalkboardsudoku.json */; };
 		BF691FBD1D48F23500ACD6A3 /* GameStateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF691FBC1D48F23500ACD6A3 /* GameStateHandler.swift */; };
@@ -57,6 +58,7 @@
 /* Begin PBXFileReference section */
 		BF2BF03E1CE28DFF00DFB59D /* Ideas.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Ideas.rtf; sourceTree = "<group>"; };
 		BF562ED51D37C2E400DB31E9 /* Notes.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Notes.rtf; sourceTree = "<group>"; };
+		BF5714A81D4CC3760077A165 /* SudokuTestGameStateHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SudokuTestGameStateHandler.swift; sourceTree = "<group>"; };
 		BF5F88941CE2334C00A53360 /* CellImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellImages.swift; sourceTree = "<group>"; };
 		BF6124821D426EA600F7E59D /* chalkboardsudoku.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = chalkboardsudoku.json; sourceTree = "<group>"; };
 		BF691FBC1D48F23500ACD6A3 /* GameStateHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStateHandler.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 				BFADC0171C8C8CA200F48E54 /* SudokuTestCellTests.swift */,
 				BF9C0ED81CC919E5004C1ABC /* SudokuTestGameBoardTests.swift */,
 				BFA3DF531CE393DD007CBC0E /* SudokuTestTrackSolution.swift */,
+				BF5714A81D4CC3760077A165 /* SudokuTestGameStateHandler.swift */,
 			);
 			path = SudokuTestTests;
 			sourceTree = "<group>";
@@ -398,6 +401,7 @@
 			files = (
 				BFADC0181C8C8CA200F48E54 /* SudokuTestCellTests.swift in Sources */,
 				BFA3DF541CE393DD007CBC0E /* SudokuTestTrackSolution.swift in Sources */,
+				BF5714A91D4CC3760077A165 /* SudokuTestGameStateHandler.swift in Sources */,
 				BF9C0ED91CC919E5004C1ABC /* SudokuTestGameBoardTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
