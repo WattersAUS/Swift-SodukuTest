@@ -149,7 +149,7 @@ class GameStateHandler: NSObject, GameStateDelegate {
         return self.currentGame.totalMovesMade
     }
     
-    func getTotalPlayerMovesRemoved() -> Int {
+    func getTotalPlayerMovesDeleted() -> Int {
         return self.currentGame.totalMovesDeleted
     }
     
@@ -169,7 +169,7 @@ class GameStateHandler: NSObject, GameStateDelegate {
         return self.currentGame.gameMovesMade
     }
     
-    func getGamePlayerMovesRemoved() -> Int {
+    func getGamePlayerMovesDeleted() -> Int {
         return self.currentGame.gameMovesDeleted
     }
     
@@ -201,8 +201,18 @@ class GameStateHandler: NSObject, GameStateDelegate {
         return
     }
     
-    func resetGamePlayerMovesRemoved() {
+    func resetGamePlayerMovesDeleted() {
         self.currentGame.gameMovesDeleted = 0
+        return
+    }
+    
+    func setCurrentBestWorstPlayerTimes() {
+        if (self.currentGame.fastestGame == 0) || (self.currentGame.currentGameTime < self.currentGame.fastestGame) {
+            self.currentGame.fastestGame = self.currentGame.currentGameTime
+        }
+        if self.currentGame.currentGameTime > self.currentGame.slowestGame {
+            self.currentGame.slowestGame = self.currentGame.currentGameTime
+        }
         return
     }
     
@@ -229,7 +239,7 @@ class GameStateHandler: NSObject, GameStateDelegate {
         return self.currentGame.totalMovesMade
     }
     
-    func incrementTotalPlayerMovesRemoved(increment: Int) -> Int {
+    func incrementTotalPlayerMovesDeleted(increment: Int) -> Int {
         self.currentGame.totalMovesDeleted = self.currentGame.totalMovesDeleted + increment
         return self.currentGame.totalMovesDeleted
     }
@@ -254,7 +264,7 @@ class GameStateHandler: NSObject, GameStateDelegate {
         return self.currentGame.gameMovesMade
     }
     
-    func incrementGamePlayerMovesRemoved() -> Int {
+    func incrementGamePlayerMovesDeleted() -> Int {
         self.currentGame.gameMovesDeleted = self.currentGame.gameMovesDeleted + 1
         return self.currentGame.gameMovesDeleted
     }

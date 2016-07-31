@@ -24,9 +24,9 @@ class SudokuTestGameBoardTests: XCTestCase {
     func testGameBoardInitialSizeCorrectlyWithoutParameters() {
         var testBoard: GameBoard!
         testBoard = GameBoard()
-        // we should see a boardwidth = 9 and difficulty = 7 where no initial values are passed
+        // we should see a boardwidth = 9 and difficulty = 1 (Medium) where no initial values are passed
         XCTAssertEqual(testBoard.getBoardWidthInCells(), 9, "Incorrect Board cells width reported")
-        XCTAssertEqual(testBoard.getGameDifficulty(), 7, "Incorrect Difficulty reported")
+        XCTAssertEqual(testBoard.getGameDifficulty(), 1, "Incorrect Difficulty reported")
         XCTAssertEqual(testBoard.getBoardRows(), 3, "Incorrect Board Rows reported")
         XCTAssertEqual(testBoard.getBoardColumns(), 3, "Incorrect Board Columns reported")
     }
@@ -34,9 +34,9 @@ class SudokuTestGameBoardTests: XCTestCase {
     func testGameBoardInitialSizeCorrectlyWithParametersOverridden() {
         var testBoard: GameBoard!
         testBoard = GameBoard(size: 5, setDifficulty: 10)
-        // we should see a boardwidth = 9 and difficulty = 7 along with rows and columns = 3 where initial values get overriden
+        // we should see a boardwidth = 9 and difficulty = 1 (Medium) along with rows and columns = 3 where initial values get overriden
         XCTAssertEqual(testBoard.getBoardWidthInCells(), 9, "Incorrect Board cells width reported")
-        XCTAssertEqual(testBoard.getGameDifficulty(), 7, "Incorrect Difficulty reported")
+        XCTAssertEqual(testBoard.getGameDifficulty(), 1, "Incorrect Difficulty reported")
         XCTAssertEqual(testBoard.getBoardRows(), 3, "Incorrect Board Rows reported")
         XCTAssertEqual(testBoard.getBoardColumns(), 3, "Incorrect Board Columns reported")
     }
@@ -46,7 +46,7 @@ class SudokuTestGameBoardTests: XCTestCase {
         testBoard = GameBoard(size: 3, setDifficulty: 8)
         // we should see a boardwidth = 9 and difficulty = 8 where initial values are passed correctly
         XCTAssertEqual(testBoard.getBoardWidthInCells(), 9, "Incorrect initial Board width reported")
-        XCTAssertEqual(testBoard.getGameDifficulty(), 8, "Incorrect initial Difficulty reported")
+        XCTAssertEqual(testBoard.getGameDifficulty(), 1, "Incorrect initial Difficulty reported")
         XCTAssertEqual(testBoard.getBoardRows(), 3, "Incorrect initial Difficulty reported")
         XCTAssertEqual(testBoard.getBoardColumns(), 3, "Incorrect initial Difficulty reported")
     }

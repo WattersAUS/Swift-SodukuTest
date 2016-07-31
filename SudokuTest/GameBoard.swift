@@ -23,7 +23,7 @@ class GameBoard: NSObject, NSCopying {
     private var difficulty: Int = 0
     private var stalls: Int = 0
     
-    init (size: Int = 3, setDifficulty: Int = 7) {
+    init (size: Int = 3, setDifficulty: Int = 1) {
         super.init()
         self.boardColumns = size
         if self.boardColumns != 3 {
@@ -31,7 +31,7 @@ class GameBoard: NSObject, NSCopying {
         }
         self.boardRows = self.boardColumns
         // need to remap diff level passed to internal useful value
-        self.setGameDifficulty(setDifficulty)
+        self.setBoardDifficulty(setDifficulty)
         // init the all copiees of the board ie solution/game and origin
         for row: Int in 0 ..< self.boardRows {
             var rowOfCells: [Cell] = [Cell(size: self.boardColumns)]
@@ -174,6 +174,20 @@ class GameBoard: NSObject, NSCopying {
         }
         return
     }
+    
+    //
+    // are we within the bounds of the board
+    //
+    private func coordBoundsCheck(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) -> Bool {
+        guard (0..<self.boardRows) ~= coord.row &&
+                (0..<self.self.boardColumns) ~= coord.column &&
+                (0..<self.gameBoardCells[coord.row][coord.column].cellDepth()) ~= coord.cellRow &&
+                (0..<self.gameBoardCells[coord.row][coord.column].cellWidth()) ~= coord.cellColumn
+        else {
+            return false
+        }
+        return true
+    }
 
     //
     // public functions - remap game difficulty to useful internal value
@@ -181,16 +195,16 @@ class GameBoard: NSObject, NSCopying {
     
     func getGameDifficulty() -> Int {
         // remap the diff level to ui control mapping
-        var difficulty: Int = 0
+        var difficulty: Int = gameDiff.Medium.rawValue
         switch self.difficulty {
-            case gameDiff.Easy.rawValue:
-                difficulty = 0
+            case gameBoardDiff.Easy.rawValue:
+                difficulty = gameDiff.Easy.rawValue
                 break
-            case gameDiff.Medium.rawValue:
-                difficulty = 1
+            case gameBoardDiff.Medium.rawValue:
+                difficulty = gameDiff.Medium.rawValue
                 break
-            case gameDiff.Hard.rawValue:
-                difficulty = 2
+            case gameBoardDiff.Hard.rawValue:
+                difficulty = gameDiff.Hard.rawValue
                 break
             default:
                 break
@@ -198,19 +212,19 @@ class GameBoard: NSObject, NSCopying {
         return difficulty
     }
     
-    func setGameDifficulty(newDifficulty: Int) {
+    func setBoardDifficulty(newDifficulty: Int) {
         switch newDifficulty {
         case 0:
-            self.difficulty = gameDiff.Easy.rawValue
+            self.difficulty = gameBoardDiff.Easy.rawValue
             break
         case 1:
-            self.difficulty = gameDiff.Medium.rawValue
+            self.difficulty = gameBoardDiff.Medium.rawValue
             break
         case 2:
-            self.difficulty = gameDiff.Hard.rawValue
+            self.difficulty = gameBoardDiff.Hard.rawValue
             break
         default:
-            self.difficulty = gameDiff.Easy.rawValue
+            self.difficulty = gameBoardDiff.Medium.rawValue
             break
         }
         return
@@ -278,7 +292,7 @@ class GameBoard: NSObject, NSCopying {
         // get the no. of each number we will remove from board
         var clearFromBoard: [Int] = []
         for _: Int in 0 ..< (self.boardColumns * self.boardRows) {
-            clearFromBoard.append(self.getCellsToClear())
+            clearFromBoard.append(self.difficulty + 1 - Int(arc4random_uniform(UInt32(2))))
         }
         // setup the origin board that we're going to remove the numbers from
         self.originBoardCells.removeAll()
@@ -313,13 +327,6 @@ class GameBoard: NSObject, NSCopying {
     }
     
     //
-    // get a random number of numbers to remove from a cell depending on difficulty
-    //
-    func getCellsToClear() -> Int {
-        return self.difficulty + 1 - Int(arc4random_uniform(UInt32(2)))
-    }
-    
-    //
     // always created from the 'origin' board, which is the solution with random numbers removed and where the user starts to solve the puzzle
     //
     func initialiseGameBoard() {
@@ -329,7 +336,7 @@ class GameBoard: NSObject, NSCopying {
     }
     
     func dumpSolutionBoard() -> String {
-        if self.isSolutionCompleted() == false {
+        guard self.isSolutionCompleted() == true else {
             return "Board is not completed"
         }
         var dumpOfBoard: String = ""
@@ -356,10 +363,7 @@ class GameBoard: NSObject, NSCopying {
     // get a number from the board the user is completing
     //
     func getNumberFromGameBoard(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) -> Int {
-        if coord.row < 0 || coord.row >= self.boardRows || coord.column < 0 || coord.column >= self.boardColumns {
-            return 0
-        }
-        if coord.cellRow < 0 || coord.cellRow >= self.gameBoardCells[coord.row][coord.column].cellDepth() || coord.cellColumn < 0 || coord.cellColumn >= self.gameBoardCells[coord.row][coord.column].cellWidth() {
+        guard self.coordBoundsCheck(coord) == true else {
             return 0
         }
         return self.gameBoardCells[coord.row][coord.column].getNumberAtCellPosition(coord.cellRow, column: coord.cellColumn)
@@ -369,10 +373,7 @@ class GameBoard: NSObject, NSCopying {
     // get a number from the solution board
     //
     func getNumberFromSolutionBoard(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) -> Int {
-        if coord.row < 0 || coord.row >= self.boardRows || coord.column < 0 || coord.column >= self.boardColumns {
-            return 0
-        }
-        if coord.cellRow < 0 || coord.cellRow >= self.solutionBoardCells[coord.row][coord.column].cellDepth() || coord.cellColumn < 0 || coord.cellColumn >= self.solutionBoardCells[coord.row][coord.column].cellWidth() {
+        guard self.coordBoundsCheck(coord) == true else {
             return 0
         }
         return self.solutionBoardCells[coord.row][coord.column].getNumberAtCellPosition(coord.cellRow, column: coord.cellColumn)
@@ -382,10 +383,7 @@ class GameBoard: NSObject, NSCopying {
     // is the location an 'origin' posn, we'll use this to work out if the user can interact with that position
     //
     func isOriginBoardCellUsed(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) -> Bool {
-        if coord.row < 0 || coord.row >= self.boardRows || coord.column < 0 || coord.column >= self.boardColumns {
-            return false
-        }
-        if coord.cellRow < 0 || coord.cellRow >= self.originBoardCells[coord.row][coord.column].cellDepth() || coord.cellColumn < 0 || coord.cellColumn >= self.originBoardCells[coord.row][coord.column].cellWidth() {
+        guard self.coordBoundsCheck(coord) == true else {
             return false
         }
         return (self.originBoardCells[coord.row][coord.column].getNumberAtCellPosition(coord.cellRow, column: coord.cellColumn) == 0) ? false : true
@@ -395,10 +393,7 @@ class GameBoard: NSObject, NSCopying {
     // is the location on the game board used
     //
     func isGameBoardCellUsed(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) -> Bool {
-        if coord.row < 0 || coord.row >= self.boardRows || coord.column < 0 || coord.column >= self.boardColumns {
-            return false
-        }
-        if coord.cellRow < 0 || coord.cellRow >= self.gameBoardCells[coord.row][coord.column].cellDepth() || coord.cellColumn < 0 || coord.cellColumn >= self.gameBoardCells[coord.row][coord.column].cellWidth() {
+        guard self.coordBoundsCheck(coord) == true else {
             return false
         }
         return (self.gameBoardCells[coord.row][coord.column].getNumberAtCellPosition(coord.cellRow, column: coord.cellColumn) == 0) ? false : true
@@ -408,10 +403,7 @@ class GameBoard: NSObject, NSCopying {
     // can the number exist in this position in the game
     //
     func isNumberValidOnGameBoard(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) -> Bool {
-        if coord.row < 0 || coord.row >= self.boardRows || coord.column < 0 || coord.column >= self.boardColumns {
-            return false
-        }
-        if coord.cellRow < 0 || coord.cellRow >= self.gameBoardCells[coord.row][coord.column].cellDepth() || coord.cellColumn < 0 || coord.cellColumn >= self.gameBoardCells[coord.row][coord.column].cellWidth() {
+        guard self.coordBoundsCheck(coord) == true else {
             return false
         }
         if self.gameBoardCells[coord.row][coord.column].isNumberUsedInCell(number) == true {
@@ -424,10 +416,7 @@ class GameBoard: NSObject, NSCopying {
     // populate a position on the game board if permissable
     //
     func setNumberOnGameBoard(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) -> Bool {
-        if coord.row < 0 || coord.row >= self.boardRows || coord.column < 0 || coord.column >= self.boardColumns {
-            return false
-        }
-        if coord.cellRow < 0 || coord.cellRow >= self.gameBoardCells[coord.row][coord.column].cellDepth() || coord.column < 0 || coord.column >= self.gameBoardCells[coord.row][coord.column].cellWidth() {
+        guard self.coordBoundsCheck(coord) == true else {
             return false
         }
         if self.gameBoardCells[coord.row][coord.column].isNumberUsedInCell(number) == true {
@@ -447,10 +436,7 @@ class GameBoard: NSObject, NSCopying {
     // remove a number from the board
     //
     func clearNumberOnGameBoard(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
-        if coord.row < 0 || coord.row >= self.boardRows || coord.column < 0 || coord.column >= self.boardColumns {
-            return
-        }
-        if coord.cellRow < 0 || coord.cellRow >= self.gameBoardCells[coord.row][coord.column].cellDepth() || coord.cellColumn < 0 || coord.cellColumn >= self.gameBoardCells[coord.row][coord.column].cellWidth() {
+        guard self.coordBoundsCheck(coord) == true else {
             return
         }
         self.gameBoardCells[coord.row][coord.column].clearNumberAtCellPosition(coord.cellRow, column: coord.cellColumn)

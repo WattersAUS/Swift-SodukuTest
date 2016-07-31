@@ -523,7 +523,7 @@ class ViewController: UIViewController {
             let restartAction = UIAlertAction(title: "New Puzzle!", style: .Default) { (action:UIAlertAction!) in
                 self.resetControlPanelSelection()
                 self.sudokuBoard.clearBoard()
-                self.sudokuBoard.setGameDifficulty(self.userPrefs.difficultySet)
+                self.sudokuBoard.setBoardDifficulty(self.userPrefs.difficultySet)
                 self.sudokuBoard.buildSolution()
                 if self.debug == 1 {
                     print(self.sudokuBoard.dumpSolutionBoard())
@@ -546,14 +546,13 @@ class ViewController: UIViewController {
         self.updateSudokuBoardDisplay()
         self.controlPanelPosition = (-1, -1)
         self.boardPosition = (-1, -1, -1, -1)
-        self.userGame.setGameInPlay(true)
         self.resetGameTimer()
         self.startGameTimer()
+        self.userGame.setGameInPlay(true)
         self.userGame.setGamePenaltyTime(self.setInitialPenalty())
         self.userGame.resetGamePenaltyIncrementTime(self.setInitialPenaltyIncrement())
-        self.userGame.resetGamePenaltyIncrementTime(1)
         self.userGame.resetGamePlayerMovesMade()
-        self.userGame.resetGamePlayerMovesRemoved()
+        self.userGame.resetGamePlayerMovesDeleted()
         self.userGame.incrementStartedGames()
         return
     }
@@ -561,29 +560,29 @@ class ViewController: UIViewController {
     func setInitialPenalty() -> Int {
         switch self.userPrefs.difficultySet {
         case gameDiff.Easy.rawValue:
-            return(10)
+            return initialHintPenalty.Easy.rawValue
         case gameDiff.Medium.rawValue:
-            return(20)
+            return initialHintPenalty.Medium.rawValue
         case gameDiff.Hard.rawValue:
-            return(30)
+            return initialHintPenalty.Hard.rawValue
         default:
             break
         }
-        return(20)
+        return initialHintPenalty.Medium.rawValue
     }
     
     func setInitialPenaltyIncrement() -> Int {
         switch self.userPrefs.difficultySet {
         case gameDiff.Easy.rawValue:
-            return (1)
+            return initialPenaltyIncrement.Easy.rawValue
         case gameDiff.Medium.rawValue:
-            return(3)
+            return initialPenaltyIncrement.Medium.rawValue
         case gameDiff.Hard.rawValue:
-            return(5)
+            return initialPenaltyIncrement.Hard.rawValue
         default:
             break
         }
-        return(3)
+        return initialPenaltyIncrement.Medium.rawValue
     }
 
     //
@@ -821,7 +820,7 @@ class ViewController: UIViewController {
                 self.sudokuBoard.clearNumberOnGameBoard(boardPosn)
                 self.setCellToBlankImage(boardPosn)
                 self.userSolution.removeCoordinate(boardPosn)
-                self.userGame.incrementGamePlayerMovesRemoved()
+                self.userGame.incrementGamePlayerMovesDeleted()
                 self.boardPosition = (-1, -1, -1, -1)
                 // may need to reactivate 'inactive' control panel posn
                 self.resetInactiveNumberOnBoard(number)
@@ -969,7 +968,7 @@ class ViewController: UIViewController {
                 self.sudokuBoard.clearNumberOnGameBoard(posn)
                 self.setCellToBlankImage(posn)
                 self.userSolution.removeCoordinate(posn)
-                self.userGame.incrementGamePlayerMovesRemoved()
+                self.userGame.incrementGamePlayerMovesDeleted()
                 self.boardPosition = (-1, -1, -1, -1)
                 return
             }
@@ -1001,7 +1000,7 @@ class ViewController: UIViewController {
             self.sudokuBoard.clearNumberOnGameBoard(posn)
             self.setCellToBlankImage(posn)
             self.userSolution.removeCoordinate(posn)
-            self.userGame.incrementGamePlayerMovesRemoved()
+            self.userGame.incrementGamePlayerMovesDeleted()
             self.boardPosition = (-1, -1, -1, -1)
             // may need to reactivate 'inactive' control panel posn
             self.resetInactiveNumberOnBoard(number)
@@ -1340,10 +1339,11 @@ class ViewController: UIViewController {
         // AND OTHER STUFF NEEDS TO HAPPEN OFC!!!!!
         self.stopGameTimer()
         self.playVictorySound()
-        self.userGame.setGameInPlay(false)
+        self.userGame.setCurrentBestWorstPlayerTimes()
         self.userGame.incrementTotalPlayerMovesMade(self.userGame.getGamePlayerMovesMade())
-        self.userGame.incrementTotalPlayerMovesRemoved(self.userGame.getGamePlayerMovesRemoved())
+        self.userGame.incrementTotalPlayerMovesDeleted(self.userGame.getGamePlayerMovesDeleted())
         self.userGame.incrementCompletedGames()
+        self.userGame.setGameInPlay(false)
         return
     }
     

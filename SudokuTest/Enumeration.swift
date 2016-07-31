@@ -29,12 +29,36 @@ enum imageSet: Int {
 }
 
 //
-// difficulty
+// external difficulty (used everywhere except in the Game Board Class)
 //
 enum gameDiff: Int {
+    case Easy   = 0
+    case Medium = 1
+    case Hard   = 2
+}
+
+//
+// internal game board difficulty
+//
+enum gameBoardDiff: Int {
     case Easy   = 3
     case Medium = 5
     case Hard   = 7
+}
+
+//
+// initial hint penalty values
+//
+enum initialHintPenalty: Int {
+    case Easy   = 5
+    case Medium = 10
+    case Hard   = 15
+}
+
+enum initialPenaltyIncrement: Int {
+    case Easy   = 1
+    case Medium = 3
+    case Hard   = 5
 }
 
 //

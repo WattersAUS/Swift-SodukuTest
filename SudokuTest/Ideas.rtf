@@ -7,6 +7,10 @@
 \f0\b\fs24 \cf0 To be Committed:
 \b0 \
 \
+1. Fix difficulty bug (now handle all diff as 0->2 when outside GameBoard class\
+2. Remove func getCellsToClear() from GameBoard (over engineered)\
+3. Introduce new private func coordBoundsCheck(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) -> Bool to simplify bounds checking in GameBoard class\
+4. New func self.userGame.setCurrentBestWorstPlayerTimes() to update game user times\
 \
 
 \b In progress:
