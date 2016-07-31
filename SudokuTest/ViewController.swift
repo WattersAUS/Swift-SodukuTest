@@ -378,8 +378,15 @@ class ViewController: UIViewController {
     // load/play sounds
     //----------------------------------------------------------------------------
     func initialiseGameSounds() {
-        self.userPlacementSounds.append(self.loadSound("Chalk_001.aiff"))
-        self.userPlacementSounds.append(self.loadSound("Chalk_002.aiff"))
+        self.userPlacementSounds.append(self.loadSound("Write_001.aiff"))
+        self.userPlacementSounds.append(self.loadSound("Write_002.aiff"))
+        self.userPlacementSounds.append(self.loadSound("Write_003.aiff"))
+        self.userPlacementSounds.append(self.loadSound("Write_004.aiff"))
+        self.userPlacementSounds.append(self.loadSound("Write_005.aiff"))
+        self.userPlacementSounds.append(self.loadSound("Write_006.aiff"))
+        self.userPlacementSounds.append(self.loadSound("Write_007.aiff"))
+        self.userPlacementSounds.append(self.loadSound("Write_008.aiff"))
+        self.userPlacementSounds.append(self.loadSound("Write_009.aiff"))
         self.userErrorSound = self.loadSound("Mistake_001.aiff")
         self.userRuboutSound = self.loadSound("RubOut_001.aiff")
         self.userVictorySound = self.loadSound("Triumph_001.aiff")
@@ -397,27 +404,26 @@ class ViewController: UIViewController {
     }
     
     func playErrorSound() {
-        if self.userErrorSound == nil || self.userPrefs.soundOn == false {
+        guard self.userErrorSound != nil && self.userPrefs.soundOn == true else {
             return
         }
         self.userErrorSound.play()
         return
     }
 
-    func playPlacementSound() {
-        if self.userPlacementSounds.count == 0 || self.userPrefs.soundOn == false {
+    func playPlacementSound(number: Int) {
+        guard (self.userPlacementSounds.count) > 0 && (self.userPrefs.soundOn == true) && (1..<(self.userPlacementSounds.count + 1)) ~= number else {
             return
         }
-        let playSound: Int = Int(arc4random_uniform(UInt32(self.userPlacementSounds.count)))
-        if self.userPlacementSounds[playSound] == nil {
+        if self.userPlacementSounds[number - 1] == nil {
             return
         }
-        self.userPlacementSounds[playSound].play()
+        self.userPlacementSounds[number - 1].play()
         return
     }
     
     func playRuboutSound() {
-        if self.userRuboutSound == nil || self.userPrefs.soundOn == false {
+        guard self.userRuboutSound != nil && self.userPrefs.soundOn == true else {
             return
         }
         self.userRuboutSound.play()
@@ -425,7 +431,7 @@ class ViewController: UIViewController {
     }
     
     func playVictorySound() {
-        if self.userVictorySound == nil || self.userPrefs.soundOn == false {
+        guard self.userVictorySound != nil && self.userPrefs.soundOn == true else {
             return
         }
         self.userVictorySound.play()
@@ -761,6 +767,7 @@ class ViewController: UIViewController {
                 self.unsetSelectNumbersOnBoard()
                 break
             case 9:
+                self.setControlPanelToOriginImageValue((pIndex / 2, column: pIndex % 2))
                 self.unsetDeleteNumbersOnBoard()
                 break
             default:
@@ -798,11 +805,13 @@ class ViewController: UIViewController {
             if self.sudokuBoard.isGameBoardCellUsed(boardPosn) == true {
                 self.sudokuBoard.clearNumberOnGameBoard(boardPosn)
             }
-            if self.sudokuBoard.setNumberOnGameBoard(boardPosn, number: index + 1) {
+            if self.sudokuBoard.setNumberOnGameBoard(boardPosn, number: index + 1) == false {
+                self.playErrorSound()
+            } else {
                 self.setCoordToOriginImage(boardPosn, number: index + 1)
                 self.userSolution.addCoordinate(boardPosn)
                 self.userGame.incrementGamePlayerMovesMade()
-                self.playPlacementSound()
+                self.playPlacementSound(index + 1)
                 self.boardPosition = (-1, -1, -1, -1)
                 if self.sudokuBoard.isNumberFullyUsedOnGameBoard(index + 1) == true {
                     self.setControlPanelToInactiveImageValue((index / 2, column: index % 2))
@@ -928,19 +937,21 @@ class ViewController: UIViewController {
         if self.giveHint == true {
             if self.sudokuBoard.isGameBoardCellUsed(posn) == false {
                 let number: Int = self.sudokuBoard.getNumberFromSolutionBoard(posn)
-                if self.sudokuBoard.setNumberOnGameBoard(posn, number: number) {
+                if self.sudokuBoard.setNumberOnGameBoard(posn, number: number) == false {
+                    self.playErrorSound()
+                } else {
                     self.userSolution.addCoordinate(posn)
                     self.userGame.incrementGamePlayerMovesMade()
                     // do we need to make number 'inactive'?
                     if self.sudokuBoard.isNumberFullyUsedOnGameBoard(number) == false {
                         self.setCoordToSelectImage(posn, number: number)
-                        self.playPlacementSound()
+                        self.playPlacementSound(number)
                     } else {
                         self.setCoordToOriginImage(posn, number: number)
                         self.setControlPanelToInactiveImageValue(((number - 1) / 2, column: (number - 1) % 2))
                         self.unsetSelectNumbersOnBoard()
                         self.controlPanelPosition = (-1, -1)
-                        self.playPlacementSound()
+                        self.playPlacementSound(number)
                         // have we completed the game
                         if self.sudokuBoard.isGameCompleted() {
                             self.userCompletesGame()
@@ -972,19 +983,21 @@ class ViewController: UIViewController {
                 self.boardPosition = (-1, -1, -1, -1)
                 return
             }
-            if self.sudokuBoard.setNumberOnGameBoard(posn, number: index + 1) {
+            if self.sudokuBoard.setNumberOnGameBoard(posn, number: index + 1) == false {
+                self.playErrorSound()
+            } else {
                 self.userSolution.addCoordinate(posn)
                 self.userGame.incrementGamePlayerMovesMade()
                 // do we need to make number 'inactive'?
                 if self.sudokuBoard.isNumberFullyUsedOnGameBoard(index + 1) == false {
                     self.setCoordToSelectImage(posn, number: index + 1)
-                    self.playPlacementSound()
+                    self.playPlacementSound(index + 1)
                 } else {
                     self.setCoordToOriginImage(posn, number: index + 1)
                     self.setControlPanelToInactiveImageValue((index / 2, column: index % 2))
                     self.unsetSelectNumbersOnBoard()
                     self.controlPanelPosition = (-1, -1)
-                    self.playPlacementSound()
+                    self.playPlacementSound(index + 1)
                     // have we completed the game
                     if self.sudokuBoard.isGameCompleted() {
                         self.userCompletesGame()
@@ -1316,13 +1329,13 @@ class ViewController: UIViewController {
             // do we need to make number 'inactive'?
             if self.sudokuBoard.isNumberFullyUsedOnGameBoard(number) == false {
                 self.setCoordToSelectImage(optionsToRemove[posnToRemove], number: number)
-                self.playPlacementSound()
+                self.playPlacementSound(number)
             } else {
                 self.setCoordToOriginImage(optionsToRemove[posnToRemove], number: number)
                 self.setControlPanelToInactiveImageValue(((number - 1) / 2, column: (number - 1) % 2))
                 self.unsetSelectNumbersOnBoard()
                 self.controlPanelPosition = (-1, -1)
-                self.playPlacementSound()
+                self.playPlacementSound(number)
                 // have we completed the game
                 if self.sudokuBoard.isGameCompleted() {
                     self.userCompletesGame()
