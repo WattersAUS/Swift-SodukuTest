@@ -1316,7 +1316,7 @@ class ViewController: UIViewController {
                 optionsToRemove = self.sudokuBoard.getFreeLocationsForNumberOnGameBoard(index + 1)
             }
         }
-        // if we found none to remove (shouldn't happen though) escape
+        // if we found none to remove (shouldn't happen though) escape cleanly
         if optionsToRemove.count == 0 {
             return false
         }
@@ -1349,50 +1349,53 @@ class ViewController: UIViewController {
     // things to do when the user completes the game
     //----------------------------------------------------------------------------
     func userCompletesGame() {
-        // AND OTHER STUFF NEEDS TO HAPPEN OFC!!!!!
         self.stopGameTimer()
         self.playVictorySound()
-        self.userGame.setCurrentBestWorstPlayerTimes()
+        //
+        // set up a customised message for the user
+        //
+        var completedMsg: String = ""
+        if self.userGame.setCurrentFastestPlayerTime() == true {
+           completedMsg.appendContentsOf("Wow! You have just set your fastest time of " + self.timeInText(self.userGame.getCurrentGameTimePlayed()) + ", do")
+        } else {
+           completedMsg.appendContentsOf("Do")
+        }
+        completedMsg.appendContentsOf(" you want to start again with another puzzle?")
+        //
+        // save things about the game we care about
+        //
         self.userGame.incrementTotalPlayerMovesMade(self.userGame.getGamePlayerMovesMade())
         self.userGame.incrementTotalPlayerMovesDeleted(self.userGame.getGamePlayerMovesDeleted())
         self.userGame.incrementCompletedGames()
         self.userGame.setGameInPlay(false)
-        
         //
-        // GAME RESET DIALOG GOES HERE!!!!
+        // go again?
         //
+        let alertController = UIAlertController(title: "Congratulations", message: completedMsg, preferredStyle: .Alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action:UIAlertAction!) in //action -> Void in
+            // nothing to do here, user bailed on reseting the game (why???????)
+        }
+        alertController.addAction(cancelAction)
+        let restartAction = UIAlertAction(title: "New Puzzle!", style: .Default) { (action:UIAlertAction!) in
+            self.resetControlPanelSelection()
+            self.sudokuBoard.clearBoard()
+            self.sudokuBoard.setBoardDifficulty(self.userPrefs.difficultySet)
+            self.sudokuBoard.buildSolution()
+            if self.debug == 1 {
+                print(self.sudokuBoard.dumpSolutionBoard())
+            }
+            self.sudokuBoard.buildOriginBoard()
+            self.finalPreparationForGameStart()
+        }
+        alertController.addAction(restartAction)
+        self.presentViewController(alertController, animated: true, completion:nil)
         return
     }
     
-//    func userDialogOnCompletion() {
-//        
-//        
-//        let alertController = UIAlertController(title: "Congratulations", message: "So you want to reset the puzzle?", preferredStyle: .Alert)
-//        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action:UIAlertAction!) in //action -> Void in
-//            // nothing to do here, user bailed on reseting the game
-//        }
-//        alertController.addAction(cancelAction)
-//        let resetAction = UIAlertAction(title: "Restart this puzzle!", style: .Default) { (action:UIAlertAction!) in
-//            self.resetControlPanelSelection()
-//            self.finalPreparationForGameStart()
-//        }
-//        alertController.addAction(resetAction)
-//        let restartAction = UIAlertAction(title: "New Puzzle!", style: .Default) { (action:UIAlertAction!) in
-//            self.resetControlPanelSelection()
-//            self.sudokuBoard.clearBoard()
-//            self.sudokuBoard.setGameDifficulty(self.userPrefs.difficultySet)
-//            self.sudokuBoard.buildSolution()
-//            if self.debug == 1 {
-//                print(self.sudokuBoard.dumpSolutionBoard())
-//            }
-//            self.sudokuBoard.buildOriginBoard()
-//            self.finalPreparationForGameStart()
-//        }
-//        alertController.addAction(restartAction)
-//        self.presentViewController(alertController, animated: true, completion:nil)
-//
-//    }
-    
+    func timeInText(time:Int) -> String {
+        return String(format: "%d", time / 60) + " minutes and " + String(format: "%d", time % 60) + " seconds"
+    }
+
     //----------------------------------------------------------------------------
     // captures user pressing the 'Settings' button
     //----------------------------------------------------------------------------

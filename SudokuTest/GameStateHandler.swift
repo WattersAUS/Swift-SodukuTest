@@ -206,14 +206,20 @@ class GameStateHandler: NSObject, GameStateDelegate {
         return
     }
     
-    func setCurrentBestWorstPlayerTimes() {
+    func setCurrentFastestPlayerTime() -> Bool {
         if (self.currentGame.fastestGame == 0) || (self.currentGame.currentGameTime < self.currentGame.fastestGame) {
             self.currentGame.fastestGame = self.currentGame.currentGameTime
+            return true
         }
+        return false
+    }
+    
+    func setCurrentSlowestPlayerTime() -> Bool {
         if self.currentGame.currentGameTime > self.currentGame.slowestGame {
             self.currentGame.slowestGame = self.currentGame.currentGameTime
+            return true
         }
-        return
+        return false
     }
     
     //
