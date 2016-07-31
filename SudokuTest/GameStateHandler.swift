@@ -181,9 +181,9 @@ class GameStateHandler: NSObject, GameStateDelegate {
         return
     }
     
-    func setCurrentGameTimePlayed(value: Int) -> Int {
-        self.currentGame.currentGameTime = value
-        return self.currentGame.currentGameTime
+    func resetCurrentGameTimePlayed() {
+        self.currentGame.currentGameTime = 0
+        return
     }
     
     func setGamePenaltyTime(value: Int) -> Int {

@@ -442,7 +442,7 @@ class ViewController: UIViewController {
     }
     
     func resetGameTimer() {
-        self.userGame.setCurrentGameTimePlayed(0)
+        self.userGame.resetCurrentGameTimePlayed()
         self.gameTimer.text = ""
         return
     }
@@ -1344,6 +1344,10 @@ class ViewController: UIViewController {
         self.userGame.incrementTotalPlayerMovesDeleted(self.userGame.getGamePlayerMovesDeleted())
         self.userGame.incrementCompletedGames()
         self.userGame.setGameInPlay(false)
+        
+        //
+        // GAME RESET DIALOG GOES HERE!!!!
+        //
         return
     }
     
