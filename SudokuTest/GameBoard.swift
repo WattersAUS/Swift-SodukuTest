@@ -435,7 +435,7 @@ class GameBoard: NSObject, NSCopying {
     //
     // remove a number from the board
     //
-    func clearNumberOnGameBoard(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
+    func clearLocationOnGameBoard(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
         guard self.coordBoundsCheck(coord) == true else {
             return
         }

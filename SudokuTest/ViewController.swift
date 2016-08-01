@@ -771,6 +771,8 @@ class ViewController: UIViewController {
                 self.unsetDeleteNumbersOnBoard()
                 break
             default:
+                // if we have a highlighted number (prob) from a hint, reset it!
+                self.unsetSelectNumbersOnBoard()
                 break
         }
         // process the current posn
@@ -803,7 +805,7 @@ class ViewController: UIViewController {
                 return (-1, -1)
             }
             if self.sudokuBoard.isGameBoardCellUsed(boardPosn) == true {
-                self.sudokuBoard.clearNumberOnGameBoard(boardPosn)
+                self.sudokuBoard.clearLocationOnGameBoard(boardPosn)
             }
             if self.sudokuBoard.setNumberOnGameBoard(boardPosn, number: index + 1) == false {
                 self.playErrorSound()
@@ -826,7 +828,7 @@ class ViewController: UIViewController {
             let number: Int = self.sudokuBoard.getNumberFromGameBoard(boardPosn)
             if number > 0 {
                 self.playRuboutSound()
-                self.sudokuBoard.clearNumberOnGameBoard(boardPosn)
+                self.sudokuBoard.clearLocationOnGameBoard(boardPosn)
                 self.setCellToBlankImage(boardPosn)
                 self.userSolution.removeCoordinate(boardPosn)
                 self.userGame.incrementGamePlayerMovesDeleted()
@@ -929,13 +931,15 @@ class ViewController: UIViewController {
         if posn.column == -1 {
             return
         }
-        // ignore those positions that were those at the start of the user solving the board, then reset the control and board positions
+        // ignore the 'origin' positions
         if self.sudokuBoard.isOriginBoardCellUsed(posn) {
             return
         }
         // if we have an acive Hint see if the board cell is clear and fill it!
         if self.giveHint == true {
-            if self.sudokuBoard.isGameBoardCellUsed(posn) == false {
+            if self.sudokuBoard.isGameBoardCellUsed(posn) == true {
+                self.playErrorSound()
+            } else {
                 let number: Int = self.sudokuBoard.getNumberFromSolutionBoard(posn)
                 if self.sudokuBoard.setNumberOnGameBoard(posn, number: number) == false {
                     self.playErrorSound()
@@ -976,7 +980,7 @@ class ViewController: UIViewController {
                     return
                 }
                 self.playRuboutSound()
-                self.sudokuBoard.clearNumberOnGameBoard(posn)
+                self.sudokuBoard.clearLocationOnGameBoard(posn)
                 self.setCellToBlankImage(posn)
                 self.userSolution.removeCoordinate(posn)
                 self.userGame.incrementGamePlayerMovesDeleted()
@@ -1010,7 +1014,7 @@ class ViewController: UIViewController {
             }
             // when user selects posn on board and it's populated by a user solution, clear it!
             self.playRuboutSound()
-            self.sudokuBoard.clearNumberOnGameBoard(posn)
+            self.sudokuBoard.clearLocationOnGameBoard(posn)
             self.setCellToBlankImage(posn)
             self.userSolution.removeCoordinate(posn)
             self.userGame.incrementGamePlayerMovesDeleted()
@@ -1078,172 +1082,6 @@ class ViewController: UIViewController {
         return
     }
     
-    //----------------------------------------------------------------------------
-    // all image setting routines live here!
-    //----------------------------------------------------------------------------
-
-    func unsetDeleteNumbersOnBoard() {
-        let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.displayBoard.getLocationsOfImages(imgStates.Delete.rawValue)
-        self.unsetDeleteLocationsOnBoard(locations)
-        return
-    }
-    
-    func unsetDeleteLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
-        if locations.isEmpty == false {
-            for coord in locations {
-                self.setCoordToOriginImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
-            }
-        }
-        return
-    }
-    
-    func setDeleteLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
-        if locations.isEmpty == false {
-            for coord in locations {
-                self.setCoordToDeleteImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
-            }
-        }
-        return
-    }
-    
-    func unsetSelectNumbersOnBoard() {
-        let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.displayBoard.getLocationsOfImages(imgStates.Selected.rawValue)
-        self.unsetSelectLocationsOnBoard(locations)
-        return
-    }
-
-    func unsetSelectLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
-        if locations.isEmpty == true {
-            return
-        }
-        for coord in locations {
-            self.setCoordToOriginImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
-        }
-        return
-    }
-    
-    func setSelectNumbersOnBoard(index: Int) {
-        // index will give the 'number' selected from the control panel
-        let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.sudokuBoard.getLocationsOfNumberOnGameBoard(index + 1)
-        self.setSelectLocationsOnBoard(locations)
-        return
-    }
-
-    func setSelectLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
-        if locations.isEmpty == true {
-            return
-        }
-        for coord in locations {
-            self.setCoordToSelectImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
-        }
-        return
-    }
-
-    //
-    // clear the current image at the coord
-    //
-    func setCellToBlankImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
-        self.displayBoard.gameImages[coord.row][coord.column].unsetImage(coord.cellRow, column: coord.cellColumn)
-        return
-    }
-    
-    //
-    // set space on board to cell having been 'touched', we use this when the user selectes the board cell first and not the control panel
-    //
-    func setCoordToTouchedImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
-        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.userSelectImage, imageState: imgStates.Origin.rawValue)
-        return
-    }
-    
-    //
-    // set numbers on the 'game' board to inactive when all of that number has been used
-    //
-    func setCoordToInactiveImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
-        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageLibrary[imgStates.Inactive.rawValue][self.userPrefs.characterSetInUse][number - 1], imageState: imgStates.Inactive.rawValue)
-        return
-    }
-    
-    //
-    // set numbers on the 'game' board to origin if they are also part of the origin board
-    //
-    func setCoordToOriginImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
-        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageLibrary[imgStates.Origin.rawValue][self.userPrefs.characterSetInUse][number - 1], imageState: imgStates.Origin.rawValue)
-        return
-    }
-    
-    //
-    // set numbers on the 'game' board to highlighted if the user selects the 'number' from the control panel
-    //
-    func setCoordToSelectImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
-        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageLibrary[imgStates.Selected.rawValue][self.userPrefs.characterSetInUse][number - 1], imageState: imgStates.Selected.rawValue)
-        return
-    }
-    
-    //
-    // set numbers on the 'game' board to highlighted if the user selects the 'number' from the control panel
-    //
-    func setCoordToDeleteImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
-        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageLibrary[imgStates.Delete.rawValue][self.userPrefs.characterSetInUse][number - 1], imageState: imgStates.Delete.rawValue)
-        return
-    }
-    
-    //
-    // set numbers on the 'game' board to highlighted if the user selects the 'number' from the control panel
-    //
-    func redrawCurrentCoordImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
-        let number: Int = self.sudokuBoard.getNumberFromGameBoard(coord)
-        if number == 0 {
-            self.setCellToBlankImage(coord)
-        } else {
-            var imgState: Int = self.displayBoard.gameImages[coord.row][coord.column].getImageState(coord.cellRow, column: coord.cellColumn)
-            if imgState == -1 {
-                imgState = imgStates.Origin.rawValue
-            }
-            self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageLibrary[imgState][self.userPrefs.characterSetInUse][number - 1], imageState: imgState)
-        }
-        return
-    }
-
-    //
-    // set numbers on the control panel to whatever 'state' is stored (used when we swap char sets)
-    //
-    func setControlPanelToCurrentImageValue(coord: (row: Int, column: Int)) {
-        let imgState: Int = self.controlPanelImages.getImageState(coord.row, column: coord.column)
-        self.controlPanelImages.setImage(coord.row, column: coord.column, imageToSet: self.imageLibrary[imgState][self.userPrefs.characterSetInUse][(coord.row * 2) + coord.column], imageState: imgState)
-        return
-    }
-    
-    //
-    // set numbers on the control panel to 'inactive' 'state'
-    //
-    func setControlPanelToInactiveImageValue(coord: (row: Int, column: Int)) {
-        self.controlPanelImages.setImage(coord.row, column: coord.column, imageToSet: self.imageLibrary[imgStates.Inactive.rawValue][self.userPrefs.characterSetInUse][(coord.row * 2) + coord.column], imageState: imgStates.Inactive.rawValue)
-        return
-    }
-
-    //
-    // set numbers on the control panel to 'origin' 'state'
-    //
-    func setControlPanelToOriginImageValue(coord: (row: Int, column: Int)) {
-        self.controlPanelImages.setImage(coord.row, column: coord.column, imageToSet: self.imageLibrary[imgStates.Origin.rawValue][self.userPrefs.characterSetInUse][(coord.row * 2) + coord.column], imageState: imgStates.Origin.rawValue)
-        return
-    }
-    
-    //
-    // set numbers on the control panel to 'selected' 'state'
-    //
-    func setControlPanelToSelectedImageValue(coord: (row: Int, column: Int)) {
-        self.controlPanelImages.setImage(coord.row, column: coord.column, imageToSet: self.imageLibrary[imgStates.Selected.rawValue][self.userPrefs.characterSetInUse][(coord.row * 2) + coord.column], imageState: imgStates.Selected.rawValue)
-        return
-    }
-    
-    //
-    // set numbers on the control panel to 'selected' 'state'
-    //
-    func setControlPanelToDeleteImageValue(coord: (row: Int, column: Int)) {
-        self.controlPanelImages.setImage(coord.row, column: coord.column, imageToSet: self.imageLibrary[imgStates.Delete.rawValue][self.userPrefs.characterSetInUse][(coord.row * 2) + coord.column], imageState: imgStates.Delete.rawValue)
-        return
-    }
     
     //
     // detect if the user has selected within a designated image view
@@ -1269,32 +1107,78 @@ class ViewController: UIViewController {
                 // nothing to do here, user bailed on using a hint
             }
             alertController.addAction(cancelAction)
+            return
+        }
+        if self.userPrefs.hintsOn == false {
+            self.playErrorSound()
+            alertController = UIAlertController(title: "Hint Options", message: "Hints have been turned off! You can turn them back on in the prefs panel.", preferredStyle: .Alert)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action:UIAlertAction!) in //action -> Void in
+                // nothing to do here, user bailed on using a hint
+            }
+            alertController.addAction(cancelAction)
         } else {
-            if self.userPrefs.hintsOn == false {
-                self.playErrorSound()
-                alertController = UIAlertController(title: "Hint Options", message: "Hints have been turned off! You can turn them back on in the prefs panel.", preferredStyle: .Alert)
-                let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action:UIAlertAction!) in //action -> Void in
-                    // nothing to do here, user bailed on using a hint
+            alertController = UIAlertController(title: "Hint Options", message: "So you want to use a hint, this will add some time to your game clock. Ok?",preferredStyle: .Alert)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action:UIAlertAction!) in //action -> Void in
+                // nothing to do here, user bailed on using a hint
+            }
+            alertController.addAction(cancelAction)
+            let useHintAction = UIAlertAction(title: "Give me a hint!", style: .Default) { (action:UIAlertAction!) in
+                if self.addHintToBoard() {
+                    self.addPenaltyToGameTime()
                 }
-                alertController.addAction(cancelAction)
-            } else {
-                alertController = UIAlertController(title: "Hint Options", message: "So you want to use a hint, this will add some time to your game clock. Ok?", preferredStyle: .Alert)
-                let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action:UIAlertAction!) in //action -> Void in
-                    // nothing to do here, user bailed on using a hint
+            }
+            alertController.addAction(useHintAction)
+            let userSelectAction = UIAlertAction(title: "Let me select a cell to uncover!", style: .Default) { (action:UIAlertAction!) in
+                self.giveHint = true
+                self.boardPosition = (-1, -1, -1, -1)
+                self.controlPanelPosition = (-1, -1)
+            }
+            alertController.addAction(userSelectAction)
+            //
+            // if we have detected numbers placed incorrectly give option to highlight (then pretend bin has been selected with restricted set)
+            //
+            let incorrectPlacements: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.incorrectNumbersPlacedOnBoard()
+            if incorrectPlacements.count > 0 {
+                var msg: String = ""
+                if incorrectPlacements.count == 1 {
+                    msg = "There is an incorrect number, show it!"
+                } else {
+                    msg = "\(incorrectPlacements.count) incorrect numbers, show them!"
                 }
-                alertController.addAction(cancelAction)
-                let useHintAction = UIAlertAction(title: "Give me a hint!", style: .Default) { (action:UIAlertAction!) in
-                    if self.addHintToBoard() {
-                        self.addPenaltyToGameTime()
+                let useHighlightAction = UIAlertAction(title: msg, style: .Default) { (action:UIAlertAction!) in
+                    //
+                    // need to clear any ctrl posn and board cells already highlighted
+                    //
+                    if self.controlPanelPosition.row != -1 {
+                        let index: Int = (self.controlPanelPosition.row * 2) + self.controlPanelPosition.column
+                        switch index {
+                            case 0..<9:
+                                if self.sudokuBoard.isNumberFullyUsedOnGameBoard(index + 1) == true {
+                                    self.setControlPanelToInactiveImageValue((index / 2, column: index % 2))
+                                } else {
+                                    self.setControlPanelToOriginImageValue((index / 2, column: index % 2))
+                                }
+                                self.unsetSelectNumbersOnBoard()
+                                break
+                            case 9:
+                                self.setControlPanelToOriginImageValue((index / 2, column: index % 2))
+                                self.unsetDeleteNumbersOnBoard()
+                                break
+                            default:
+                                // if we have a highlighted number (prob) from a hint, reset it!
+                                self.unsetSelectNumbersOnBoard()
+                                break
+                        }
                     }
-                }
-                alertController.addAction(useHintAction)
-                let userSelectAction = UIAlertAction(title: "Let me select a cell to uncover!", style: .Default) { (action:UIAlertAction!) in
-                    self.giveHint = true
+                    //
+                    // highlight the incorrect numbers and the 'bin' as though the user had done it!
+                    //
+                    self.setControlPanelToDeleteImageValue((4, column: 1))
+                    self.controlPanelPosition = (4, 1)
+                    self.setDeleteLocationsOnBoard(incorrectPlacements)
                     self.boardPosition = (-1, -1, -1, -1)
-                    self.controlPanelPosition = (-1, -1)
                 }
-                alertController.addAction(userSelectAction)
+                alertController.addAction(useHighlightAction)
             }
         }
         self.presentViewController(alertController, animated: true, completion:nil)
@@ -1302,7 +1186,7 @@ class ViewController: UIViewController {
     }
     
     //
-    // First if they have a 'selected' number highlighted use that!, then failover to a random hint
+    // If they have a 'selected' number highlighted use that!, then failover to a random hint
     //
     func addHintToBoard() -> Bool {
         var optionsToRemove: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = []
@@ -1343,6 +1227,20 @@ class ViewController: UIViewController {
             }
         }
         return true
+    }
+    
+    //
+    // use the userSolution and compare against the 'Origin' board to see if we have incorrect placements
+    //
+    func incorrectNumbersPlacedOnBoard() -> [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] {
+        var incorrectCoords: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = []
+        let coordsInSolution: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.userSolution.getCoordinatesInSolution()
+        for coord in coordsInSolution {
+            if self.sudokuBoard.getNumberFromGameBoard(coord) != self.sudokuBoard.getNumberFromSolutionBoard(coord) {
+                incorrectCoords.append(coord)
+            }
+        }
+        return incorrectCoords
     }
     
     //----------------------------------------------------------------------------
@@ -1410,4 +1308,172 @@ class ViewController: UIViewController {
         return
     }
 
+    //----------------------------------------------------------------------------
+    // all image setting routines live here!
+    //----------------------------------------------------------------------------
+    
+    func unsetDeleteNumbersOnBoard() {
+        let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.displayBoard.getLocationsOfImages(imgStates.Delete.rawValue)
+        self.unsetDeleteLocationsOnBoard(locations)
+        return
+    }
+    
+    func unsetDeleteLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
+        if locations.isEmpty == false {
+            for coord in locations {
+                self.setCoordToOriginImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
+            }
+        }
+        return
+    }
+    
+    func setDeleteLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
+        if locations.isEmpty == false {
+            for coord in locations {
+                self.setCoordToDeleteImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
+            }
+        }
+        return
+    }
+    
+    func unsetSelectNumbersOnBoard() {
+        let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.displayBoard.getLocationsOfImages(imgStates.Selected.rawValue)
+        self.unsetSelectLocationsOnBoard(locations)
+        return
+    }
+    
+    func unsetSelectLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
+        if locations.isEmpty == true {
+            return
+        }
+        for coord in locations {
+            self.setCoordToOriginImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
+        }
+        return
+    }
+    
+    func setSelectNumbersOnBoard(index: Int) {
+        // index will give the 'number' selected from the control panel
+        let locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.sudokuBoard.getLocationsOfNumberOnGameBoard(index + 1)
+        self.setSelectLocationsOnBoard(locations)
+        return
+    }
+    
+    func setSelectLocationsOnBoard(locations: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)]) {
+        if locations.isEmpty == true {
+            return
+        }
+        for coord in locations {
+            self.setCoordToSelectImage(coord, number: self.sudokuBoard.getNumberFromGameBoard(coord))
+        }
+        return
+    }
+    
+    //
+    // clear the current image at the coord
+    //
+    func setCellToBlankImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
+        self.displayBoard.gameImages[coord.row][coord.column].unsetImage(coord.cellRow, column: coord.cellColumn)
+        return
+    }
+    
+    //
+    // set space on board to cell having been 'touched', we use this when the user selectes the board cell first and not the control panel
+    //
+    func setCoordToTouchedImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
+        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.userSelectImage, imageState: imgStates.Origin.rawValue)
+        return
+    }
+    
+    //
+    // set numbers on the 'game' board to inactive when all of that number has been used
+    //
+    func setCoordToInactiveImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
+        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageLibrary[imgStates.Inactive.rawValue][self.userPrefs.characterSetInUse][number - 1], imageState: imgStates.Inactive.rawValue)
+        return
+    }
+    
+    //
+    // set numbers on the 'game' board to origin if they are also part of the origin board
+    //
+    func setCoordToOriginImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
+        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageLibrary[imgStates.Origin.rawValue][self.userPrefs.characterSetInUse][number - 1], imageState: imgStates.Origin.rawValue)
+        return
+    }
+    
+    //
+    // set numbers on the 'game' board to highlighted if the user selects the 'number' from the control panel
+    //
+    func setCoordToSelectImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
+        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageLibrary[imgStates.Selected.rawValue][self.userPrefs.characterSetInUse][number - 1], imageState: imgStates.Selected.rawValue)
+        return
+    }
+    
+    //
+    // set numbers on the 'game' board to highlighted if the user selects the 'number' from the control panel
+    //
+    func setCoordToDeleteImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int), number: Int) {
+        self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageLibrary[imgStates.Delete.rawValue][self.userPrefs.characterSetInUse][number - 1], imageState: imgStates.Delete.rawValue)
+        return
+    }
+    
+    //
+    // set numbers on the 'game' board to highlighted if the user selects the 'number' from the control panel
+    //
+    func redrawCurrentCoordImage(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
+        let number: Int = self.sudokuBoard.getNumberFromGameBoard(coord)
+        if number == 0 {
+            self.setCellToBlankImage(coord)
+        } else {
+            var imgState: Int = self.displayBoard.gameImages[coord.row][coord.column].getImageState(coord.cellRow, column: coord.cellColumn)
+            if imgState == -1 {
+                imgState = imgStates.Origin.rawValue
+            }
+            self.displayBoard.gameImages[coord.row][coord.column].setImage(coord.cellRow, column: coord.cellColumn, imageToSet: self.imageLibrary[imgState][self.userPrefs.characterSetInUse][number - 1], imageState: imgState)
+        }
+        return
+    }
+    
+    //
+    // set numbers on the control panel to whatever 'state' is stored (used when we swap char sets)
+    //
+    func setControlPanelToCurrentImageValue(coord: (row: Int, column: Int)) {
+        let imgState: Int = self.controlPanelImages.getImageState(coord.row, column: coord.column)
+        self.controlPanelImages.setImage(coord.row, column: coord.column, imageToSet: self.imageLibrary[imgState][self.userPrefs.characterSetInUse][(coord.row * 2) + coord.column], imageState: imgState)
+        return
+    }
+    
+    //
+    // set numbers on the control panel to 'inactive' 'state'
+    //
+    func setControlPanelToInactiveImageValue(coord: (row: Int, column: Int)) {
+        self.controlPanelImages.setImage(coord.row, column: coord.column, imageToSet: self.imageLibrary[imgStates.Inactive.rawValue][self.userPrefs.characterSetInUse][(coord.row * 2) + coord.column], imageState: imgStates.Inactive.rawValue)
+        return
+    }
+    
+    //
+    // set numbers on the control panel to 'origin' 'state'
+    //
+    func setControlPanelToOriginImageValue(coord: (row: Int, column: Int)) {
+        self.controlPanelImages.setImage(coord.row, column: coord.column, imageToSet: self.imageLibrary[imgStates.Origin.rawValue][self.userPrefs.characterSetInUse][(coord.row * 2) + coord.column], imageState: imgStates.Origin.rawValue)
+        return
+    }
+    
+    //
+    // set numbers on the control panel to 'selected' 'state'
+    //
+    func setControlPanelToSelectedImageValue(coord: (row: Int, column: Int)) {
+        self.controlPanelImages.setImage(coord.row, column: coord.column, imageToSet: self.imageLibrary[imgStates.Selected.rawValue][self.userPrefs.characterSetInUse][(coord.row * 2) + coord.column], imageState: imgStates.Selected.rawValue)
+        return
+    }
+    
+    //
+    // set numbers on the control panel to 'selected' 'state'
+    //
+    func setControlPanelToDeleteImageValue(coord: (row: Int, column: Int)) {
+        self.controlPanelImages.setImage(coord.row, column: coord.column, imageToSet: self.imageLibrary[imgStates.Delete.rawValue][self.userPrefs.characterSetInUse][(coord.row * 2) + coord.column], imageState: imgStates.Delete.rawValue)
+        return
+    }
+    
 }
+
