@@ -935,35 +935,9 @@ class ViewController: UIViewController {
         if self.sudokuBoard.isOriginBoardCellUsed(posn) {
             return
         }
-        // if we have an acive Hint see if the board cell is clear and fill it!
+        // if we have an acive Hint to place see if the board cell is clear and fill it!
         if self.giveHint == true {
-            if self.sudokuBoard.isGameBoardCellUsed(posn) == true {
-                self.playErrorSound()
-            } else {
-                let number: Int = self.sudokuBoard.getNumberFromSolutionBoard(posn)
-                if self.sudokuBoard.setNumberOnGameBoard(posn, number: number) == false {
-                    self.playErrorSound()
-                } else {
-                    self.userSolution.addCoordinate(posn)
-                    self.userGame.incrementGamePlayerMovesMade()
-                    // do we need to make number 'inactive'?
-                    if self.sudokuBoard.isNumberFullyUsedOnGameBoard(number) == false {
-                        self.setCoordToSelectImage(posn, number: number)
-                        self.playPlacementSound(number)
-                    } else {
-                        self.setCoordToOriginImage(posn, number: number)
-                        self.setControlPanelToInactiveImageValue(((number - 1) / 2, column: (number - 1) % 2))
-                        self.unsetSelectNumbersOnBoard()
-                        self.controlPanelPosition = (-1, -1)
-                        self.playPlacementSound(number)
-                        // have we completed the game
-                        if self.sudokuBoard.isGameCompleted() {
-                            self.userCompletesGame()
-                        }
-                    }
-                }
-                self.giveHint = false
-            }
+            self.placeUserHintOnBoard(posn)
             return
         }
         // if there's no action to process from the control panel, store the board posn, highlight it and leave
@@ -1045,6 +1019,62 @@ class ViewController: UIViewController {
     }
     
     //
+    // place users hint on the board, if we can
+    //
+    func placeUserHintOnBoard(position: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) {
+        if self.sudokuBoard.isGameBoardCellUsed(position) == true {
+            self.playErrorSound()
+        } else {
+            let number: Int = self.sudokuBoard.getNumberFromSolutionBoard(position)
+            if self.sudokuBoard.setNumberOnGameBoard(position, number: number) == false {
+                self.playErrorSound()
+            } else {
+                // we need to clear any selected numbers on the board and any reset control panel icons if selected
+                self.unsetDeleteNumbersOnBoard()
+                self.unsetSelectNumbersOnBoard()
+                if self.controlPanelPosition.row != -1 {
+                    let index: Int = (self.controlPanelPosition.row * 2) + self.controlPanelPosition.column
+                    switch index {
+                        case 0..<9:
+                            if self.sudokuBoard.isNumberFullyUsedOnGameBoard(index + 1) == true {
+                                self.setControlPanelToInactiveImageValue(self.controlPanelPosition)
+                            } else {
+                                self.setControlPanelToOriginImageValue(self.controlPanelPosition)
+                            }
+                            break
+                        case 9:
+                            self.setControlPanelToOriginImageValue(self.controlPanelPosition)
+                            break
+                        default:
+                        break
+                    }
+                    self.controlPanelPosition = (-1, -1)
+                }
+                // then we can add the number
+                self.userSolution.addCoordinate(position)
+                self.userGame.incrementGamePlayerMovesMade()
+                // do we need to make number 'inactive'?
+                if self.sudokuBoard.isNumberFullyUsedOnGameBoard(number) == false {
+                    self.setCoordToSelectImage(position, number: number)
+                    self.playPlacementSound(number)
+                } else {
+                    self.setCoordToOriginImage(position, number: number)
+                    self.setControlPanelToInactiveImageValue(((number - 1) / 2, column: (number - 1) % 2))
+                    self.unsetSelectNumbersOnBoard()
+                    self.controlPanelPosition = (-1, -1)
+                    self.playPlacementSound(number)
+                    // have we completed the game
+                    if self.sudokuBoard.isGameCompleted() {
+                        self.userCompletesGame()
+                    }
+                }
+            }
+            self.giveHint = false
+        }
+        return
+    }
+    
+    //
     // if the user selects the board first
     //
     func userSelectedBoardFirst(currentPosn: (row: Int, column: Int, cellRow: Int, cellColumn: Int), previousPosn: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) -> (row: Int, column: Int, cellRow: Int, cellColumn: Int) {
@@ -1075,7 +1105,7 @@ class ViewController: UIViewController {
     //----------------------------------------------------------------------------
     // routines to make numbers inactive/active if all are completed on board
     //----------------------------------------------------------------------------
-    
+
     func resetInactiveNumberOnBoard(number: Int) {
         let index: Int = number - 1
         self.setControlPanelToOriginImageValue((index / 2, column: index % 2))
@@ -1130,8 +1160,6 @@ class ViewController: UIViewController {
             alertController.addAction(useHintAction)
             let userSelectAction = UIAlertAction(title: "Let me select a cell to uncover!", style: .Default) { (action:UIAlertAction!) in
                 self.giveHint = true
-                self.boardPosition = (-1, -1, -1, -1)
-                self.controlPanelPosition = (-1, -1)
             }
             alertController.addAction(userSelectAction)
             //
