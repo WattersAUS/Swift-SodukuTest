@@ -16,6 +16,7 @@ import Foundation
 protocol GameStateDelegate: class {
     // game stats
     var currentGame: GameState { get set }
+    func getTotalGameTimePlayedAsString() -> String
 }
 
 class GameStateHandler: NSObject, GameStateDelegate {
@@ -46,6 +47,17 @@ class GameStateHandler: NSObject, GameStateDelegate {
         return
     }
 
+    //
+    // format the seconds played into hrs/mins/secs string
+    //
+    func getTotalGameTimePlayedAsString() -> String {
+        let time:  Int = self.currentGame.totalTimePlayed
+        let hours: Int = time / 3600
+        let mins:  Int = (time - (hours * 3600)) / 60
+        let secs:  Int = time - (hours * 3600) - (mins * 60)
+        return String(format: "%02d", hours) + ":" + String(format: "%02d", mins) + ":" + String(format: "%02d", secs)
+    }
+    
     //-------------------------------------------------------------------------------
     // load/save to/from internal 'currentgame' state and save dictionary 'gameSave'
     //-------------------------------------------------------------------------------
@@ -144,7 +156,7 @@ class GameStateHandler: NSObject, GameStateDelegate {
     func getTotalGameTimePlayed() -> Int {
         return self.currentGame.totalTimePlayed
     }
-    
+
     func getTotalPlayerMovesMade() -> Int {
         return self.currentGame.totalMovesMade
     }

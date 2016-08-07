@@ -16,10 +16,10 @@ import Foundation
 protocol PreferencesDelegate: class {
     // what we use to populate the pref dialog
     var characterSetInUse: Int { get set }
-    var difficultySet: Int { get set }
-    var gameModeInUse: Int { get set }
-    var soundOn: Bool { get set }
-    var hintsOn: Bool { get set }
+    var difficultySet:     Int { get set }
+    var gameModeInUse:     Int { get set }
+    var soundOn:          Bool { get set }
+    var hintsOn:          Bool { get set }
     // if we swap the char set redraw the board
     var drawFunctions: [(Void) -> ()] { get set }
     var saveFunctions: [(Void) -> ()] { get set }
@@ -27,10 +27,10 @@ protocol PreferencesDelegate: class {
 
 class PreferencesHandler: NSObject, PreferencesDelegate {
     var characterSetInUse: Int = 0
-    var difficultySet: Int = 0
-    var gameModeInUse: Int = 0
-    var soundOn: Bool = true
-    var hintsOn: Bool = false
+    var difficultySet:     Int = 0
+    var gameModeInUse:     Int = 0
+    var soundOn:          Bool = true
+    var hintsOn:          Bool = false
     var drawFunctions: [(Void) -> ()] = []
     var saveFunctions: [(Void) -> ()] = []
     

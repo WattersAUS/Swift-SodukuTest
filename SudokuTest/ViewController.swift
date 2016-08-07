@@ -312,10 +312,11 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.userPrefs = PreferencesHandler(redrawFunctions: [])
+        
         //** NEEDS TO BE LOADED FROM SAVE GAME**//
-        //self.totalSeconds = 0
-        //self.timerSeconds = 0
         self.userGame = GameStateHandler()
+        //**
+
         self.sudokuBoard = GameBoard(size: self.boardDimensions, setDifficulty: self.userPrefs.difficultySet)
         self.displayBoard = GameBoardImages(size: self.boardDimensions)
         self.controlPanelImages = CellImages(rows: 5, columns: 2)
@@ -326,11 +327,6 @@ class ViewController: UIViewController {
         // setup the timer but dont let game time start yet
         self.initialiseGameTimer()
         self.stopGameTimer()
-
-        //** NEEDS TO BE LOADED FROM SAVE GAME**//
-        //self.totalSeconds = 0
-        //self.timerSeconds = 0
-
         // load sounds
         self.initialiseGameSounds()
         // set Hint override to off
@@ -1330,6 +1326,7 @@ class ViewController: UIViewController {
         let pViewController: Preferences = Preferences()
         pViewController.modalPresentationStyle = UIModalPresentationStyle.Popover
         pViewController.prefs = self.userPrefs
+        pViewController.state = self.userGame
         self.presentViewController(pViewController, animated: true, completion: nil)
         let popoverController = pViewController.popoverPresentationController
         popoverController?.sourceView = sender

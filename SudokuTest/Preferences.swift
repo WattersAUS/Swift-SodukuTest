@@ -19,14 +19,29 @@ class Preferences: UIViewController {
     @IBOutlet weak var useSound: UISwitch!
     @IBOutlet weak var allowHints: UISwitch!
     
+    // now the game stats
+    @IBOutlet weak var startedGames: UITextField!
+    @IBOutlet weak var completedGames: UITextField!
+    @IBOutlet weak var totalTimePlayed: UITextField!
+    @IBOutlet weak var totalMovesMade: UITextField!
+    @IBOutlet weak var totalMovesDeleted: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // get the current state of the prefs
-        self.characterSet.selectedSegmentIndex = (prefs?.characterSetInUse)!
+        // self.prefs = self.
+        self.characterSet.selectedSegmentIndex  = (prefs?.characterSetInUse)!
         self.setDifficulty.selectedSegmentIndex = (prefs?.difficultySet)!
-        self.gameMode.selectedSegmentIndex = (prefs?.gameModeInUse)!
-        self.useSound.on = (prefs?.soundOn)!
-        self.allowHints.on = (prefs?.hintsOn)!
+        self.gameMode.selectedSegmentIndex      = (prefs?.gameModeInUse)!
+        self.useSound.on                        = (prefs?.soundOn)!
+        self.allowHints.on                      = (prefs?.hintsOn)!
+        // game stats
+        self.startedGames.text      = String((state?.currentGame.startedGames)!)
+        self.completedGames.text    = String((state?.currentGame.completedGames)!)
+        self.totalTimePlayed.text   = (state?.getTotalGameTimePlayedAsString())
+        self.totalMovesMade.text    = String((state?.currentGame.totalMovesMade)!)
+        self.totalMovesDeleted.text = String((state?.currentGame.totalMovesDeleted)!)
+        return
     }
 
     override func didReceiveMemoryWarning() {
@@ -60,6 +75,7 @@ class Preferences: UIViewController {
             saveFunction()
         }
         self.dismissViewControllerAnimated(true, completion: nil)
+        return
     }
 
 }
