@@ -90,6 +90,8 @@ enum saveGameDictionary: String {
     case GameMovesMade         = "GAMEMOVESMADE"
     case GameMovesDeleted      = "GAMEMOVESDELETED"
     case GameBoard             = "GAMEBOARD"
+    case OriginBoard           = "ORIGINBOARD"
+    case SolutionBoard         = "SOLUTIONBOARD"
 }
 
 //
@@ -102,4 +104,5 @@ enum cellDictionary: String {
     case ccol  = "ccol"
     case value = "value"
     case state = "state"
+    case board = "board"
 }

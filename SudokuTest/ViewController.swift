@@ -79,7 +79,7 @@ class ViewController: UIViewController {
     //
     // State:
     //
-    // 0 = Origin
+    // 0 = origin
     //      used as the default display image
     // 1 = select
     //      when the user selects via the control panel
@@ -355,6 +355,8 @@ class ViewController: UIViewController {
     }
     
     func applicationToClose() {
+        self.userGame.setGameCells(self.getCurrentGameBoardState())
+        self.userGame.saveGame()
         return
     }
     
@@ -367,6 +369,8 @@ class ViewController: UIViewController {
 
     func applicationMovingToBackground() {
         self.stopGameTimer()
+        self.userGame.setGameCells(self.getCurrentGameBoardState())
+        self.userGame.saveGame()
         return
     }
 
@@ -556,6 +560,9 @@ class ViewController: UIViewController {
         self.userGame.resetGamePlayerMovesMade()
         self.userGame.resetGamePlayerMovesDeleted()
         self.userGame.incrementStartedGames()
+        self.userGame.setGameCells(self.getCurrentGameBoardState())
+        self.userGame.setOriginCells(self.getCurrentOriginBoardState())
+        self.userGame.setSolutionCells(self.getCurrentSolutionBoardState())
         return
     }
 
@@ -1498,6 +1505,86 @@ class ViewController: UIViewController {
     func setControlPanelToDeleteImageValue(coord: (row: Int, column: Int)) {
         self.controlPanelImages.setImage(coord.row, column: coord.column, imageToSet: self.imageLibrary[imgStates.Delete.rawValue][self.userPrefs.characterSetInUse][(coord.row * 2) + coord.column], imageState: imgStates.Delete.rawValue)
         return
+    }
+    
+    //----------------------------------------------------------------------------
+    // translate game to/from GameStateHandler
+    //----------------------------------------------------------------------------
+    func loadGameState() {
+        return
+    }
+    
+    //
+    // Game cells linked to the solution tracker
+    //
+    func getCurrentGameBoardState() -> [BoardCell] {
+        var cells: [BoardCell] = []
+        let coordsInGame: [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] = self.userSolution.getCoordinatesInSolution()
+        for coord in coordsInGame {
+            let number: Int = self.sudokuBoard.getNumberFromGameBoard(coord)
+            var cell: BoardCell = BoardCell()
+            cell.row   = coord.row
+            cell.col   = coord.column
+            cell.crow  = coord.cellRow
+            cell.ccol  = coord.cellColumn
+            cell.value = number
+            cell.state = self.displayBoard.getImageState(coord)
+            cells.append(cell)
+        }
+        return cells
+    }
+
+    //
+    // Only populated origin cells
+    //
+    func getCurrentOriginBoardState() -> [BoardCell] {
+        var cells: [BoardCell] = []
+        for y: Int in 0 ..< self.displayBoard.boardRows {
+            for x: Int in 0 ..< self.displayBoard.boardColumns {
+                for j: Int in 0 ..< self.displayBoard.gameImages[y][x].cellRows {
+                    for k: Int in 0 ..< self.displayBoard.gameImages[y][x].cellColumns {
+                        let coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int) = (y, x, j, k)
+                        let number: Int = self.sudokuBoard.getNumberFromOriginBoard(coord)
+                        if number > 0 {
+                            var cell: BoardCell = BoardCell()
+                            cell.row   = coord.row
+                            cell.col   = coord.column
+                            cell.crow  = coord.cellRow
+                            cell.ccol  = coord.cellColumn
+                            cell.value = number
+                            cell.state = self.displayBoard.getImageState(coord)
+                            cells.append(cell)
+                        }
+                    }
+                }
+            }
+        }
+        return cells
+    }
+
+    //
+    // All solution cells
+    //
+    func getCurrentSolutionBoardState() -> [BoardCell] {
+        var cells: [BoardCell] = []
+        for y: Int in 0 ..< self.displayBoard.boardRows {
+            for x: Int in 0 ..< self.displayBoard.boardColumns {
+                for j: Int in 0 ..< self.displayBoard.gameImages[y][x].cellRows {
+                    for k: Int in 0 ..< self.displayBoard.gameImages[y][x].cellColumns {
+                        let coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int) = (y, x, j, k)
+                        var cell: BoardCell = BoardCell()
+                        cell.row   = coord.row
+                        cell.col   = coord.column
+                        cell.crow  = coord.cellRow
+                        cell.ccol  = coord.cellColumn
+                        cell.value = self.sudokuBoard.getNumberFromSolutionBoard(coord)
+                        cell.state = self.displayBoard.getImageState(coord)
+                        cells.append(cell)
+                    }
+                }
+            }
+        }
+        return cells
     }
     
 }

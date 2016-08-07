@@ -119,12 +119,4 @@ class CellImages {
         return (returnCoords)
     }
     
-//    func setStateOfCellsAtLocations(locations: [(cellRow: Int, cellColumn: Int)], state: Int) {
-//        for location: (cellRow: Int, cellColumn: Int) in locations {
-//            self.setImageState(<#T##row: Int##Int#>, column: <#T##Int#>, imageState: <#T##Int#>)
-//            self.cellContents[location.cellRow][location.cellColumn].state = state
-//        }
-//        return
-//    }
-    
 }

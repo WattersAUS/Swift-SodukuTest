@@ -55,6 +55,13 @@ class GameBoardImages {
     }
     
     //
+    // get locations 'state', used for save routine
+    //
+    func getImageState(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) -> Int {
+        return self.gameImages[coord.row][coord.column].getImageState(coord.cellRow, column: coord.cellColumn)
+    }
+    
+    //
     // we use this to pass back to the ViewController an array of images selected by the user when selecting a control panel 'number'
     //
     func getLocationsOfImages(imageState: Int) -> [(row: Int, column: Int, cellRow: Int, cellColumn: Int)] {

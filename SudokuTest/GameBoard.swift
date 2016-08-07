@@ -370,6 +370,16 @@ class GameBoard: NSObject, NSCopying {
     }
 
     //
+    // get a number from the origin board
+    //
+    func getNumberFromOriginBoard(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) -> Int {
+        guard self.coordBoundsCheck(coord) == true else {
+            return 0
+        }
+        return self.originBoardCells[coord.row][coord.column].getNumberAtCellPosition(coord.cellRow, column: coord.cellColumn)
+    }
+
+    //
     // get a number from the solution board
     //
     func getNumberFromSolutionBoard(coord: (row: Int, column: Int, cellRow: Int, cellColumn: Int)) -> Int {
@@ -514,6 +524,18 @@ class GameBoard: NSObject, NSCopying {
         }
         return returnCoords
     }
+    
+//    func getGameBoardCells() -> [[Cell]] {
+//        return self.gameBoardCells
+//    }
+//    
+//    func getSolutionBoardCells() -> [[Cell]] {
+//        return self.solutionBoardCells
+//    }
+//    
+//    func getOriginBoardCells() -> [[Cell]] {
+//        return self.originBoardCells
+//    }
     
     func copyWithZone(zone: NSZone) -> AnyObject {
         let copy = GameBoard(size: self.boardColumns)

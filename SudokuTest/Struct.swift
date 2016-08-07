@@ -35,6 +35,8 @@ struct GameState {
     var currentGameTime:               Int = 0
     var gameMovesMade:                 Int = 0
     var gameMovesDeleted:              Int = 0
-    var cells:               [ BoardCell ] = []
+    var gameCells:             [BoardCell] = []
+    var originCells:           [BoardCell] = []
+    var solutionCells:         [BoardCell] = []
 }
 

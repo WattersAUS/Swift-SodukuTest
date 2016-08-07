@@ -6,16 +6,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SudokuTest/SudokuBoard.swift"
-            timestampString = "481295324.846169"
+            filePath = "SudokuTest/GameStateHandler.swift"
+            timestampString = "492270556.205432"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
-            landmarkName = "getNumberFromBoard(_:boardColumn:cellRow:cellColumn:)"
+            startingLineNumber = "349"
+            endingLineNumber = "349"
+            landmarkName = "saveGame()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -25,169 +25,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SudokuTest/CellUILabel.swift"
-            timestampString = "481396433.111072"
+            filePath = "SudokuTest/GameStateHandler.swift"
+            timestampString = "492270314.421926"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "16"
-            endingLineNumber = "16"
-            landmarkName = "init(coder:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SudokuTestTests/SudokuTestGameBoardTests.swift"
-            timestampString = "483388873.060406"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "69"
-            endingLineNumber = "69"
-            landmarkName = "testGameBoardInitialisedToZero()"
-            landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SudokuTestTests.SudokuTestGameBoardTests.testGameBoardInitialisedToZero () -&gt; ()"
-                  moduleName = "SudokuTestTests"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/graham/Documents/Development/Shiny%20Idea/SudokuTest/SudokuTestTests/SudokuTestGameBoardTests.swift"
-                  timestampString = "483991247.969897"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "69"
-                  endingLineNumber = "69"
-                  offsetFromSymbolStart = "1416">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SudokuTestTests.SudokuTestGameBoardTests.(testGameBoardInitialisedToZero () -&gt; ()).(implicit closure #1)"
-                  moduleName = "SudokuTestTests"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/graham/Documents/Development/Shiny%20Idea/SudokuTest/SudokuTestTests/SudokuTestGameBoardTests.swift"
-                  timestampString = "483991247.970142"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "69"
-                  endingLineNumber = "69"
-                  offsetFromSymbolStart = "39">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SudokuTestTests.SudokuTestGameBoardTests.(testGameBoardInitialisedToZero () -&gt; ()).(implicit closure #2)"
-                  moduleName = "SudokuTestTests"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/graham/Documents/Development/Shiny%20Idea/SudokuTest/SudokuTestTests/SudokuTestGameBoardTests.swift"
-                  timestampString = "483991247.970304"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "69"
-                  endingLineNumber = "69"
-                  offsetFromSymbolStart = "12">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SudokuTestTests.SudokuTestGameBoardTests.(testGameBoardInitialisedToZero () -&gt; ()).(implicit closure #3)"
-                  moduleName = "SudokuTestTests"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/graham/Documents/Development/Shiny%20Idea/SudokuTest/SudokuTestTests/SudokuTestGameBoardTests.swift"
-                  timestampString = "483991247.970452"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "69"
-                  endingLineNumber = "69"
-                  offsetFromSymbolStart = "4">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SudokuTest/TrackSolution.swift"
-            timestampString = "487625950.880395"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
-            landmarkName = "removeCoordinate(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Settings.swift"
-            timestampString = "489767972.339777"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "27"
-            endingLineNumber = "27"
-            landmarkName = "Settings"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SudokuTest/Enumerate.swift"
-            timestampString = "489861534.112517"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "10"
-            endingLineNumber = "10">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SudokuTest/GameTimer.swift"
-            timestampString = "490293216.860286"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
-            landmarkName = "updateGameTime()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SudokuTest/GameTimer.swift"
-            timestampString = "490293267.11689"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "48"
-            endingLineNumber = "48"
-            landmarkName = "setupGameTimer()"
+            startingLineNumber = "337"
+            endingLineNumber = "337"
+            landmarkName = "saveGame()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
