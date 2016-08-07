@@ -329,8 +329,16 @@ class GameStateHandler: NSObject, GameStateDelegate {
     }
     
     //-------------------------------------------------------------------------------
-    // save the dictionary object
+    // load/save the dictionary object
     //-------------------------------------------------------------------------------
+    
+    private func getDocumentDirectory() -> NSString {
+        return NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+    }
+    
+    func loadGame() {
+        return
+    }
     
     func saveGame() {
         self.updateGameSaveObjects()
@@ -339,8 +347,13 @@ class GameStateHandler: NSObject, GameStateDelegate {
                 let rawData: NSData = try NSJSONSerialization.dataWithJSONObject(self.gameSave, options: .PrettyPrinted)
                 //Convert NSString to String
                 let resultString = NSString(data: rawData, encoding: NSUTF8StringEncoding)! as String
-                print (resultString)
-                
+                let filename = getDocumentDirectory().stringByAppendingPathComponent("chalkboardsudoku.json")
+                do {
+                    try resultString.writeToFile(filename, atomically: true, encoding: NSUTF8StringEncoding)
+                } catch {
+                    // failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding
+                    print("Failed to write to file: \(filename)")
+                }
             } catch {
                 // Handle Error
             }
