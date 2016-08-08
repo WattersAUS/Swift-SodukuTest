@@ -525,18 +525,6 @@ class GameBoard: NSObject, NSCopying {
         return returnCoords
     }
     
-//    func getGameBoardCells() -> [[Cell]] {
-//        return self.gameBoardCells
-//    }
-//    
-//    func getSolutionBoardCells() -> [[Cell]] {
-//        return self.solutionBoardCells
-//    }
-//    
-//    func getOriginBoardCells() -> [[Cell]] {
-//        return self.originBoardCells
-//    }
-    
     func copyWithZone(zone: NSZone) -> AnyObject {
         let copy = GameBoard(size: self.boardColumns)
         for row: Int in 0 ..< self.boardRows {

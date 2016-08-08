@@ -989,7 +989,11 @@ class ViewController: UIViewController {
             if number == 0 {
                 return
             }
-            // when user selects posn on board and it's populated by a user solution, clear it!
+            // when user selects posn on board and it's populated by a user solution, clear it if it's set to 'delete' state!
+            if self.displayBoard.getImageState(posn) != imgStates.Delete.rawValue {
+                self.playErrorSound()
+                return
+            }
             self.playRuboutSound()
             self.sudokuBoard.clearLocationOnGameBoard(posn)
             self.setCellToBlankImage(posn)
@@ -998,6 +1002,11 @@ class ViewController: UIViewController {
             self.boardPosition = (-1, -1, -1, -1)
             // may need to reactivate 'inactive' control panel posn
             self.resetInactiveNumberOnBoard(number)
+            // if we have exhausted all 'delete' options, then reset the control panel icon, and selected ctrl panel posn
+            if self.displayBoard.getLocationsOfImages(imgStates.Delete.rawValue).count == 0 {
+                self.setControlPanelToSelectedImageValue((index / 2, column: index % 2))
+                self.controlPanelPosition = (-1, -1)
+            }
             break
         default:
             // this should never happen
